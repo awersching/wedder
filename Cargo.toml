@@ -1,0 +1,11 @@
+[package]
+name = "currweather"
+version = "0.1.0"
+authors = ["Adrian Wersching <dev@awersching.de>"]
+edition = "2018"
+
+[dependencies]
+config = "0.9"
+log = "0.4"
+log4rs = "0.8"
+reqwest = "0.9.5"
