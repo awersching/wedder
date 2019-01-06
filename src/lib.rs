@@ -5,9 +5,6 @@ extern crate serde;
 extern crate serde_derive;
 extern crate serde_json;
 
-use std::thread;
-use std::time;
-
 use crate::settings::Settings;
 use crate::weather::providers::owm::OpenWeatherMap;
 use crate::weather::Weather;
@@ -17,10 +14,7 @@ mod weather;
 
 pub fn run() {
     let settings = Settings::new();
-    let weather = OpenWeatherMap::new(&settings);
+    let weather = OpenWeatherMap::new(settings.weather_api_key);
 
-    loop {
-        println!("{}", weather.current_weather().to_string());
-        thread::sleep(time::Duration::from_secs(settings.interval as u64));
-    }
+    println!("{}", weather.current_weather(settings.city).to_string());
 }
