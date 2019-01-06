@@ -13,15 +13,15 @@ pub enum WeatherCondition {
 impl WeatherCondition {
     pub fn get_icon(&self) -> String {
         match self {
-            ClearSky => String::from(""),
-            FewClouds => String::from(""),
-            ScatteredClouds => String::from(""),
-            BrokenClouds => String::from(""),
-            ShowerRain => String::from(""),
-            Rain => String::from(""),
-            Thunderstorm => String::from(""),
-            Snow => String::from(""),
-            Mist => String::from(""),
+            WeatherCondition::ClearSky => "".into(),
+            WeatherCondition::FewClouds => "".into(),
+            WeatherCondition::ScatteredClouds => "".into(),
+            WeatherCondition::BrokenClouds => "".into(),
+            WeatherCondition::ShowerRain => "".into(),
+            WeatherCondition::Rain => "".into(),
+            WeatherCondition::Thunderstorm => "".into(),
+            WeatherCondition::Snow => "".into(),
+            WeatherCondition::Mist => "".into(),
         }
     }
 }

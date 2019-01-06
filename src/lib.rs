@@ -1,5 +1,9 @@
 extern crate config;
 extern crate reqwest;
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde_json;
 
 use std::thread;
 use std::time;
