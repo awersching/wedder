@@ -1,5 +1,6 @@
 use crate::settings::Settings;
 use crate::weather::Weather;
+use crate::weather::weather_condition::WeatherCondition;
 use crate::weather::weather_status::WeatherStatus;
 
 pub struct OpenWeatherMap {
@@ -15,9 +16,13 @@ impl Weather for OpenWeatherMap {
 
     fn current_weather(&self) -> WeatherStatus {
         let body = self.request_current_weather(String::from("London"));
-        info!("{:?}", body);
+        println!("{:?}", body);
 
-        WeatherStatus::new()
+        WeatherStatus::new(
+            WeatherCondition::ClearSky,
+            1,
+            String::from(""),
+        )
     }
 }
 
