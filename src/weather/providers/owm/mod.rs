@@ -1,7 +1,7 @@
+use crate::weather::CurrentWeather;
 use crate::weather::providers::owm::response::Response;
-use crate::weather::Weather;
+use crate::weather::weather::Weather;
 use crate::weather::weather_condition::WeatherCondition;
-use crate::weather::weather_status::WeatherStatus;
 
 mod response;
 
@@ -9,18 +9,18 @@ pub struct OpenWeatherMap {
     api_key: String
 }
 
-impl Weather for OpenWeatherMap {
+impl CurrentWeather for OpenWeatherMap {
     fn new(api_key: String) -> Self {
         OpenWeatherMap {
             api_key
         }
     }
 
-    fn current_weather(&self, location: String) -> WeatherStatus {
+    fn current_weather(&self, location: String) -> Weather {
         let body = self.request_current_weather(location);
         let response: Response = serde_json::from_str(&body).unwrap();
 
-        WeatherStatus::new(
+        Weather::new(
             self.parse_weather_condition(&response),
             // TODO: round
             response.main.temp as i32,

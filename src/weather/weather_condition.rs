@@ -13,6 +13,7 @@ pub enum WeatherCondition {
 impl WeatherCondition {
     pub fn get_icon(&self) -> String {
         match self {
+            // TODO: better icons
             WeatherCondition::ClearSky => "".into(),
             WeatherCondition::FewClouds => "".into(),
             WeatherCondition::ScatteredClouds => "".into(),

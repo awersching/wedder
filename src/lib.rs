@@ -6,11 +6,12 @@ extern crate serde_derive;
 extern crate serde_json;
 
 use crate::settings::Settings;
+use crate::weather::CurrentWeather;
 use crate::weather::providers::owm::OpenWeatherMap;
-use crate::weather::Weather;
 
 mod settings;
 mod weather;
+mod location;
 
 pub fn run() {
     let settings = Settings::new();

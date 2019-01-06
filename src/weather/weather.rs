@@ -1,22 +1,22 @@
 use crate::weather::weather_condition::WeatherCondition;
 
-pub struct WeatherStatus {
+pub struct Weather {
     weather_condition: WeatherCondition,
     temperature: i32,
     unit: String,
 }
 
-impl WeatherStatus {
-    pub fn new(condition_icon: WeatherCondition, temperature: i32, unit: String) -> Self {
-        WeatherStatus {
-            weather_condition: condition_icon,
+impl Weather {
+    pub fn new(weather_condition: WeatherCondition, temperature: i32, unit: String) -> Self {
+        Weather {
+            weather_condition,
             temperature,
             unit,
         }
     }
 }
 
-impl ToString for WeatherStatus {
+impl ToString for Weather {
     fn to_string(&self) -> String {
         format!(
             "{} {}{}",

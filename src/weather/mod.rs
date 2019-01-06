@@ -1,11 +1,11 @@
-use crate::weather::weather_status::WeatherStatus;
+use crate::weather::weather::Weather;
 
 pub mod providers;
-pub mod weather_status;
+pub mod weather;
 pub mod weather_condition;
 
-pub trait Weather {
+pub trait CurrentWeather {
     fn new(api_key: String) -> Self;
 
-    fn current_weather(&self, location: String) -> WeatherStatus;
+    fn current_weather(&self, location: String) -> Weather;
 }
