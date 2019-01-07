@@ -21,7 +21,10 @@ pub fn run() {
     let weather = OpenWeatherMap::new(config.weather_api_key);
 
     loop {
-        println!("{}", weather.current_weather(&config.city).to_string());
+        let current_weather = weather.current_weather(&config.city)
+            .format(&config.format);
+        println!("{}", current_weather);
+
         thread::sleep(time::Duration::from_secs(config.interval as u64));
     }
 }

@@ -5,6 +5,7 @@ pub struct Config {
     pub weather_api_key: String,
     pub interval: i32,
     pub city: String,
+    pub format: String,
 }
 
 impl Default for Config {

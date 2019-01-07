@@ -22,9 +22,7 @@ impl CurrentWeather for OpenWeatherMap {
 
         Weather::new(
             self.parse_weather_condition(&response),
-            // TODO: round
-            response.main.temp as i32,
-            String::from("°C"),
+            response.main.temp,
         )
     }
 }
@@ -34,7 +32,7 @@ impl OpenWeatherMap {
         let base_url = "http://api.openweathermap.org/data/2.5";
 
         let url = format!(
-            "{}/weather?q={}&units=metric&APPID={}",
+            "{}/weather?q={}&APPID={}",
             base_url,
             location,
             self.api_key
