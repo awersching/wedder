@@ -50,10 +50,10 @@ impl OpenWeatherMap {
             //day
             "01" => WeatherCondition::ClearSky,
             "02" => WeatherCondition::FewClouds,
-            "03" => WeatherCondition::ScatteredClouds,
-            "04" => WeatherCondition::BrokenClouds,
-            "09" => WeatherCondition::ShowerRain,
+            "03" => WeatherCondition::Clouds,
+            "04" => WeatherCondition::ManyClouds,
             "10" => WeatherCondition::Rain,
+            "09" => WeatherCondition::HeavyRain,
             "11" => WeatherCondition::Thunderstorm,
             "13" => WeatherCondition::Snow,
             "50" => WeatherCondition::Mist,

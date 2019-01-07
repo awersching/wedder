@@ -1,10 +1,10 @@
 pub enum WeatherCondition {
     ClearSky,
     FewClouds,
-    ScatteredClouds,
-    BrokenClouds,
-    ShowerRain,
+    Clouds,
+    ManyClouds,
     Rain,
+    HeavyRain,
     Thunderstorm,
     Snow,
     Mist,
@@ -14,15 +14,15 @@ impl WeatherCondition {
     pub fn get_icon(&self) -> String {
         match self {
             // TODO: better icons
-            WeatherCondition::ClearSky => "".into(),
-            WeatherCondition::FewClouds => "".into(),
-            WeatherCondition::ScatteredClouds => "".into(),
-            WeatherCondition::BrokenClouds => "".into(),
-            WeatherCondition::ShowerRain => "".into(),
-            WeatherCondition::Rain => "".into(),
-            WeatherCondition::Thunderstorm => "".into(),
-            WeatherCondition::Snow => "".into(),
-            WeatherCondition::Mist => "".into(),
+            WeatherCondition::ClearSky => "".to_string(),
+            WeatherCondition::FewClouds => "".to_string(),
+            WeatherCondition::Clouds => "".to_string(),
+            WeatherCondition::ManyClouds => "".to_string(),
+            WeatherCondition::Rain => "".to_string(),
+            WeatherCondition::HeavyRain => "".to_string(),
+            WeatherCondition::Thunderstorm => "".to_string(),
+            WeatherCondition::Snow => "".to_string(),
+            WeatherCondition::Mist => "".to_string(),
         }
     }
 }
