@@ -1,0 +1,6 @@
+weather_api_key = 'key'
+
+# in seconds
+interval = 900
+
+city = 'London'

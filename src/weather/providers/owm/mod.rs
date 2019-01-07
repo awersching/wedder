@@ -16,7 +16,7 @@ impl CurrentWeather for OpenWeatherMap {
         }
     }
 
-    fn current_weather(&self, location: String) -> Weather {
+    fn current_weather(&self, location: &String) -> Weather {
         let body = self.request_current_weather(location);
         let response: Response = serde_json::from_str(&body).unwrap();
 
@@ -30,7 +30,7 @@ impl CurrentWeather for OpenWeatherMap {
 }
 
 impl OpenWeatherMap {
-    fn request_current_weather(&self, location: String) -> String {
+    fn request_current_weather(&self, location: &String) -> String {
         let base_url = "http://api.openweathermap.org/data/2.5";
 
         let url = format!(

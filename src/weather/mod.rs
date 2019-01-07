@@ -7,5 +7,5 @@ pub mod weather_condition;
 pub trait CurrentWeather {
     fn new(api_key: String) -> Self;
 
-    fn current_weather(&self, location: String) -> Weather;
+    fn current_weather(&self, location: &String) -> Weather;
 }
