@@ -20,22 +20,18 @@ impl Weather {
             &*self.weather_condition.get_icon(),
         );
 
-        if formatted.contains("<temperature_fahrenheit>") {
-            formatted = formatted.replace(
-                "<temperature_fahrenheit>",
-                &*self.temp_to_fahrenheit().to_string(),
-            );
-        } else if formatted.contains("<temperature_kelvin>") {
-            formatted = formatted.replace(
-                "<temperature_kelvin>",
-                &*(self.kelvin.round() as i32).to_string(),
-            );
-        } else {
-            formatted = formatted.replace(
-                "<temperature_celsius>",
-                &*self.temp_to_celsius().to_string(),
-            );
-        }
+        formatted = formatted.replace(
+            "<temperature_celsius>",
+            &*self.temp_to_celsius().to_string(),
+        );
+        formatted = formatted.replace(
+            "<temperature_fahrenheit>",
+            &*self.temp_to_fahrenheit().to_string(),
+        );
+        formatted = formatted.replace(
+            "<temperature_kelvin>",
+            &*(self.kelvin.round() as i32).to_string(),
+        );
         formatted
     }
 

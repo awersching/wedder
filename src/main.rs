@@ -1,5 +1,5 @@
-extern crate currweather;
+extern crate wedder;
 
 fn main() {
-    currweather::run();
+    wedder::run();
 }

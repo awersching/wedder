@@ -1,5 +1,5 @@
 [package]
-name = "currweather"
+name = "wedder"
 version = "0.1.0"
 authors = ["Adrian Wersching <dev@awersching.de>"]
 edition = "2018"
