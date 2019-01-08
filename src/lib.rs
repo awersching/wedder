@@ -1,4 +1,7 @@
 extern crate confy;
+#[macro_use]
+extern crate log;
+extern crate log4rs;
 extern crate reqwest;
 extern crate serde;
 #[macro_use]
@@ -21,9 +24,11 @@ pub fn run() {
     let weather = OpenWeatherMap::new(config.weather_api_key);
 
     loop {
-        let current_weather = weather.current_weather(&config.city)
-            .format(&config.format, &config.icons);
-        println!("{}", current_weather);
+        let current_weather = weather.current_weather(&config.city);
+        match current_weather {
+            Ok(weather) => println!("{}", weather.format(&config.format, &config.icons)),
+            Err(err) => error!("{:?}", err)
+        }
 
         thread::sleep(time::Duration::from_secs(config.interval as u64));
     }

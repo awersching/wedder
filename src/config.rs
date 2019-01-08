@@ -30,7 +30,7 @@ impl Config {
     }
 
     fn no_config_file_found() -> Self {
-        println!("Please add a configuration file");
+        println!("No config file");
         process::exit(1)
     }
 }

@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
@@ -10,7 +11,7 @@ pub mod weather;
 pub trait CurrentWeather {
     fn new(api_key: String) -> Self;
 
-    fn current_weather(&self, location: &String) -> Weather;
+    fn current_weather(&self, location: &String) -> Result<Weather, Box<dyn Error>>;
 }
 
 #[derive(Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]

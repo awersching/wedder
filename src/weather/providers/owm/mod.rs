@@ -1,3 +1,7 @@
+use std::error::Error;
+use std::thread;
+use std::time::Duration;
+
 use crate::weather::CurrentWeather;
 use crate::weather::providers::owm::response::Response;
 use crate::weather::weather::Weather;
@@ -16,19 +20,20 @@ impl CurrentWeather for OpenWeatherMap {
         }
     }
 
-    fn current_weather(&self, location: &String) -> Weather {
-        let body = self.request_current_weather(location);
-        let response: Response = serde_json::from_str(&body).unwrap();
+    fn current_weather(&self, location: &String) -> Result<Weather, Box<dyn Error>> {
+        let body = self.request_current_weather(location)
+            .text().unwrap();
+        let response: Response = serde_json::from_str(&body)?;
 
-        Weather::new(
-            self.parse_weather_condition(&response),
+        Ok(Weather::new(
+            self.parse_weather_condition(&response)?,
             response.main.temp,
-        )
+        ))
     }
 }
 
 impl OpenWeatherMap {
-    fn request_current_weather(&self, location: &String) -> String {
+    fn request_current_weather(&self, location: &String) -> reqwest::Response {
         let base_url = "http://api.openweathermap.org/data/2.5";
 
         let url = format!(
@@ -37,27 +42,34 @@ impl OpenWeatherMap {
             location,
             self.api_key
         );
-        reqwest::get(&url).unwrap().text().unwrap()
+
+        // if error wait for reconnection
+        let mut result = reqwest::get(&url);
+        while result.is_err() {
+            println!("No connection");
+            thread::sleep(Duration::from_secs(5));
+            result = reqwest::get(&url);
+        }
+        result.unwrap()
     }
 
-    fn parse_weather_condition(&self, response: &Response) -> WeatherCondition {
+    fn parse_weather_condition(&self, response: &Response) -> Result<WeatherCondition, String> {
         // owm has different icons for day and night (third char), we do not
         let icon_code = &response.weather[0].icon[0..2];
 
         match icon_code {
             //day
-            "01" => WeatherCondition::ClearSky,
-            "02" => WeatherCondition::FewClouds,
-            "03" => WeatherCondition::Clouds,
-            "04" => WeatherCondition::ManyClouds,
-            "10" => WeatherCondition::Rain,
-            "09" => WeatherCondition::HeavyRain,
-            "11" => WeatherCondition::Thunderstorm,
-            "13" => WeatherCondition::Snow,
-            "50" => WeatherCondition::Mist,
+            "01" => Ok(WeatherCondition::ClearSky),
+            "02" => Ok(WeatherCondition::FewClouds),
+            "03" => Ok(WeatherCondition::Clouds),
+            "04" => Ok(WeatherCondition::ManyClouds),
+            "10" => Ok(WeatherCondition::Rain),
+            "09" => Ok(WeatherCondition::HeavyRain),
+            "11" => Ok(WeatherCondition::Thunderstorm),
+            "13" => Ok(WeatherCondition::Snow),
+            "50" => Ok(WeatherCondition::Mist),
 
-            // TODO: better error handling
-            _ => panic!("Undefined weather condition")
+            _ => Err("Undefined weather condition".to_string())
         }
     }
 }
