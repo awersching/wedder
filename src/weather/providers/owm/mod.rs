@@ -54,20 +54,51 @@ impl OpenWeatherMap {
     }
 
     fn parse_weather_condition(&self, response: &Response) -> Result<WeatherCondition, String> {
-        // owm has different icons for day and night (third char), we do not
-        let icon_code = &response.weather[0].icon[0..2];
+        let id = response.weather[0].id;
+        let first_digit = id.to_string()[0..1].parse::<i32>().unwrap();
 
-        match icon_code {
-            //day
-            "01" => Ok(WeatherCondition::ClearSky),
-            "02" => Ok(WeatherCondition::FewClouds),
-            "03" => Ok(WeatherCondition::Clouds),
-            "04" => Ok(WeatherCondition::ManyClouds),
-            "10" => Ok(WeatherCondition::Rain),
-            "09" => Ok(WeatherCondition::HeavyRain),
-            "11" => Ok(WeatherCondition::Thunderstorm),
-            "13" => Ok(WeatherCondition::Snow),
-            "50" => Ok(WeatherCondition::Mist),
+        match first_digit {
+            2 => Ok(WeatherCondition::Thunderstorm),
+
+            // rain
+            3 => match id {
+                300 => Ok(WeatherCondition::Rain),
+                301 => Ok(WeatherCondition::Rain),
+                302 => Ok(WeatherCondition::HeavyRain),
+                310 => Ok(WeatherCondition::Rain),
+                311 => Ok(WeatherCondition::HeavyRain),
+                312 => Ok(WeatherCondition::HeavyRain),
+                313 => Ok(WeatherCondition::HeavyRain),
+                314 => Ok(WeatherCondition::HeavyRain),
+                321 => Ok(WeatherCondition::HeavyRain),
+                _ => Err("Undefined weather condition".to_string())
+            },
+            5 => match id {
+                500 => Ok(WeatherCondition::Rain),
+                501 => Ok(WeatherCondition::HeavyRain),
+                502 => Ok(WeatherCondition::HeavyRain),
+                503 => Ok(WeatherCondition::HeavyRain),
+                504 => Ok(WeatherCondition::HeavyRain),
+                511 => Ok(WeatherCondition::HeavyRain),
+                520 => Ok(WeatherCondition::Rain),
+                521 => Ok(WeatherCondition::HeavyRain),
+                522 => Ok(WeatherCondition::HeavyRain),
+                531 => Ok(WeatherCondition::HeavyRain),
+                _ => Err("Undefined weather condition".to_string())
+            },
+
+            6 => Ok(WeatherCondition::Snow),
+            7 => Ok(WeatherCondition::Mist),
+
+            // clear sky and clouds
+            8 => match id {
+                800 => Ok(WeatherCondition::ClearSky),
+                801 => Ok(WeatherCondition::FewClouds),
+                802 => Ok(WeatherCondition::Clouds),
+                803 => Ok(WeatherCondition::ManyClouds),
+                804 => Ok(WeatherCondition::ManyClouds),
+                _ => Err("Undefined weather condition".to_string())
+            },
 
             _ => Err("Undefined weather condition".to_string())
         }
