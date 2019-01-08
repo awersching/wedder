@@ -1,4 +1,6 @@
-use crate::weather::weather_condition::WeatherCondition;
+use std::collections::HashMap;
+
+use crate::weather::WeatherCondition;
 
 pub struct Weather {
     weather_condition: WeatherCondition,
@@ -13,11 +15,14 @@ impl Weather {
         }
     }
 
-    pub fn format(&self, format: &String) -> String {
+    pub fn format(&self, format: &String, icons: &HashMap<String, String>) -> String {
         let mut formatted = format.clone();
+
+        let icon = icons.get(&*self.weather_condition.to_string())
+            .unwrap();
         formatted = formatted.replace(
             "<icon>",
-            &*self.weather_condition.get_icon(),
+            icon,
         );
 
         formatted = formatted.replace(

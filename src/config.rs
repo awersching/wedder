@@ -1,11 +1,18 @@
+use std::collections::HashMap;
 use std::process;
+
+use crate::weather::providers::WeatherProvider;
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
+    pub weather_provider: WeatherProvider,
     pub weather_api_key: String,
-    pub interval: i32,
+
     pub city: String,
+    pub interval: i32,
+
     pub format: String,
+    pub icons: HashMap<String, String>,
 }
 
 impl Default for Config {

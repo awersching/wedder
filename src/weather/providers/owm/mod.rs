@@ -1,7 +1,7 @@
 use crate::weather::CurrentWeather;
 use crate::weather::providers::owm::response::Response;
 use crate::weather::weather::Weather;
-use crate::weather::weather_condition::WeatherCondition;
+use crate::weather::WeatherCondition;
 
 mod response;
 

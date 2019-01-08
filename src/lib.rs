@@ -22,7 +22,7 @@ pub fn run() {
 
     loop {
         let current_weather = weather.current_weather(&config.city)
-            .format(&config.format);
+            .format(&config.format, &config.icons);
         println!("{}", current_weather);
 
         thread::sleep(time::Duration::from_secs(config.interval as u64));
