@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::process;
 
+use serde::{Deserialize, Serialize};
+
 use crate::weather::providers::WeatherProvider;
 
 #[derive(Serialize, Deserialize)]

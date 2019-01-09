@@ -3,6 +3,8 @@ use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
+use serde::{Deserialize, Serialize};
+
 use crate::weather::weather::Weather;
 
 pub mod providers;
