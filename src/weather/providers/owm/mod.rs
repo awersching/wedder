@@ -20,7 +20,7 @@ impl CurrentWeather for OpenWeatherMap {
         }
     }
 
-    fn current_weather(&self, location: &String) -> Result<Weather, Box<dyn Error>> {
+    fn current_weather(&self, location: &str) -> Result<Weather, Box<dyn Error>> {
         let body = self.request_current_weather(location)
             .text().unwrap();
         let response: Response = serde_json::from_str(&body)?;
@@ -33,7 +33,7 @@ impl CurrentWeather for OpenWeatherMap {
 }
 
 impl OpenWeatherMap {
-    fn request_current_weather(&self, location: &String) -> reqwest::Response {
+    fn request_current_weather(&self, location: &str) -> reqwest::Response {
         let base_url = "http://api.openweathermap.org/data/2.5";
 
         let url = format!(

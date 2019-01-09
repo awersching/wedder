@@ -8,12 +8,13 @@ use serde::{Deserialize, Serialize};
 use crate::weather::weather::Weather;
 
 pub mod providers;
+#[allow(clippy::module_inception)]
 pub mod weather;
 
 pub trait CurrentWeather {
     fn new(api_key: String) -> Self;
 
-    fn current_weather(&self, location: &String) -> Result<Weather, Box<dyn Error>>;
+    fn current_weather(&self, location: &str) -> Result<Weather, Box<dyn Error>>;
 }
 
 #[derive(Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]

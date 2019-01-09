@@ -15,8 +15,8 @@ impl Weather {
         }
     }
 
-    pub fn format(&self, format: &String, icons: &HashMap<String, String>) -> String {
-        let mut formatted = format.clone();
+    pub fn format(&self, format: &str, icons: &HashMap<String, String>) -> String {
+        let mut formatted = format.to_string();
 
         let icon = icons.get(&*self.weather_condition.to_string())
             .unwrap();
