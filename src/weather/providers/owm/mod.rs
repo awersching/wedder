@@ -1,8 +1,7 @@
 use std::error::Error;
-use std::thread;
-use std::time::Duration;
 
 use crate::weather::CurrentWeather;
+use crate::weather::providers::Get;
 use crate::weather::providers::owm::response::Response;
 use crate::weather::weather::Weather;
 use crate::weather::WeatherCondition;
@@ -13,6 +12,8 @@ pub struct OpenWeatherMap {
     api_key: String
 }
 
+impl Get for OpenWeatherMap {}
+
 impl CurrentWeather for OpenWeatherMap {
     fn new(api_key: String) -> Self {
         OpenWeatherMap {
@@ -21,8 +22,8 @@ impl CurrentWeather for OpenWeatherMap {
     }
 
     fn current_weather(&self, location: &str) -> Result<Weather, Box<dyn Error>> {
-        let body = self.request_current_weather(location)
-            .text().unwrap();
+        let url = self.build_url(location);
+        let body = self.get(&url).text().unwrap();
         let response: Response = serde_json::from_str(&body)?;
 
         Ok(Weather::new(
@@ -33,24 +34,15 @@ impl CurrentWeather for OpenWeatherMap {
 }
 
 impl OpenWeatherMap {
-    fn request_current_weather(&self, location: &str) -> reqwest::Response {
+    fn build_url(&self, location: &str) -> String {
         let base_url = "http://api.openweathermap.org/data/2.5";
 
-        let url = format!(
+        format!(
             "{}/weather?q={}&APPID={}",
             base_url,
             location,
             self.api_key
-        );
-
-        // if error wait for reconnection
-        let mut result = reqwest::get(&url);
-        while result.is_err() {
-            println!("No connection");
-            thread::sleep(Duration::from_secs(5));
-            result = reqwest::get(&url);
-        }
-        result.unwrap()
+        )
     }
 
     fn parse_weather_condition(&self, response: &Response) -> Result<WeatherCondition, String> {
