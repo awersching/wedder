@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::weather::providers::WeatherProvider;
 
+pub const RETRY_TIMEOUT: u64 = 5;
+
 #[derive(Serialize, Deserialize)]
 pub struct Config {
     pub weather_provider: WeatherProvider,

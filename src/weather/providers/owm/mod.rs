@@ -1,7 +1,7 @@
 use std::error::Error;
 
+use crate::util;
 use crate::weather::CurrentWeather;
-use crate::weather::providers::Get;
 use crate::weather::providers::owm::response::Response;
 use crate::weather::weather::Weather;
 use crate::weather::WeatherCondition;
@@ -12,8 +12,6 @@ pub struct OpenWeatherMap {
     api_key: String
 }
 
-impl Get for OpenWeatherMap {}
-
 impl CurrentWeather for OpenWeatherMap {
     fn new(api_key: String) -> Self {
         OpenWeatherMap {
@@ -23,7 +21,8 @@ impl CurrentWeather for OpenWeatherMap {
 
     fn current_weather(&self, location: &str) -> Result<Weather, Box<dyn Error>> {
         let url = self.build_url(location);
-        let body = self.get(&url).text().unwrap();
+        let body = util::get_retry(&url, "No connection")
+            .text().unwrap();
         let response: Response = serde_json::from_str(&body)?;
 
         Ok(Weather::new(

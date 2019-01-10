@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use crate::location::CurrentLocation;
 use crate::location::Location;
 
@@ -5,7 +7,7 @@ use crate::location::Location;
 pub struct Geoclue {}
 
 impl CurrentLocation for Geoclue {
-    fn current_location() -> Location {
+    fn current_location(&self) -> Result<Location, Box<dyn Error>> {
         unimplemented!()
     }
 }
