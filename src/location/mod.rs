@@ -1,20 +1,23 @@
 use std::error::Error;
 
-pub mod geoclue;
+use serde::{Deserialize, Serialize};
+
 pub mod ip_api;
 
 pub trait CurrentLocation {
     fn current_location(&self) -> Result<Location, Box<dyn Error>>;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Location {
-    pub city: Option<String>,
-    pub coordinates: Option<Coordinates>,
+    #[serde(default)]
+    pub lat: f32,
+    #[serde(default)]
+    pub lon: f32,
 }
 
-#[derive(Debug)]
-pub struct Coordinates {
-    pub lat: f32,
-    pub lon: f32,
+#[derive(Serialize, Deserialize)]
+pub enum LocationProvider {
+    Ip,
+    Manual,
 }

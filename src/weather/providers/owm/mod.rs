@@ -1,5 +1,6 @@
 use std::error::Error;
 
+use crate::location::Location;
 use crate::util;
 use crate::weather::CurrentWeather;
 use crate::weather::providers::owm::response::Response;
@@ -13,13 +14,13 @@ pub struct OpenWeatherMap {
 }
 
 impl CurrentWeather for OpenWeatherMap {
-    fn new(api_key: String) -> Self {
+    fn new(api_key: &str) -> Self {
         OpenWeatherMap {
-            api_key
+            api_key: api_key.to_string()
         }
     }
 
-    fn current_weather(&self, location: &str) -> Result<Weather, Box<dyn Error>> {
+    fn current_weather(&self, location: &Location) -> Result<Weather, Box<dyn Error>> {
         let url = self.build_url(location);
         let body = util::get_retry(&url, "No connection")
             .text().unwrap();
@@ -33,13 +34,14 @@ impl CurrentWeather for OpenWeatherMap {
 }
 
 impl OpenWeatherMap {
-    fn build_url(&self, location: &str) -> String {
+    fn build_url(&self, location: &Location) -> String {
         let base_url = "http://api.openweathermap.org/data/2.5";
 
         format!(
-            "{}/weather?q={}&APPID={}",
+            "{}/weather?lat={}&lon={}&APPID={}",
             base_url,
-            location,
+            location.lat,
+            location.lon,
             self.api_key
         )
     }
