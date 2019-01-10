@@ -1,5 +1,3 @@
-font-0 = WeatherIcons:style=Solid:size=12;3
-
 [module/weather]
 type = custom/script
 exec = wedder

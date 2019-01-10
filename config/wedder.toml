@@ -15,15 +15,16 @@ interval = 300
 #   <temperature_kelvin>
 format = ' <icon> <temperature_celsius>°C '
 
-# install the weather icons font to display the icons correctly
+# install one of the patched fonts from Nerd Fonts to display the icons:
+# https://github.com/ryanoasis/nerd-fonts#patched-fonts
 [icons]
-ClearSky = ''
-FewClouds = ''
-Clouds = ''
-ManyClouds = ''
-RainSun = ''
-Rain = ''
-HeavyRain = ''
-Thunderstorm = ''
-Snow = ''
-Mist = ''
+ClearSky = ''
+FewClouds = ''
+Clouds = '摒'
+ManyClouds = ''
+RainSun = ''
+Rain = ''
+HeavyRain = '歹'
+Thunderstorm = ''
+Snow = ''
+Mist = ''
