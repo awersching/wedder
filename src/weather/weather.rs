@@ -45,7 +45,6 @@ impl Weather {
     }
 
     fn temp_to_fahrenheit(&self) -> i32 {
-        // TODO
-        self.kelvin as i32
+        (1.8 * (self.kelvin - 273.15) + 32.0).round() as i32
     }
 }
