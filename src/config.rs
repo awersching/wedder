@@ -39,10 +39,16 @@ impl Default for Config {
 
 impl Config {
     pub fn new() -> Self {
-        match confy::load("wedder") {
+        let config = match confy::load("wedder") {
             Ok(cfg) => cfg,
             Err(_) => Config::no_config_file_found()
+        };
+
+        if config.weather.api_key == "" {
+            println!("No API key");
+            process::exit(1)
         }
+        config
     }
 
     fn no_config_file_found() -> Self {

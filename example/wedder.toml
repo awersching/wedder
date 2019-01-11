@@ -12,7 +12,8 @@ interval = 300
 # available providers:
 #   OpenWeatherMap
 provider = 'OpenWeatherMap'
-api_key = 'your api key'
+# enter your API key here
+api_key = ''
 
 [location]
 # available providers:
