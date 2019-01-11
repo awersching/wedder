@@ -9,19 +9,11 @@ use crate::weather::WeatherCondition;
 
 mod response;
 
-pub struct OpenWeatherMap {
-    api_key: String
-}
+pub struct OpenWeatherMap {}
 
 impl CurrentWeather for OpenWeatherMap {
-    fn new(api_key: &str) -> Self {
-        OpenWeatherMap {
-            api_key: api_key.to_string()
-        }
-    }
-
-    fn current_weather(&self, location: &Location) -> Result<Weather, Box<dyn Error>> {
-        let url = self.build_url(location);
+    fn current_weather(&self, location: &Location, api_key: &str) -> Result<Weather, Box<dyn Error>> {
+        let url = self.build_url(location, api_key);
         let body = util::get_retry(&url, "No connection")
             .text().unwrap();
         let response: Response = serde_json::from_str(&body)?;
@@ -34,7 +26,12 @@ impl CurrentWeather for OpenWeatherMap {
 }
 
 impl OpenWeatherMap {
-    fn build_url(&self, location: &Location) -> String {
+    #[allow(clippy::new_ret_no_self)]
+    pub fn new() -> impl CurrentWeather {
+        OpenWeatherMap {}
+    }
+
+    fn build_url(&self, location: &Location, api_key: &str) -> String {
         let base_url = "http://api.openweathermap.org/data/2.5";
 
         format!(
@@ -42,7 +39,7 @@ impl OpenWeatherMap {
             base_url,
             location.lat,
             location.lon,
-            self.api_key
+            api_key
         )
     }
 

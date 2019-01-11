@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::thread;
 use std::time;
 
@@ -16,36 +17,46 @@ mod weather;
 mod util;
 mod location;
 
-pub fn main() {
-    let config = Config::new();
-    let location_provider = IpApi::new();
-    let weather_provider = OpenWeatherMap::new(&config.weather.api_key);
+struct App {
+    config: Box<Config>,
+    location_provider: Box<dyn CurrentLocation>,
+    weather_provider: Box<dyn CurrentWeather>,
+}
 
-    loop {
-        let current_location = match current_location(&location_provider, &config) {
-            Some(location) => location,
-            None => continue
-        };
-
-        match weather_provider.current_weather(&current_location) {
-            Ok(weather) => println!("{}", weather.format(&config.format, &config.icons)),
-            Err(err) => error!("{:?}", err)
+impl App {
+    fn new() -> Self {
+        App {
+            config: Box::new(Config::new()),
+            location_provider: Box::new(IpApi::new()),
+            weather_provider: Box::new(OpenWeatherMap::new()),
         }
-        thread::sleep(time::Duration::from_secs(config.interval as u64));
+    }
+
+    fn run(&self) -> Result<(), Box<dyn Error>> {
+        loop {
+            if self.config.location.provider == LocationProvider::Manual {
+                self.print_current_weather(&self.config.location.location)?;
+            } else {
+                // location by provider
+                let current_location = self.location_provider.current_location()?;
+                self.print_current_weather(&current_location)?;
+            }
+            thread::sleep(time::Duration::from_secs(self.config.interval as u64));
+        }
+    }
+
+    fn print_current_weather(&self, location: &Location) -> Result<(), Box<dyn Error>> {
+        let current_weather = self.weather_provider
+            .current_weather(location, &self.config.weather.api_key)?;
+        println!("{}", current_weather.format(&self.config.format, &self.config.icons));
+        Ok(())
     }
 }
 
-fn current_location(provider: &impl CurrentLocation, config: &Config) -> Option<Location> {
-    match config.location.provider {
-        LocationProvider::Ip => match provider.current_location() {
-            Ok(location) => Some(location),
-            Err(err) => {
-                error!("{:?}", err);
-                thread::sleep(time::Duration::from_secs(config::RETRY_TIMEOUT));
-                None
-            }
-        },
+fn main() {
+    let app = App::new();
 
-        LocationProvider::Manual => Some(config.location.location.clone())
+    if let Err(err) = app.run() {
+        error!("{:?}", err)
     }
 }

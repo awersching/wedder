@@ -8,7 +8,7 @@ pub trait CurrentLocation {
     fn current_location(&self) -> Result<Location, Box<dyn Error>>;
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Location {
     #[serde(default)]
     pub lat: f32,
@@ -16,7 +16,7 @@ pub struct Location {
     pub lon: f32,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(PartialEq, Serialize, Deserialize)]
 pub enum LocationProvider {
     Ip,
     Manual,

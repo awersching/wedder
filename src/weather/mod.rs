@@ -13,9 +13,8 @@ pub mod providers;
 pub mod weather;
 
 pub trait CurrentWeather {
-    fn new(api_key: &str) -> Self;
-
-    fn current_weather(&self, location: &Location) -> Result<Weather, Box<dyn Error>>;
+    fn current_weather(&self, location: &Location, api_key: &str)
+                       -> Result<Weather, Box<dyn Error>>;
 }
 
 #[derive(Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
