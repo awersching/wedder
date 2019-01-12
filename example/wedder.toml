@@ -3,7 +3,7 @@
 #   <temperature_celsius>
 #   <temperature_fahrenheit>
 #   <temperature_kelvin>
-format = ' <icon> <temperature_celsius>°C '
+format = '<icon> <temperature_celsius>°C'
 
 # in seconds
 interval = 300
@@ -21,8 +21,8 @@ api_key = ''
 #   Manual
 provider = 'Ip'
 # if you choose 'Manual' as provider, you can set your coordinates
-# lat = 51.509865
-# lon = -0.118092
+#lat = 51.509865
+#lon = -0.118092
 
 # install one of the patched fonts from Nerd Fonts to display the icons:
 # https://github.com/ryanoasis/nerd-fonts#patched-fonts
