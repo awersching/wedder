@@ -26,7 +26,7 @@ Note: [Cargo](https://github.com/rust-lang/cargo/) is required for building.
 ## Configuration
 
 Wedder assumes that there is a config file `wedder/wedder.toml` in your config directory (e.g. `~/.config` for Linux).
-An example configuration is provided [here](exaple/wedder.toml).
+An example configuration is provided [here](example/wedder.toml).
 
 Note: because the OpenWeatherMap API is restricted, you have to get an API key by [creating a free account](https://home.openweathermap.org/users/sign_up) and add it to the `wedder.toml` config file.
 
