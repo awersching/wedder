@@ -3,4 +3,5 @@ font-0 = NotoSans Nerd Font:style=Regular:size=13;3
 [module/weather]
 type = custom/script
 exec = wedder
+exec-if = ping openweathermap.org -c 1
 tail = true
