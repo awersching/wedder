@@ -1,38 +1,53 @@
-use std::error::Error;
-use std::fmt;
-use std::fmt::Display;
-use std::fmt::Formatter;
+use std::collections::HashMap;
 
-use serde::{Deserialize, Serialize};
-
-use crate::location::Location;
-use crate::weather::weather::Weather;
+use crate::weather::weather_condition::WeatherCondition;
 
 pub mod providers;
-#[allow(clippy::module_inception)]
-pub mod weather;
+pub mod weather_condition;
 
-pub trait CurrentWeather {
-    fn current_weather(&self, location: &Location, api_key: &str)
-                       -> Result<Weather, Box<dyn Error>>;
+pub struct Weather {
+    weather_condition: WeatherCondition,
+    kelvin: f32,
 }
 
-#[derive(Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
-pub enum WeatherCondition {
-    ClearSky,
-    FewClouds,
-    Clouds,
-    ManyClouds,
-    RainSun,
-    Rain,
-    HeavyRain,
-    Thunderstorm,
-    Snow,
-    Mist,
-}
+impl Weather {
+    pub fn new(weather_condition: WeatherCondition, kelvin: f32) -> Self {
+        Weather {
+            weather_condition,
+            kelvin,
+        }
+    }
 
-impl Display for WeatherCondition {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
+    pub fn format(&self, format: &str, icons: &HashMap<String, String>) -> String {
+        let mut formatted = format.to_string();
+
+        let icon = icons.get(&self.weather_condition.to_string())
+            .unwrap();
+        formatted = formatted.replace(
+            "<icon>",
+            icon,
+        );
+
+        formatted = formatted.replace(
+            "<temperature_celsius>",
+            &self.temp_to_celsius().to_string(),
+        );
+        formatted = formatted.replace(
+            "<temperature_fahrenheit>",
+            &self.temp_to_fahrenheit().to_string(),
+        );
+        formatted = formatted.replace(
+            "<temperature_kelvin>",
+            &(self.kelvin.round() as i32).to_string(),
+        );
+        formatted
+    }
+
+    fn temp_to_celsius(&self) -> i32 {
+        (self.kelvin - 273.15).round() as i32
+    }
+
+    fn temp_to_fahrenheit(&self) -> i32 {
+        (1.8 * (self.kelvin - 273.15) + 32.0).round() as i32
     }
 }

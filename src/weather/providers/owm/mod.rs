@@ -2,10 +2,10 @@ use std::error::Error;
 
 use crate::location::Location;
 use crate::util;
-use crate::weather::CurrentWeather;
+use crate::weather::providers::CurrentWeather;
 use crate::weather::providers::owm::response::Response;
-use crate::weather::weather::Weather;
-use crate::weather::WeatherCondition;
+use crate::weather::Weather;
+use crate::weather::weather_condition::WeatherCondition;
 
 mod response;
 

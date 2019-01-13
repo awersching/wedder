@@ -9,7 +9,7 @@ use crate::location::CurrentLocation;
 use crate::location::ip_api::IpApi;
 use crate::location::Location;
 use crate::location::LocationProvider;
-use crate::weather::CurrentWeather;
+use crate::weather::providers::CurrentWeather;
 use crate::weather::providers::owm::OpenWeatherMap;
 
 mod config;
