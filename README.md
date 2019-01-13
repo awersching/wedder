@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="img/example.png"></img>
+    <img src="img/conditions.gif"></img>
 </p>
 
 # wedder
@@ -25,10 +25,14 @@ Note: [Cargo](https://github.com/rust-lang/cargo/) is required for building.
 
 ## Configuration
 
-Wedder assumes that there is a config file `wedder/wedder.toml` in your config directory (e.g. `~/.config` for Linux).
-An example configuration is provided [here](example/wedder.toml).
+Copy the [example config](example/wedder.toml) to a folder named `wedder` in your config directory.
+E.g. for Linux:
 
-Note: because the OpenWeatherMap API is restricted, you have to get an API key by [creating a free account](https://home.openweathermap.org/users/sign_up) and add it to the `wedder.toml` config file.
+```bash
+cp example/wedder.toml ~/.config/wedder/wedder.toml
+```
+
+Because the OpenWeatherMap API is restricted, you have to get an API key by [creating a free account](https://home.openweathermap.org/users/sign_up) and add it to the `wedder.toml` config file.
 
 ### Polybar
 

@@ -9,8 +9,7 @@ pub struct IpApi {}
 impl CurrentLocation for IpApi {
     fn current_location(&self) -> Result<Location, Box<dyn Error>> {
         let url = "http://ip-api.com/json/?fields=lat,lon";
-        let body = util::get_retry(url, "No location")
-            .text().unwrap();
+        let body = util::get_retry(url, "No location").text()?;
 
         let location: Location = serde_json::from_str(&body)?;
         Ok(location)
