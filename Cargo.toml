@@ -1,16 +1,21 @@
 [package]
 name = "wedder"
 version = "1.0.0"
+description = "Current weather info for status bars like polybar"
 authors = ["Adrian Wersching <dev@awersching.de>"]
 edition = "2018"
 
 [dependencies]
+structopt = "0.2.14"
 serde = { version = "1.0", features = ["derive"] }
-
-directories = "1.0.2"
+serde_json = "1.0"
 toml = "0.4.10"
 
+strum = "0.13.0"
+strum_macros = "0.13.0"
+
+directories = "1.0.2"
 reqwest = "0.9.5"
-serde_json = "1.0"
 
 log = "0.4"
+simplelog = "^0.5.0"

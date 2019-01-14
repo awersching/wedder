@@ -13,7 +13,7 @@ pub trait CurrentWeather {
                        -> Result<Weather, Box<dyn Error>>;
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, EnumString)]
 pub enum WeatherProvider {
     OpenWeatherMap
 }

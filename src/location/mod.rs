@@ -16,7 +16,7 @@ pub struct Location {
     pub lon: f32,
 }
 
-#[derive(PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, EnumString)]
 pub enum LocationProvider {
     Ip,
     Manual,

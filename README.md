@@ -32,6 +32,12 @@ E.g. for Linux:
 cp example/wedder.toml ~/.config/wedder/wedder.toml
 ```
 
+All config options except the weather condition icons can be overriden by passing CLI options. For more info use
+
+```bash
+wedder --help
+```
+
 Because the OpenWeatherMap API is restricted, you have to get an API key by [creating a free account](https://home.openweathermap.org/users/sign_up) and add it to the `wedder.toml` config file.
 
 ### Polybar

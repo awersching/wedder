@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add cli options
 - Add `exec-if` to polybar example
 - Add better readme with gif
 
