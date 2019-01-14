@@ -10,7 +10,9 @@ pub trait CurrentLocation {
 
 #[derive(Default, Debug, Serialize, Deserialize)]
 pub struct Location {
+    #[serde(default)]
     pub lat: f32,
+    #[serde(default)]
     pub lon: f32,
 }
 

@@ -26,6 +26,7 @@ pub struct Config {
     pub format: String,
     #[serde(default = "default_interval")]
     pub interval: i32,
+    #[serde(default)]
     pub weather: WeatherConfig,
     #[serde(default)]
     pub location: LocationConfig,
@@ -35,7 +36,7 @@ pub struct Config {
 
 /// Remove when serde supports default literals
 fn default_format() -> String {
-    "<icon>  <temperature_celsius>°C".to_string()
+    "<icon> <temperature_celsius>°C".to_string()
 }
 
 /// Remove when serde supports default literals
