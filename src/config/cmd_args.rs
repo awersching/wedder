@@ -25,10 +25,12 @@ pub struct CmdArgs {
     /// <temperature_fahrenheit>,
     /// <temperature_kelvin>
     ///
-    /// E.g. '<icon> <temperature_celsius>°C'
+    /// Default: '<icon> <temperature_celsius>°C'
     #[structopt(short, long)]
     pub format: Option<String>,
     /// The interval in seconds how often the weather status is updated
+    ///
+    /// Default: 300
     #[structopt(short, long)]
     pub interval: Option<i32>,
 
@@ -36,6 +38,8 @@ pub struct CmdArgs {
     ///
     /// Available providers:
     /// OpenWeatherMap
+    ///
+    /// Default: OpenWeatherMap
     #[structopt(long = "weather-provider")]
     pub weather_provider: Option<WeatherProvider>,
     /// The API key for the corresponding weather provider
@@ -47,6 +51,8 @@ pub struct CmdArgs {
     /// Available providers:
     /// Ip,
     /// Manual
+    ///
+    /// Default: Ip
     #[structopt(long = "location-provider")]
     pub location_provider: Option<LocationProvider>,
     /// Latitude of the location to display the weather status for

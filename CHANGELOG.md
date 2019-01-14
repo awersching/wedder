@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add config defaults (&rarr; config file is optional)
 - Add cli options
 - Add `exec-if` to polybar example
 - Add better readme with gif

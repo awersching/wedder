@@ -25,20 +25,16 @@ Note: [Cargo](https://github.com/rust-lang/cargo/) is required for building.
 
 ## Configuration
 
-Copy the [example config](example/wedder.toml) to a folder named `wedder` in your config directory.
-E.g. for Linux:
-
-```bash
-cp example/wedder.toml ~/.config/wedder/wedder.toml
-```
-
-All config options except the weather condition icons can be overriden by passing CLI options. For more info use
-
+Have a look at the [example config](example/wedder.toml) or the CLI options:
 ```bash
 wedder --help
 ```
 
-Because the OpenWeatherMap API is restricted, you have to get an API key by [creating a free account](https://home.openweathermap.org/users/sign_up) and add it to the `wedder.toml` config file.
+The only required parameter to run wedder is an API key for OpenWeatherMap.
+Get one by [creating a free account](https://home.openweathermap.org/users/sign_up) and add it to the `wedder.toml` config file or pass it as argument with `--weather-api-key`.
+
+All config options except the weather condition icons can be overriden by passing CLI options.
+The weather condition icons can only be set via config file.
 
 ### Polybar
 

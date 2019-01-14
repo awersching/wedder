@@ -25,7 +25,7 @@ fn handle_args(args: &CmdArgs) {
     }
 
     if args.print_default_config_path {
-        println!("{}", Config::default_config_path().to_str().unwrap());
+        println!("{}", Config::default_config_path().unwrap().to_str().unwrap());
         process::exit(0);
     }
 }

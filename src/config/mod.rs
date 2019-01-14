@@ -5,12 +5,14 @@ use std::path::PathBuf;
 use std::process;
 
 use directories::ProjectDirs;
+use log::warn;
 use serde::{Deserialize, Serialize};
 
 use crate::config::cmd_args::CmdArgs;
 use crate::location::Location;
 use crate::location::LocationProvider;
 use crate::weather::providers::WeatherProvider;
+use crate::weather::weather_condition;
 
 pub mod cmd_args;
 
@@ -20,30 +22,47 @@ const APP_NAME: &str = env!("CARGO_PKG_NAME");
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
+    #[serde(default = "default_format")]
     pub format: String,
+    #[serde(default = "default_interval")]
     pub interval: i32,
     pub weather: WeatherConfig,
+    #[serde(default)]
     pub location: LocationConfig,
+    #[serde(default = "weather_condition::default_icons")]
     pub icons: HashMap<String, String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+/// Remove when serde supports default literals
+fn default_format() -> String {
+    "<icon>  <temperature_celsius>°C".to_string()
+}
+
+/// Remove when serde supports default literals
+fn default_interval() -> i32 {
+    300
+}
+
+#[derive(Default, Debug, Serialize, Deserialize)]
 pub struct WeatherConfig {
+    #[serde(default)]
     pub provider: WeatherProvider,
+    #[serde(default)]
     pub api_key: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Default, Debug, Serialize, Deserialize)]
 pub struct LocationConfig {
+    #[serde(default)]
     pub provider: LocationProvider,
-    #[serde(flatten)]
+    #[serde(default, flatten)]
     pub location: Location,
 }
 
 impl Config {
     pub fn from_default_path() -> Self {
         let config_path = Config::default_config_path();
-        Config::load_config(&config_path)
+        Config::load_config(&config_path.unwrap())
     }
 
     pub fn from_path(path: &str) -> Config {
@@ -77,41 +96,53 @@ impl Config {
         }
     }
 
-    pub fn default_config_path() -> PathBuf {
-        let project = match
-            ProjectDirs::from("rs", APP_NAME, APP_NAME) {
-            Some(dir) => dir,
-            None => Config::no_config_file()
-        };
+    pub fn default_config_path() -> Option<PathBuf> {
+        let project =
+            ProjectDirs::from("rs", APP_NAME, APP_NAME)?;
 
-        [
+        Some([
             project.config_dir().to_str().unwrap(),
             &format!("{}.toml", APP_NAME),
-        ].iter().collect()
+        ].iter().collect())
     }
 
     fn load_config(path: &PathBuf) -> Config {
         let config_string = match fs::read_to_string(path) {
-            Ok(cfg_str) => cfg_str,
+            Ok(cfg_str) => Some(cfg_str),
             Err(err) => match err.kind() {
-                io::ErrorKind::NotFound => Config::no_config_file(),
+                io::ErrorKind::NotFound => None,
                 _ => Config::malformed_config()
             }
         };
 
-        match toml::from_str(&config_string) {
+        if config_string.is_none() {
+            warn!(
+                "No config file found under {}",
+                path.to_str().unwrap()
+            );
+            return Config::default();
+        }
+
+        match toml::from_str(&config_string.unwrap()) {
             Ok(config) => config,
             Err(_) => Config::malformed_config()
         }
     }
 
-    fn no_config_file() -> ! {
-        println!("No config file");
-        process::exit(1)
-    }
-
     fn malformed_config() -> ! {
         println!("Malformed config file");
         process::exit(1)
+    }
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Config {
+            format: default_format(),
+            interval: default_interval(),
+            weather: WeatherConfig::default(),
+            location: LocationConfig::default(),
+            icons: weather_condition::default_icons(),
+        }
     }
 }

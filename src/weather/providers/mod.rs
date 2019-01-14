@@ -17,3 +17,9 @@ pub trait CurrentWeather {
 pub enum WeatherProvider {
     OpenWeatherMap
 }
+
+impl Default for WeatherProvider {
+    fn default() -> Self {
+        WeatherProvider::OpenWeatherMap
+    }
+}
