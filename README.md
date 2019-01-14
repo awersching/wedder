@@ -32,6 +32,7 @@ wedder --help
 
 The only required parameter to run wedder is an API key for OpenWeatherMap.
 Get one by [creating a free account](https://home.openweathermap.org/users/sign_up) and add it to the `wedder.toml` config file or pass it as argument with `--weather-api-key`.
+Note: the API key will not be activated immediately.
 
 All config options except the weather condition icons can be overriden by passing CLI options.
 The weather condition icons can only be set via config file.
