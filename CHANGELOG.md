@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.1 - 2019-01-14
 
 - Add config defaults (&rarr; config file is optional)
 - Add cli options
