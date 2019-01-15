@@ -1,4 +1,4 @@
-use std::error::Error;
+use log::debug;
 
 use crate::location::Location;
 use crate::util;
@@ -12,11 +12,12 @@ mod response;
 pub struct OpenWeatherMap {}
 
 impl CurrentWeather for OpenWeatherMap {
-    fn current_weather(&self, location: &Location, api_key: &str) -> Result<Weather, Box<dyn Error>> {
+    fn current_weather(&self, location: &Location, api_key: &str) -> util::Result<Weather> {
         let url = self.build_url(location, api_key);
         let body = util::get_retry(&url, "No connection")
             .text().unwrap();
         let response: Response = serde_json::from_str(&body)?;
+        debug!("Parsed response {:?}", response);
 
         Ok(Weather::new(
             self.parse_weather_condition(&response)?,
@@ -26,21 +27,22 @@ impl CurrentWeather for OpenWeatherMap {
 }
 
 impl OpenWeatherMap {
-    #[allow(clippy::new_ret_no_self)]
-    pub fn new() -> impl CurrentWeather {
+    pub fn new() -> Self {
         OpenWeatherMap {}
     }
 
     fn build_url(&self, location: &Location, api_key: &str) -> String {
         let base_url = "http://api.openweathermap.org/data/2.5";
 
-        format!(
+        let url = format!(
             "{}/weather?lat={}&lon={}&APPID={}",
             base_url,
             location.lat,
             location.lon,
             api_key
-        )
+        );
+        debug!("Built URL {}", url);
+        url
     }
 
     fn parse_weather_condition(&self, response: &Response) -> Result<WeatherCondition, String> {

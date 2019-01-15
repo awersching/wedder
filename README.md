@@ -5,7 +5,7 @@
 # wedder
 
 Wedder displays the current weather condition and temperature in a configurable format for status bars like [polybar](https://github.com/jaagr/polybar).
-The current weather is pulled from [OpenWeatherMap](https://openweathermap.org/) and you can either set your location manually or let it be determined by your IP.
+The current weather is pulled from [OpenWeatherMap](https://openweathermap.org/) and you can either set a location manually or let it be determined by your IP.
 
 ## Installation
 
@@ -25,14 +25,26 @@ Note: [Cargo](https://github.com/rust-lang/cargo/) is required for building.
 
 ## Configuration
 
-Have a look at the [example config](example/wedder.toml) or the CLI options:
+Because the OpenWeatherMap API is restricted, you have to get an API key by [creating a free account](https://home.openweathermap.org/users/sign_up).
+After the API key is activated you can then pass it to wedder using
+
+```bash
+wedder --weather-api-key <weather_api_key>
+```
+
+For more info use
+
 ```bash
 wedder --help
 ```
 
-The only required parameter to run wedder is an API key for OpenWeatherMap.
-Get one by [creating a free account](https://home.openweathermap.org/users/sign_up) and add it to the `wedder.toml` config file or pass it as argument with `--weather-api-key`.
-Note: the API key will not be activated immediately.
+You can also provide the API key via config file.
+An example config is located [here](example/wedder.toml).
+The default path wedder expects for the config file can be viewed using
+
+```bash
+wedder -p
+```
 
 All config options except the weather condition icons can be overriden by passing CLI options.
 The weather condition icons can only be set via config file.

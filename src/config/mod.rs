@@ -1,10 +1,13 @@
 use std::collections::HashMap;
+use std::fmt::Display;
 use std::fs;
 use std::io;
 use std::path::PathBuf;
 use std::process;
 
 use directories::ProjectDirs;
+use log::debug;
+use log::error;
 use log::warn;
 use serde::{Deserialize, Serialize};
 
@@ -108,17 +111,18 @@ impl Config {
     }
 
     fn load_config(path: &PathBuf) -> Config {
+        debug!("Trying to open config file under {}", path.to_str().unwrap());
         let config_string = match fs::read_to_string(path) {
             Ok(cfg_str) => Some(cfg_str),
             Err(err) => match err.kind() {
                 io::ErrorKind::NotFound => None,
-                _ => Config::malformed_config()
+                _ => Config::malformed_config(err)
             }
         };
 
         if config_string.is_none() {
             warn!(
-                "No config file found under {}",
+                "No config file found under {}, using defaults",
                 path.to_str().unwrap()
             );
             return Config::default();
@@ -126,11 +130,13 @@ impl Config {
 
         match toml::from_str(&config_string.unwrap()) {
             Ok(config) => config,
-            Err(_) => Config::malformed_config()
+            Err(err) => Config::malformed_config(err)
         }
     }
 
-    fn malformed_config() -> ! {
+    #[allow(clippy::needless_pass_by_value)]
+    fn malformed_config<E: Display>(err: E) -> ! {
+        error!("Error parsing config file: {}", err.to_string());
         println!("Malformed config file");
         process::exit(1)
     }

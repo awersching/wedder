@@ -3,6 +3,7 @@ extern crate strum_macros;
 
 use std::process;
 
+use log::debug;
 use log::error;
 use simplelog::LevelFilter;
 use simplelog::TermLogger;
@@ -11,6 +12,8 @@ use structopt::StructOpt;
 use crate::app::App;
 use crate::config::cmd_args::CmdArgs;
 use crate::config::Config;
+use crate::location::ip_api::IpApi;
+use crate::weather::providers::owm::OpenWeatherMap;
 
 mod config;
 mod weather;
@@ -18,10 +21,25 @@ mod util;
 mod location;
 mod app;
 
+fn main() {
+    let args = CmdArgs::from_args();
+    handle_args(&args);
+    let config = create_config(args);
+
+    let app = App::new(
+        config,
+        IpApi::new(),
+        OpenWeatherMap::new(),
+    );
+    if let Err(err) = app.run() {
+        error!("{}", err.to_string())
+    }
+}
+
 fn handle_args(args: &CmdArgs) {
     if args.debug {
-        TermLogger::init(LevelFilter::Info, simplelog::Config::default())
-            .unwrap();
+        init_logger();
+        debug!("Read args {:?}", args);
     }
 
     if args.print_default_config_path {
@@ -35,7 +53,9 @@ fn create_config(args: CmdArgs) -> Config {
         Some(path) => Config::from_path(path),
         None => Config::from_default_path()
     };
+    debug!("Read config {:?}", config);
     config.merge(args);
+    debug!("Merged config with args into {:?}", config);
 
     if config.weather.api_key == "" {
         println!("No API key");
@@ -44,13 +64,7 @@ fn create_config(args: CmdArgs) -> Config {
     config
 }
 
-fn main() {
-    let args = CmdArgs::from_args();
-    handle_args(&args);
-    let config = create_config(args);
-
-    let app = App::new(config);
-    if let Err(err) = app.run() {
-        error!("{:?}", err)
-    }
+fn init_logger() {
+    TermLogger::init(LevelFilter::Debug, simplelog::Config::default())
+        .unwrap();
 }

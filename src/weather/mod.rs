@@ -5,6 +5,7 @@ use crate::weather::weather_condition::WeatherCondition;
 pub mod providers;
 pub mod weather_condition;
 
+#[derive(Debug)]
 pub struct Weather {
     weather_condition: WeatherCondition,
     kelvin: f32,

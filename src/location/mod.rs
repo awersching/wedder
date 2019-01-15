@@ -1,11 +1,11 @@
-use std::error::Error;
-
 use serde::{Deserialize, Serialize};
+
+use crate::util;
 
 pub mod ip_api;
 
 pub trait CurrentLocation {
-    fn current_location(&self) -> Result<Location, Box<dyn Error>>;
+    fn current_location(&self) -> util::Result<Location>;
 }
 
 #[derive(Default, Debug, Serialize, Deserialize)]

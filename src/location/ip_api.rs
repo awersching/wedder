@@ -1,4 +1,4 @@
-use std::error::Error;
+use log::debug;
 
 use crate::location::CurrentLocation;
 use crate::location::Location;
@@ -7,8 +7,9 @@ use crate::util;
 pub struct IpApi {}
 
 impl CurrentLocation for IpApi {
-    fn current_location(&self) -> Result<Location, Box<dyn Error>> {
+    fn current_location(&self) -> util::Result<Location> {
         let url = "http://ip-api.com/json/?fields=lat,lon";
+        debug!("Querying {}...", url);
         let body = util::get_retry(url, "No location").text()?;
 
         let location: Location = serde_json::from_str(&body)?;
@@ -17,8 +18,7 @@ impl CurrentLocation for IpApi {
 }
 
 impl IpApi {
-    #[allow(clippy::new_ret_no_self)]
-    pub fn new() -> impl CurrentLocation {
+    pub fn new() -> Self {
         IpApi {}
     }
 }
