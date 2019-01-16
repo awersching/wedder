@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Improve debug output
+
 ## 1.0.1 - 2019-01-14
 
 - Add config defaults (&rarr; config file is optional)

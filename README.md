@@ -59,6 +59,7 @@ The example config uses [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts) to
 You can install the complete Nerd Fonts package but I wouldn't recommend it, as it is multiple GBs in size.
 A better option is to pick a single font like [Noto Sans](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Noto/Sans/complete/Noto%20Sans%20Regular%20Nerd%20Font%20Complete.ttf) and install it manually.
 For Linux this means placing the `.ttf` file in `/usr/share/fonts/TTF`.
+There is also an [AUR package](https://aur.archlinux.org/packages/nerd-fonts-noto-sans-regular-complete/) for this single font.
 
 Another option is using the [Weather Icons font](https://github.com/erikflowers/weather-icons) which is also included in Nerd Fonts.
 If you are using other fonts however like [Font Awesome](https://github.com/FortAwesome/Font-Awesome) there will most likely be conflicts.

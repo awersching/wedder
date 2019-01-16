@@ -134,7 +134,6 @@ impl Config {
         }
     }
 
-    #[allow(clippy::needless_pass_by_value)]
     fn malformed_config<E: Display>(err: E) -> ! {
         error!("Error parsing config file: {}", err.to_string());
         println!("Malformed config file");

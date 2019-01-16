@@ -12,8 +12,6 @@ use structopt::StructOpt;
 use crate::app::App;
 use crate::config::cmd_args::CmdArgs;
 use crate::config::Config;
-use crate::location::ip_api::IpApi;
-use crate::weather::providers::owm::OpenWeatherMap;
 
 mod config;
 mod weather;
@@ -26,11 +24,7 @@ fn main() {
     handle_args(&args);
     let config = create_config(args);
 
-    let app = App::new(
-        config,
-        IpApi::new(),
-        OpenWeatherMap::new(),
-    );
+    let app = App::new(config);
     if let Err(err) = app.run() {
         error!("{}", err.to_string())
     }

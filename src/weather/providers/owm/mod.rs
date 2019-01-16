@@ -14,7 +14,7 @@ pub struct OpenWeatherMap {}
 impl CurrentWeather for OpenWeatherMap {
     fn current_weather(&self, location: &Location, api_key: &str) -> util::Result<Weather> {
         let url = self.build_url(location, api_key);
-        let body = util::get_retry(&url, "No connection")
+        let body = util::get_retry(&url)
             .text().unwrap();
         let response: Response = serde_json::from_str(&body)?;
         debug!("Parsed response {:?}", response);

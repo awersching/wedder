@@ -8,8 +8,7 @@ use crate::weather::Weather;
 pub mod owm;
 
 pub trait CurrentWeather {
-    fn current_weather(&self, location: &Location, api_key: &str)
-                       -> util::Result<Weather>;
+    fn current_weather(&self, location: &Location, api_key: &str) -> util::Result<Weather>;
 }
 
 #[derive(Debug, Serialize, Deserialize, EnumString)]

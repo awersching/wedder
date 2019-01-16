@@ -5,23 +5,25 @@ use log::debug;
 
 use crate::config::Config;
 use crate::location::CurrentLocation;
+use crate::location::ip_api::IpApi;
 use crate::location::Location;
 use crate::location::LocationProvider;
 use crate::util;
 use crate::weather::providers::CurrentWeather;
+use crate::weather::providers::owm::OpenWeatherMap;
 
-pub struct App<T: CurrentLocation, U: CurrentWeather> {
+pub struct App {
     config: Config,
-    location_provider: T,
-    weather_provider: U,
+    location_provider: Box<dyn CurrentLocation>,
+    weather_provider: Box<dyn CurrentWeather>,
 }
 
-impl<T: CurrentLocation, U: CurrentWeather> App<T, U> {
-    pub fn new(config: Config, location_provider: T, weather_provider: U) -> Self {
+impl App {
+    pub fn new(config: Config) -> Self {
         App {
             config,
-            location_provider,
-            weather_provider,
+            location_provider: Box::new(IpApi::new()),
+            weather_provider: Box::new(OpenWeatherMap::new()),
         }
     }
 

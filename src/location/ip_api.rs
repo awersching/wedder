@@ -10,7 +10,7 @@ impl CurrentLocation for IpApi {
     fn current_location(&self) -> util::Result<Location> {
         let url = "http://ip-api.com/json/?fields=lat,lon";
         debug!("Querying {}...", url);
-        let body = util::get_retry(url, "No location").text()?;
+        let body = util::get_retry(url).text()?;
 
         let location: Location = serde_json::from_str(&body)?;
         Ok(location)
