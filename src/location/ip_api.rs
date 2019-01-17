@@ -8,7 +8,7 @@ pub struct IpApi {}
 
 impl CurrentLocation for IpApi {
     fn current_location(&self) -> util::Result<Location> {
-        let url = "http://ip-api.com/json/?fields=lat,lon";
+        let url = "http://ip-api.com/json/?fields=city,lat,lon";
         debug!("Querying {}...", url);
         let body = util::get_retry(url).text()?;
 

@@ -12,6 +12,8 @@ use structopt::StructOpt;
 use crate::app::App;
 use crate::config::cmd_args::CmdArgs;
 use crate::config::Config;
+use crate::location::CurrentLocation;
+use crate::location::ip_api::IpApi;
 
 mod config;
 mod weather;
@@ -39,6 +41,19 @@ fn handle_args(args: &CmdArgs) {
     if args.print_default_config_path {
         println!("{}", Config::default_config_path().unwrap().to_str().unwrap());
         process::exit(0);
+    }
+
+    if args.print_current_city {
+        match IpApi::new().current_location() {
+            Ok(location) => {
+                println!("{}", location.city);
+                process::exit(0)
+            }
+            Err(_) => {
+                println!("Couldn't get current location");
+                process::exit(1)
+            }
+        }
     }
 }
 

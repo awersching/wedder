@@ -56,6 +56,9 @@ pub struct CmdArgs {
     #[structopt(long = "location-provider")]
     pub location_provider: Option<LocationProvider>,
     /// Latitude of the location to display the weather status for
+    #[structopt(long = "print-current-city")]
+    pub print_current_city: bool,
+    /// Latitude of the location to display the weather status for
     #[structopt(long)]
     pub lat: Option<f32>,
     /// Longitude of the location to display the weather status for

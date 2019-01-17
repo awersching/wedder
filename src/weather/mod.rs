@@ -20,28 +20,22 @@ impl Weather {
     }
 
     pub fn format(&self, format: &str, icons: &HashMap<String, String>) -> String {
-        let mut formatted = format.to_string();
-
         let icon = icons.get(&self.weather_condition.to_string())
             .unwrap();
-        formatted = formatted.replace(
+
+        format.to_string().replace(
             "<icon>",
             icon,
-        );
-
-        formatted = formatted.replace(
+        ).replace(
             "<temperature_celsius>",
             &self.temp_to_celsius().to_string(),
-        );
-        formatted = formatted.replace(
+        ).replace(
             "<temperature_fahrenheit>",
             &self.temp_to_fahrenheit().to_string(),
-        );
-        formatted = formatted.replace(
+        ).replace(
             "<temperature_kelvin>",
             &(self.kelvin.round() as i32).to_string(),
-        );
-        formatted
+        )
     }
 
     fn temp_to_celsius(&self) -> i32 {

@@ -5,3 +5,6 @@ type = custom/script
 exec = wedder
 exec-if = ping openweathermap.org -c 1
 tail = true
+click-left = xdg-open "https://google.de/search?q=weather"
+# or using the city determined by wedder:
+#click-left = xdg-open "https://google.de/search?q=weather+$(wedder --print-current-city)"

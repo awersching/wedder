@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add polybar config to open weather forecast in browser on module click
+- Add option to print current city
 - Improve debug output
 
 ## 1.0.1 - 2019-01-14
