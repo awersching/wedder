@@ -4,13 +4,14 @@ use crate::location::CurrentLocation;
 use crate::location::Location;
 use crate::util;
 
-pub struct IpApi {}
+pub struct IpApi;
+
+const URL: &str = "http://ip-api.com/json/?fields=city,lat,lon";
 
 impl CurrentLocation for IpApi {
     fn current_location(&self) -> util::Result<Location> {
-        let url = "http://ip-api.com/json/?fields=city,lat,lon";
-        debug!("Querying {}...", url);
-        let body = util::get_retry(url).text()?;
+        debug!("Querying {}...", URL);
+        let body = util::get_retry(URL).text()?;
 
         let location: Location = serde_json::from_str(&body)?;
         Ok(location)
@@ -19,6 +20,6 @@ impl CurrentLocation for IpApi {
 
 impl IpApi {
     pub fn new() -> Self {
-        IpApi {}
+        IpApi
     }
 }

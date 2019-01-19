@@ -1,5 +1,6 @@
 use serde::Deserialize;
 use serde::Serialize;
+use strum_macros::EnumString;
 
 use crate::location::Location;
 use crate::util;

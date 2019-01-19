@@ -4,6 +4,7 @@ use crate::weather::weather_condition::WeatherCondition;
 
 pub mod providers;
 pub mod weather_condition;
+pub mod error;
 
 #[derive(Debug)]
 pub struct Weather {

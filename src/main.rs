@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate strum_macros;
-
 use std::process;
 
 use log::debug;
@@ -39,7 +36,7 @@ fn handle_args(args: &CmdArgs) {
     }
 
     if args.print_default_config_path {
-        println!("{}", Config::default_config_path().unwrap().to_str().unwrap());
+        println!("{}", config::file::default_config_path().unwrap().to_str().unwrap());
         process::exit(0);
     }
 
