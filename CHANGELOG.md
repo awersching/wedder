@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- BREAKING: Rename icon names in config to snake case (e.g. ClearSky &rarr; clear_sky)
+- BREAKING: rename icon names in config to snake case (e.g. ClearSky &rarr; clear_sky)
+- Fix some icons having different sizes
 - Add polybar config to open weather forecast in browser on module click
 - Add option to print current city
 - Improve debug output

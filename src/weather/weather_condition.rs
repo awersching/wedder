@@ -23,11 +23,11 @@ pub fn default_icons() -> HashMap<String, String> {
 
     icons.insert(WeatherCondition::ClearSky, "");
     icons.insert(WeatherCondition::FewClouds, "");
-    icons.insert(WeatherCondition::Clouds, "摒");
+    icons.insert(WeatherCondition::Clouds, "");
     icons.insert(WeatherCondition::ManyClouds, "");
     icons.insert(WeatherCondition::RainSun, "");
     icons.insert(WeatherCondition::Rain, "");
-    icons.insert(WeatherCondition::HeavyRain, "歹");
+    icons.insert(WeatherCondition::HeavyRain, "");
     icons.insert(WeatherCondition::Thunderstorm, "");
     icons.insert(WeatherCondition::Snow, "");
     icons.insert(WeatherCondition::Mist, "");
