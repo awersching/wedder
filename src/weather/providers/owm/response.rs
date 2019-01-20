@@ -1,13 +1,13 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub struct Response {
-    pub weather: Vec<Weather>,
-    pub main: Main,
+pub struct OwmResponse {
+    pub weather: Vec<OwmWeather>,
+    pub main: OwmMain,
 }
 
 #[derive(Debug, Deserialize)]
-pub struct Weather {
+pub struct OwmWeather {
     pub id: i32,
     pub main: String,
     pub description: String,
@@ -15,6 +15,6 @@ pub struct Weather {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct Main {
+pub struct OwmMain {
     pub temp: f32,
 }

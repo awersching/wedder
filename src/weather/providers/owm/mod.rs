@@ -4,7 +4,8 @@ use crate::location::Location;
 use crate::util;
 use crate::weather::error::UndefinedCondition;
 use crate::weather::providers::CurrentWeather;
-use crate::weather::providers::owm::response::Response;
+use crate::weather::providers::owm::response::OwmResponse;
+use crate::weather::providers::owm::response::OwmWeather;
 use crate::weather::Weather;
 use crate::weather::weather_condition::WeatherCondition;
 
@@ -19,11 +20,16 @@ impl CurrentWeather for OpenWeatherMap {
         let url = self.build_url(location, api_key);
         let body = util::get_retry(&url)
             .text().unwrap();
-        let response: Response = serde_json::from_str(&body)?;
+        let response: OwmResponse = serde_json::from_str(&body)?;
         debug!("Parsed response {:?}", response);
 
+        let weather_condition = if response.weather.len() > 1 {
+            self.combined_weather_condition(&response.weather)?
+        } else {
+            self.weather_condition(&response.weather[0])?
+        };
         Ok(Weather::new(
-            self.parse_weather_condition(&response)?,
+            weather_condition,
             response.main.temp,
         ))
     }
@@ -46,8 +52,8 @@ impl OpenWeatherMap {
         url
     }
 
-    fn parse_weather_condition(&self, response: &Response) -> util::Result<WeatherCondition> {
-        let id = response.weather[0].id;
+    fn weather_condition(&self, owm_weather: &OwmWeather) -> util::Result<WeatherCondition> {
+        let id = owm_weather.id;
         let first_digit = id.to_string()[0..1].parse::<i32>()?;
 
         match first_digit {
@@ -79,5 +85,23 @@ impl OpenWeatherMap {
 
             _ => Err(UndefinedCondition.into())
         }
+    }
+
+    fn combined_weather_condition(&self, owm_weather: &[OwmWeather]) -> util::Result<WeatherCondition> {
+        let condition1 = self.weather_condition(&owm_weather[0])?;
+        let condition2 = self.weather_condition(&owm_weather[1])?;
+
+        let sun = condition1 == WeatherCondition::ClearSky ||
+            condition2 == WeatherCondition::ClearSky;
+        let rain = condition1 == WeatherCondition::Rain ||
+            condition2 == WeatherCondition::Rain ||
+            condition1 == WeatherCondition::HeavyRain ||
+            condition2 == WeatherCondition::HeavyRain;
+
+        Ok(if rain && sun {
+            WeatherCondition::RainSun
+        } else {
+            condition1
+        })
     }
 }
