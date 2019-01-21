@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.2 - 2019-01-21
 
 - BREAKING: rename icon names in config to snake case (e.g. ClearSky &rarr; clear_sky)
 - Improve weather parsing
