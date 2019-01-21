@@ -14,7 +14,7 @@ pub struct Weather {
 
 impl Weather {
     pub fn new(weather_condition: WeatherCondition, kelvin: f32) -> Self {
-        Weather {
+        Self {
             weather_condition,
             kelvin,
         }

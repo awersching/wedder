@@ -2,5 +2,7 @@ all:
 	cargo build --release
 
 lint:
-	cargo build
 	cargo clippy
+
+lint-all:
+	cargo clippy -- -W clippy::pedantic

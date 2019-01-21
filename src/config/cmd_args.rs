@@ -32,7 +32,7 @@ pub struct CmdArgs {
     ///
     /// Default: 300
     #[structopt(short, long)]
-    pub interval: Option<i32>,
+    pub interval: Option<u64>,
 
     /// The provider to use for pulling weather updates
     ///

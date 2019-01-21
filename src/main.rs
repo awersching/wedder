@@ -46,8 +46,9 @@ fn handle_args(args: &CmdArgs) {
                 println!("{}", location.city);
                 process::exit(0)
             }
-            Err(_) => {
+            Err(err) => {
                 println!("Couldn't get current location");
+                error!("{}", err.to_string());
                 process::exit(1)
             }
         }

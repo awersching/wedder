@@ -20,7 +20,7 @@ pub struct App {
 
 impl App {
     pub fn new(config: Config) -> Self {
-        App {
+        Self {
             config,
             location_provider: Box::new(IpApi::new()),
             weather_provider: Box::new(OpenWeatherMap::new()),
@@ -39,7 +39,7 @@ impl App {
             }
 
             debug!("Sleeping for {}s...", self.config.interval.to_string());
-            thread::sleep(time::Duration::from_secs(self.config.interval as u64));
+            thread::sleep(time::Duration::from_secs(self.config.interval));
         }
     }
 

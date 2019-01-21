@@ -18,7 +18,7 @@ pub struct Config {
     #[serde(default = "default_format")]
     pub format: String,
     #[serde(default = "default_interval")]
-    pub interval: i32,
+    pub interval: u64,
     #[serde(default)]
     pub weather: WeatherConfig,
     #[serde(default)]
@@ -49,7 +49,7 @@ impl Config {
         file::load_config(&config_path.unwrap())
     }
 
-    pub fn from_path(path: &str) -> Config {
+    pub fn from_path(path: &str) -> Self {
         let config_path = [path].iter().collect();
         file::load_config(&config_path)
     }
@@ -83,7 +83,7 @@ impl Config {
 
 impl Default for Config {
     fn default() -> Self {
-        Config {
+        Self {
             format: default_format(),
             interval: default_interval(),
             weather: WeatherConfig::default(),
@@ -99,6 +99,6 @@ fn default_format() -> String {
 }
 
 /// Remove when serde supports default literals
-fn default_interval() -> i32 {
+fn default_interval() -> u64 {
     300
 }
