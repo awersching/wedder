@@ -57,7 +57,7 @@ fn handle_args(args: &CmdArgs) {
 
 fn create_config(args: CmdArgs) -> Config {
     let mut config = match &args.config_file {
-        Some(path) => Config::from_path(path),
+        Some(path) => Config::from_path(&[path].iter().collect()),
         None => Config::from_default_path()
     };
     debug!("Read config {:?}", config);
@@ -72,6 +72,8 @@ fn create_config(args: CmdArgs) -> Config {
 }
 
 fn init_logger() {
-    TermLogger::init(LevelFilter::Debug, simplelog::Config::default())
-        .unwrap();
+    if let Err(err) = TermLogger::init(LevelFilter::Debug,
+                                       simplelog::Config::default()) {
+        println!("Failed to initialize logger: {}", err.to_string())
+    }
 }

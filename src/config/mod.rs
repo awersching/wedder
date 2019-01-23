@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::path::PathBuf;
+use std::process;
 
 use serde::{Deserialize, Serialize};
 
@@ -45,13 +47,22 @@ pub struct LocationConfig {
 
 impl Config {
     pub fn from_default_path() -> Self {
-        let config_path = file::default_config_path();
-        file::load_config(&config_path.unwrap())
+        let default_path = if let Some(path) = file::default_config_path() {
+            path
+        } else {
+            println!("Erroneous default config path");
+            process::exit(1)
+        };
+        Self::from_path(&default_path)
     }
 
-    pub fn from_path(path: &str) -> Self {
-        let config_path = [path].iter().collect();
-        file::load_config(&config_path)
+    pub fn from_path(path: &PathBuf) -> Self {
+        if let Some(config) = file::load_config(&path) {
+            config
+        } else {
+            println!("Erroneous config path");
+            process::exit(1)
+        }
     }
 
     pub fn merge(&mut self, args: CmdArgs) {

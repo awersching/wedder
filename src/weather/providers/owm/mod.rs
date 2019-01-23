@@ -18,8 +18,7 @@ const BASE_URL: &str = "http://api.openweathermap.org/data/2.5";
 impl CurrentWeather for OpenWeatherMap {
     fn current_weather(&self, location: &Location, api_key: &str) -> util::Result<Weather> {
         let url = self.build_url(location, api_key);
-        let body = util::get_retry(&url)
-            .text().unwrap();
+        let body = util::get_retry(&url).text()?;
         let response: OwmResponse = serde_json::from_str(&body)?;
         debug!("Parsed response {:?}", response);
 
