@@ -13,7 +13,7 @@ use crate::weather::weather_condition;
 pub mod cmd_args;
 pub mod file;
 
-pub const RETRY_TIMEOUT: u64 = 5;
+pub const RETRY_TIMEOUT: u64 = 15;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {

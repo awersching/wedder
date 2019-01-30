@@ -35,22 +35,22 @@ impl App {
             } else {
                 debug!("Pulling current location...");
                 let current_location = self.location_provider.current_location()?;
+                debug!("{:?}", current_location);
                 self.print_current_weather(&current_location)?;
             }
 
-            debug!("Sleeping for {}s...", self.config.interval.to_string());
+            debug!("Sleeping for {}s...", self.config.interval);
             thread::sleep(time::Duration::from_secs(self.config.interval));
         }
     }
 
     fn print_current_weather(&self, location: &Location) -> util::Result<()> {
-        debug!("{:?}", location);
         debug!("Pulling current weather...");
         let current_weather = self.weather_provider
-            .current_weather(location, &self.config.weather.api_key)?;
-        debug!("{:?}", current_weather);
+            .current_weather(location, &self.config.weather.api_key)?
+            .format(&self.config.format, &self.config.icons);
 
-        println!("{}", current_weather.format(&self.config.format, &self.config.icons));
+        println!("{}", current_weather);
         Ok(())
     }
 }
