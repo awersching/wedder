@@ -35,12 +35,12 @@ fn handle_args(args: &CmdArgs) {
         debug!("Read args {:?}", args);
     }
 
-    if args.print_default_config_path {
+    if args.default_config_path {
         println!("{}", config::file::default_config_path().unwrap().to_str().unwrap());
         process::exit(0);
     }
 
-    if args.print_current_city {
+    if args.current_city {
         match IpApi::new().current_location() {
             Ok(location) => {
                 println!("{}", location.city);

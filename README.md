@@ -29,7 +29,7 @@ Because the OpenWeatherMap API is restricted, you have to get an API key by [cre
 After the API key is activated you can then pass it to wedder using
 
 ```bash
-wedder --weather-api-key <weather_api_key>
+wedder -k <weather_api_key>
 ```
 
 For more info use

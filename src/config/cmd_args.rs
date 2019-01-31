@@ -11,8 +11,8 @@ pub struct CmdArgs {
     pub debug: bool,
 
     /// Prints the default config path
-    #[structopt(short, long = "print-default-config-path")]
-    pub print_default_config_path: bool,
+    #[structopt(short = "p", long = "default-config-path")]
+    pub default_config_path: bool,
     /// Path to an alternative config file
     #[structopt(short, long = "config-file")]
     pub config_file: Option<String>,
@@ -40,10 +40,10 @@ pub struct CmdArgs {
     /// OpenWeatherMap
     ///
     /// Default: OpenWeatherMap
-    #[structopt(long = "weather-provider")]
+    #[structopt(short, long = "weather-provider")]
     pub weather_provider: Option<WeatherProvider>,
     /// The API key for the corresponding weather provider
-    #[structopt(long = "weather-api-key")]
+    #[structopt(short = "k", long = "weather-api-key")]
     pub weather_api_key: Option<String>,
 
     /// The provider to use for geolocation
@@ -53,11 +53,11 @@ pub struct CmdArgs {
     /// Manual
     ///
     /// Default: Ip
-    #[structopt(long = "location-provider")]
+    #[structopt(short, long = "location-provider")]
     pub location_provider: Option<LocationProvider>,
-    /// Latitude of the location to display the weather status for
-    #[structopt(long = "print-current-city")]
-    pub print_current_city: bool,
+    /// Prints the current city
+    #[structopt(short = "C", long = "current-city")]
+    pub current_city: bool,
     /// Latitude of the location to display the weather status for
     #[structopt(long)]
     pub lat: Option<f32>,
