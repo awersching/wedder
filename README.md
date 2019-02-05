@@ -17,7 +17,7 @@ Install the [AUR package](https://aur.archlinux.org/packages/wedder-git/) with y
 
 Compile the source code:
 
-> `make`
+> `make build`
 
 and place the executable in your path.
 

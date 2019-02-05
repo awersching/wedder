@@ -1,4 +1,6 @@
-all:
+all: lint build
+
+build:
 	cargo build --release
 
 lint:

@@ -1,0 +1,9 @@
+language: rust
+
+notifications:
+  email: false
+
+install:
+  - rustup component add clippy
+script:
+  - make
