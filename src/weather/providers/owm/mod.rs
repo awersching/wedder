@@ -1,3 +1,5 @@
+use std::process;
+
 use log::debug;
 
 use crate::location::Location;
@@ -17,10 +19,7 @@ const BASE_URL: &str = "http://api.openweathermap.org/data/2.5";
 
 impl CurrentWeather for OpenWeatherMap {
     fn current_weather(&self, location: &Location, api_key: &str) -> util::Result<Weather> {
-        let url = self.build_url(location, api_key);
-        let body = util::get_retry(&url).text()?;
-        let response: OwmResponse = serde_json::from_str(&body)?;
-        debug!("Parsed response {:?}", response);
+        let response = self.query(location, api_key)?;
 
         let weather_condition = if response.weather.len() > 1 {
             self.combined_weather_condition(&response.weather)?
@@ -39,7 +38,7 @@ impl OpenWeatherMap {
         OpenWeatherMap
     }
 
-    fn build_url(&self, location: &Location, api_key: &str) -> String {
+    fn query(&self, location: &Location, api_key: &str) -> util::Result<OwmResponse> {
         let url = format!(
             "{}/weather?lat={}&lon={}&APPID={}",
             BASE_URL,
@@ -48,7 +47,17 @@ impl OpenWeatherMap {
             api_key
         );
         debug!("Built URL {}", url);
-        url
+
+        let mut body = util::get_retry(&url);
+        debug!("Received response {:?}", body);
+        if body.status().as_u16() == 401 {
+            println!("Invalid/unauthorized API key");
+            process::exit(0)
+        }
+
+        let response: OwmResponse = serde_json::from_str(&body.text()?)?;
+        debug!("Parsed response {:?}", response);
+        Ok(response)
     }
 
     fn weather_condition(&self, owm_weather: &OwmWeather) -> util::Result<WeatherCondition> {
