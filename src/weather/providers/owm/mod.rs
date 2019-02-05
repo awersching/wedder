@@ -52,7 +52,7 @@ impl OpenWeatherMap {
         debug!("Received response {:?}", body);
         if body.status().as_u16() == 401 {
             println!("Invalid/unauthorized API key");
-            process::exit(0)
+            process::exit(1)
         }
 
         let response: OwmResponse = serde_json::from_str(&body.text()?)?;
