@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.3 - 2019-02-06
 
 - Improve error handling
 - Improve CLI arguments
