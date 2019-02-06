@@ -19,14 +19,18 @@ mod location;
 mod app;
 
 fn main() {
+    if let Err(err) = run() {
+        println!("Error: {}", err.to_string())
+    }
+}
+
+fn run() -> util::Result<()> {
     let args = CmdArgs::from_args();
     handle_args(&args);
     let config = create_config(args);
 
     let app = App::new(config);
-    if let Err(err) = app.run() {
-        error!("{}", err.to_string())
-    }
+    app.run()
 }
 
 fn handle_args(args: &CmdArgs) {

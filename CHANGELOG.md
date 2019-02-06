@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Improve error handling
 - Improve CLI arguments
 
 ## 1.0.2 - 2019-01-21
