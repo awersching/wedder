@@ -1,9 +1,29 @@
 language: rust
 
+env:
+  global:
+    - PROJECT_NAME=wedder
 notifications:
   email: false
+
+matrix:
+  include:
+    - os: linux
+      rust: stable
+      env: TARGET=x86_64-unknown-linux-gnu
 
 install:
   - rustup component add clippy
 script:
   - make
+
+before_deploy:
+  - make ci
+deploy:
+  provider: releases
+  api_key:
+    secure: kkYY+fxfqBO1t9Z9x9YsPCcuo3vN5HWd0j67gOA7WhkatX4zGax1dwY7rs/fQsEjv43j4DYBuy09H4r8bT4V8R3mvxJx4BNksSC1N2YxuAFct0g788escmtdMMAabKWyie/pfN0RsALDgGhaT1ngwqJkw8mHrK1eetIHE/YhJmOVfnaapstP9GA3dQunbYnTa5YOFhWmwp+nH1vM4tlg9+HRPsUIGCjT5FEiTxwbIp/tyb0SFTrqAJWdD5n5Qkd0F2RqC4HC+yqTj6PANCYvx34HYSJVtBZLddlKNaR7w1F0drT7wXxlBLn+1opPR6qdNmK3G1I6EpejaMxnyNHGvggMObljUmqSv02190PZBHSTMEuw/taJ1cRBGYlGjF+kTQRew6LN/XoDtvsM9EY6i0SIAFa/CbGfczNl44f8I4VYW13E24szd6g3v9baJLhpoqcWiMqXopNn1VQfaR+hI+LGDouEJ95jtKeMt8h3Bp5PRBxQYg9fMTv+6PdUKoCvi6mOQr1bPeh8B2vIkuiGpATMx6aQMzsChx5inhZXBIYqXIgE8G/at8+4Je2Sn31oqwpn7hhiORTs9B/yU6a8NR2NpyVmS4BB/YN4v6y+6sps3sYBuDQF2llpZeYc2rmPHpGLzb17Jv4ZMnQvcGqr16nTehh7iLpr7gD8/I73ysU=
+  skip_cleanup: true
+  file: $PROJECT_NAME-$TRAVIS_TAG-$TARGET
+  on:
+    tags: true
