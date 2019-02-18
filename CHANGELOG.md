@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4 - 2019-02-18
+
+- Add binary release
+
 ## 1.0.3 - 2019-02-06
 
 - Improve error handling
