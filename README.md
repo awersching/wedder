@@ -11,7 +11,11 @@ The current weather is pulled from [OpenWeatherMap](https://openweathermap.org/)
 
 ### AUR package
 
-Install the [AUR package](https://aur.archlinux.org/packages/wedder-git/) with your package manager of choice.
+Install the [stable](https://aur.archlinux.org/packages/wedder/) or [development](https://aur.archlinux.org/packages/wedder-git/) AUR package with your package manager of choice.
+
+### Download binary
+
+Download a binary from the [releases page](https://github.com/awersching/wedder/releases).
 
 ### Compile from source
 
