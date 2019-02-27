@@ -8,7 +8,8 @@ use crate::location::CurrentLocation;
 use crate::location::ip_api::IpApi;
 use crate::location::Location;
 use crate::location::LocationProvider;
-use crate::util;
+use crate::util::Result;
+use crate::weather::Formatter;
 use crate::weather::providers::CurrentWeather;
 use crate::weather::providers::owm::OpenWeatherMap;
 
@@ -27,10 +28,10 @@ impl App {
         }
     }
 
-    pub fn run(&self) -> util::Result<()> {
+    pub fn run(&self) -> Result<()> {
         loop {
             if self.config.location.provider == LocationProvider::Manual {
-                debug!("Using location from config file");
+                debug!("Using specified location: {:?}", &self.config.location.location);
                 self.print_current_weather(&self.config.location.location)?;
             } else {
                 debug!("Pulling current location...");
@@ -44,13 +45,17 @@ impl App {
         }
     }
 
-    fn print_current_weather(&self, location: &Location) -> util::Result<()> {
+    fn print_current_weather(&self, location: &Location) -> Result<()> {
         debug!("Pulling current weather...");
         let current_weather = self.weather_provider
-            .current_weather(location, &self.config.weather.api_key)?
-            .format(&self.config.format, &self.config.icons);
+            .current_weather(location, &self.config.weather.api_key)?;
+        let formatted = Formatter::new(
+            &self.config.format,
+            current_weather,
+            &self.config.icons,
+        ).format();
 
-        println!("{}", current_weather);
+        println!("{}", formatted);
         Ok(())
     }
 }

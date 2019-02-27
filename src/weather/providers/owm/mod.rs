@@ -4,41 +4,19 @@ use log::debug;
 
 use crate::location::Location;
 use crate::util;
-use crate::weather::error::UndefinedCondition;
+use crate::util::Result;
 use crate::weather::providers::CurrentWeather;
-use crate::weather::providers::owm::response::OwmResponse;
-use crate::weather::providers::owm::response::OwmWeather;
+use crate::weather::providers::owm::response::Response;
 use crate::weather::Weather;
-use crate::weather::weather_condition::WeatherCondition;
 
 mod response;
 
-pub struct OpenWeatherMap;
-
 const BASE_URL: &str = "http://api.openweathermap.org/data/2.5";
 
+pub struct OpenWeatherMap;
+
 impl CurrentWeather for OpenWeatherMap {
-    fn current_weather(&self, location: &Location, api_key: &str) -> util::Result<Weather> {
-        let response = self.query(location, api_key)?;
-
-        let weather_condition = if response.weather.len() > 1 {
-            self.combined_weather_condition(&response.weather)?
-        } else {
-            self.weather_condition(&response.weather[0])?
-        };
-        Ok(Weather::new(
-            weather_condition,
-            response.main.temp,
-        ))
-    }
-}
-
-impl OpenWeatherMap {
-    pub fn new() -> Self {
-        OpenWeatherMap
-    }
-
-    fn query(&self, location: &Location, api_key: &str) -> util::Result<OwmResponse> {
+    fn current_weather(&self, location: &Location, api_key: &str) -> Result<Box<dyn Weather>> {
         let url = format!(
             "{}/weather?lat={}&lon={}&APPID={}",
             BASE_URL,
@@ -46,70 +24,23 @@ impl OpenWeatherMap {
             location.lon,
             api_key
         );
-        debug!("Built URL {}", url);
 
-        let mut body = util::get_retry(&url);
-        debug!("Received response {:?}", body);
-        if body.status().as_u16() == 401 {
+        debug!("Querying {} ...", url);
+        let mut http_response = util::get_retry(&url);
+        debug!("HTTP {}", http_response.status().to_string());
+        if http_response.status().as_u16() == 401 {
             println!("Invalid/unauthorized API key");
             process::exit(1)
         }
 
-        let response: OwmResponse = serde_json::from_str(&body.text()?)?;
-        debug!("Parsed response {:?}", response);
-        Ok(response)
+        let response: Response = serde_json::from_str(&http_response.text()?)?;
+        debug!("{:?}", response);
+        Ok(Box::new(response))
     }
+}
 
-    fn weather_condition(&self, owm_weather: &OwmWeather) -> util::Result<WeatherCondition> {
-        let id = owm_weather.id;
-        let first_digit = id.to_string()[0..1].parse::<i32>()?;
-
-        match first_digit {
-            2 => Ok(WeatherCondition::Thunderstorm),
-
-            // rain
-            3 => match id {
-                300 | 301 | 310 => Ok(WeatherCondition::Rain),
-                302 | 311 | 312 | 313 | 314 | 321 => Ok(WeatherCondition::HeavyRain),
-                _ => Err(UndefinedCondition.into())
-            },
-            5 => match id {
-                500 | 520 => Ok(WeatherCondition::Rain),
-                501 | 502 | 503 | 504 | 511 | 521 | 522 | 531 => Ok(WeatherCondition::HeavyRain),
-                _ => Err(UndefinedCondition.into())
-            },
-
-            6 => Ok(WeatherCondition::Snow),
-            7 => Ok(WeatherCondition::Mist),
-
-            // clear sky and clouds
-            8 => match id {
-                800 => Ok(WeatherCondition::ClearSky),
-                801 => Ok(WeatherCondition::FewClouds),
-                802 => Ok(WeatherCondition::Clouds),
-                803 | 804 => Ok(WeatherCondition::ManyClouds),
-                _ => Err(UndefinedCondition.into())
-            },
-
-            _ => Err(UndefinedCondition.into())
-        }
-    }
-
-    fn combined_weather_condition(&self, owm_weather: &[OwmWeather]) -> util::Result<WeatherCondition> {
-        let condition1 = self.weather_condition(&owm_weather[0])?;
-        let condition2 = self.weather_condition(&owm_weather[1])?;
-
-        let sun = condition1 == WeatherCondition::ClearSky ||
-            condition2 == WeatherCondition::ClearSky;
-        let rain = condition1 == WeatherCondition::Rain ||
-            condition2 == WeatherCondition::Rain ||
-            condition1 == WeatherCondition::HeavyRain ||
-            condition2 == WeatherCondition::HeavyRain;
-
-        Ok(if rain && sun {
-            WeatherCondition::RainSun
-        } else {
-            condition1
-        })
+impl OpenWeatherMap {
+    pub fn new() -> Self {
+        OpenWeatherMap
     }
 }

@@ -1,12 +1,12 @@
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
-use crate::util;
+use crate::util::Result;
 
 pub mod ip_api;
 
 pub trait CurrentLocation {
-    fn current_location(&self) -> util::Result<Location>;
+    fn current_location(&self) -> Result<Location>;
 }
 
 #[derive(Default, Debug, Serialize, Deserialize)]

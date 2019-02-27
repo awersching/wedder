@@ -18,4 +18,4 @@ directories = "1.0.2"
 reqwest = "0.9.8"
 
 log = "0.4.6"
-simplelog = "0.5.3"
+log4rs = "0.8.1"

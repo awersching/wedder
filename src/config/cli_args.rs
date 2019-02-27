@@ -1,11 +1,20 @@
+use std::process;
+
+use log::debug;
+use log::error;
 use structopt::StructOpt;
 
+use crate::config;
+use crate::location::CurrentLocation;
+use crate::location::ip_api::IpApi;
 use crate::location::LocationProvider;
+use crate::logger;
+use crate::util::Result;
 use crate::weather::providers::WeatherProvider;
 
 #[derive(Debug, StructOpt)]
 #[structopt()]
-pub struct CmdArgs {
+pub struct CliArgs {
     /// Enables verbose debug output
     #[structopt(short, long)]
     pub debug: bool,
@@ -64,4 +73,37 @@ pub struct CmdArgs {
     /// Longitude of the location to display the weather status for
     #[structopt(long)]
     pub lon: Option<f32>,
+}
+
+impl CliArgs {
+    pub fn apply(&self) -> Result<()> {
+        if self.debug {
+            logger::init()?;
+            debug!("Read {:?}", self);
+        }
+
+        if self.default_config_path {
+            let path = config::file::default_config_path()
+                .ok_or("Couldn't get default config path")?
+                .to_str().map(|string| string.to_string())
+                .ok_or("Couldn't parse default config path")?;
+            println!("{}", path);
+            process::exit(0);
+        }
+
+        if self.current_city {
+            match IpApi::new().current_location() {
+                Ok(location) => {
+                    println!("{}", location.city);
+                    process::exit(0)
+                }
+                Err(err) => {
+                    println!("Couldn't get current location");
+                    error!("{}", err.to_string());
+                    process::exit(1)
+                }
+            }
+        }
+        Ok(())
+    }
 }

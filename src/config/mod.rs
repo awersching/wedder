@@ -2,16 +2,17 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 use std::process;
 
+use log::debug;
 use serde::{Deserialize, Serialize};
 
-use crate::config::cmd_args::CmdArgs;
+use crate::config::cli_args::CliArgs;
 use crate::location::Location;
 use crate::location::LocationProvider;
 use crate::weather::providers::WeatherProvider;
 use crate::weather::weather_condition;
 
-pub mod cmd_args;
-pub mod file;
+pub mod cli_args;
+mod file;
 
 pub const RETRY_TIMEOUT: u64 = 15;
 
@@ -46,7 +47,23 @@ pub struct LocationConfig {
 }
 
 impl Config {
-    pub fn from_default_path() -> Self {
+    pub fn new(args: CliArgs) -> Self {
+        let mut config = match &args.config_file {
+            Some(path) => Self::from_path(&[path].iter().collect()),
+            None => Self::from_default_path()
+        };
+        debug!("Read {:?}", config);
+        config.merge(args);
+        debug!("Merged config with args into {:?}", config);
+
+        if config.weather.api_key == "" {
+            println!("No API key");
+            process::exit(1)
+        }
+        config
+    }
+
+    fn from_default_path() -> Self {
         let default_path = if let Some(path) = file::default_config_path() {
             path
         } else {
@@ -56,7 +73,7 @@ impl Config {
         Self::from_path(&default_path)
     }
 
-    pub fn from_path(path: &PathBuf) -> Self {
+    fn from_path(path: &PathBuf) -> Self {
         if let Some(config) = file::load_config(&path) {
             config
         } else {
@@ -65,7 +82,7 @@ impl Config {
         }
     }
 
-    pub fn merge(&mut self, args: CmdArgs) {
+    fn merge(&mut self, args: CliArgs) {
         if let Some(format) = args.format {
             self.format = format;
         }
@@ -105,11 +122,13 @@ impl Default for Config {
 }
 
 /// Remove when serde supports default literals
+/// https://github.com/serde-rs/serde/issues/368
 fn default_format() -> String {
     "<icon> <temperature_celsius>°C".to_string()
 }
 
 /// Remove when serde supports default literals
+/// https://github.com/serde-rs/serde/issues/368
 fn default_interval() -> u64 {
     300
 }

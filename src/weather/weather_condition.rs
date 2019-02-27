@@ -16,6 +16,8 @@ pub enum WeatherCondition {
     Thunderstorm,
     Snow,
     Mist,
+
+    Unknown,
 }
 
 pub fn default_icons() -> HashMap<String, String> {
