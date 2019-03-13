@@ -1,3 +1,7 @@
+use chrono::DateTime;
+use chrono::Local;
+use chrono::NaiveDateTime;
+use chrono::offset::TimeZone;
 use log::warn;
 use serde::Deserialize;
 
@@ -42,8 +46,8 @@ struct Clouds {
 
 #[derive(Debug, Deserialize)]
 struct Sys {
-    sunrise: i32,
-    sunset: i32,
+    sunrise: i64,
+    sunset: i64,
 }
 
 impl weather::Weather for Response {
@@ -57,6 +61,38 @@ impl weather::Weather for Response {
 
     fn kelvin(&self) -> f32 {
         self.main.temp
+    }
+
+    fn kelvin_max(&self) -> f32 {
+        self.main.temp_max
+    }
+
+    fn kelvin_min(&self) -> f32 {
+        self.main.temp_min
+    }
+
+    fn pressure(&self) -> f32 {
+        self.main.pressure
+    }
+
+    fn humidity(&self) -> f32 {
+        self.main.humidity
+    }
+
+    fn wind_speed(&self) -> f32 {
+        self.wind.speed
+    }
+
+    fn cloud_percentage(&self) -> f32 {
+        self.clouds.all
+    }
+
+    fn sunrise(&self) -> DateTime<Local> {
+        self.to_datetime(self.sys.sunrise)
+    }
+
+    fn sunset(&self) -> DateTime<Local> {
+        self.to_datetime(self.sys.sunset)
     }
 }
 
@@ -118,5 +154,10 @@ impl Response {
         } else {
             condition1
         }
+    }
+
+    fn to_datetime(&self, unix_timestamp: i64) -> DateTime<Local> {
+        let time = NaiveDateTime::from_timestamp(unix_timestamp, 0);
+        Local.from_utc_datetime(&time)
     }
 }

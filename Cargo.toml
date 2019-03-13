@@ -16,6 +16,7 @@ strum_macros = "0.13.0"
 
 directories = "1.0.2"
 reqwest = "0.9.8"
+chrono = "0.4.6"
 
 log = "0.4.6"
 log4rs = "0.8.1"

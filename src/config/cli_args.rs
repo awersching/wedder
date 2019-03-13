@@ -30,9 +30,21 @@ pub struct CliArgs {
     ///
     /// Available tags:
     /// <icon>,
+    /// <temperature_kelvin>,
+    /// <kelvin_max>,
+    /// <kelvin_min>,
     /// <temperature_celsius>,
+    /// <celsius_max>,
+    /// <celsius_min>,
     /// <temperature_fahrenheit>,
-    /// <temperature_kelvin>
+    /// <fahrenheit_max>,
+    /// <fahrenheit_min>,
+    /// <pressure>,
+    /// <humidity>,
+    /// <wind_speed>,
+    /// <cloud_percentage>,
+    /// <sunrise>,
+    /// <sunset>
     ///
     /// Default: '<icon> <temperature_celsius>°C'
     #[structopt(short, long)]

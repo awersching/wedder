@@ -1,8 +1,20 @@
 # available tags:
 #   <icon>
-#   <temperature_celsius>
-#   <temperature_fahrenheit>
 #   <temperature_kelvin>
+#   <kelvin_max>
+#   <kelvin_min>
+#   <temperature_celsius>
+#   <celsius_max>
+#   <celsius_min>
+#   <temperature_fahrenheit>
+#   <fahrenheit_max>
+#   <fahrenheit_min>
+#   <pressure>
+#   <humidity>
+#   <wind_speed>
+#   <cloud_percentage>
+#   <sunrise>
+#   <sunset>
 # default: '<icon> <temperature_celsius>°C'
 format = '<icon> <temperature_celsius>°C'
 
