@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.5 - 2019-04-11
+
+- Add more weather info options
+- Improve logging
+
 ## 1.0.4 - 2019-02-18
 
 - Add binary release
