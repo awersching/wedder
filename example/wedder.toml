@@ -19,7 +19,7 @@
 format = '<icon> <temperature_celsius>°C'
 
 # in seconds
-# default: 300
+# if no interval is specified, wedder exits after printing the weather once
 interval = 300
 
 [weather]

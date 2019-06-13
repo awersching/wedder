@@ -51,7 +51,7 @@ pub struct CliArgs {
     pub format: Option<String>,
     /// The interval in seconds how often the weather status is updated
     ///
-    /// Default: 300
+    /// If no interval is specified, wedder exits after printing the weather once
     #[structopt(short, long)]
     pub interval: Option<u64>,
 

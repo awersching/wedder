@@ -20,8 +20,7 @@ pub const RETRY_TIMEOUT: u64 = 15;
 pub struct Config {
     #[serde(default = "default_format")]
     pub format: String,
-    #[serde(default = "default_interval")]
-    pub interval: u64,
+    pub interval: Option<u64>,
     #[serde(default)]
     pub weather: WeatherConfig,
     #[serde(default)]
@@ -87,7 +86,7 @@ impl Config {
             self.format = format;
         }
         if let Some(interval) = args.interval {
-            self.interval = interval;
+            self.interval = Some(interval);
         }
 
         if let Some(weather_provider) = args.weather_provider {
@@ -113,7 +112,7 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             format: default_format(),
-            interval: default_interval(),
+            interval: None,
             weather: WeatherConfig::default(),
             location: LocationConfig::default(),
             icons: weather_condition::default_icons(),
@@ -125,10 +124,4 @@ impl Default for Config {
 /// https://github.com/serde-rs/serde/issues/368
 fn default_format() -> String {
     "<icon> <temperature_celsius>°C".to_string()
-}
-
-/// Remove when serde supports default literals
-/// https://github.com/serde-rs/serde/issues/368
-fn default_interval() -> u64 {
-    300
 }

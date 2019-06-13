@@ -1,4 +1,4 @@
-use std::thread;
+use std::{process, thread};
 use std::time;
 
 use log::debug;
@@ -39,9 +39,7 @@ impl App {
                 debug!("{:?}", current_location);
                 self.print_current_weather(&current_location)?;
             }
-
-            debug!("Sleeping for {}s...", self.config.interval);
-            thread::sleep(time::Duration::from_secs(self.config.interval));
+            self.sleep();
         }
     }
 
@@ -57,5 +55,15 @@ impl App {
 
         println!("{}", formatted);
         Ok(())
+    }
+
+    fn sleep(&self) {
+        if let Some(interval) = self.config.interval {
+            debug!("Sleeping for {}s...", interval);
+            thread::sleep(time::Duration::from_secs(interval));
+        } else {
+            debug!("Exiting because no interval for loop is specified...");
+            process::exit(0);
+        }
     }
 }
