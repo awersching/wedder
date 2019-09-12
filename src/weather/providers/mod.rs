@@ -4,6 +4,8 @@ use strum_macros::EnumString;
 
 use crate::location::Location;
 use crate::util::Result;
+use crate::weather::providers::owm::mock::OwmMock;
+use crate::weather::providers::owm::OpenWeatherMap;
 use crate::weather::Weather;
 
 pub mod owm;
@@ -14,7 +16,17 @@ pub trait CurrentWeather {
 
 #[derive(Debug, Serialize, Deserialize, EnumString)]
 pub enum WeatherProvider {
-    OpenWeatherMap
+    OpenWeatherMap,
+    OwmMock,
+}
+
+impl WeatherProvider {
+    pub fn create(provider: &WeatherProvider) -> Box<dyn CurrentWeather> {
+        match provider {
+            WeatherProvider::OpenWeatherMap => Box::new(OpenWeatherMap::new()),
+            WeatherProvider::OwmMock => Box::new(OwmMock::new())
+        }
+    }
 }
 
 impl Default for WeatherProvider {

@@ -43,19 +43,19 @@ wedder --help
 ```
 
 You can also provide the API key via config file.
-An example config is located [here](example/wedder.toml).
+An example config is located [here](examples/wedder.toml).
 The default path wedder expects for the config file can be viewed using
 
 ```bash
 wedder -p
 ```
 
-All config options except the weather condition icons can be overriden by passing CLI options.
+All config options except the weather condition icons can be overridden by passing CLI options.
 The weather condition icons can only be set via config file.
 
 ### Polybar
 
-Add a custom script module to your polybar config as shown in the [example snippet](example/polybar).
+Add a custom script module to your polybar config as shown in the [example snippet](examples/polybar).
 
 ### Fonts
 

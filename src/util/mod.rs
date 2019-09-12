@@ -2,6 +2,10 @@ use std::error::Error;
 use std::thread;
 use std::time::Duration;
 
+use chrono::DateTime;
+use chrono::Local;
+use chrono::NaiveDateTime;
+use chrono::offset::TimeZone;
 use log::debug;
 use log::error;
 
@@ -23,4 +27,10 @@ pub fn get_retry(url: &str) -> reqwest::Response {
         result = reqwest::get(url);
     }
     result.unwrap()
+}
+
+
+pub fn to_datetime(unix_timestamp: i64) -> DateTime<Local> {
+    let time = NaiveDateTime::from_timestamp(unix_timestamp, 0);
+    Local.from_utc_datetime(&time)
 }

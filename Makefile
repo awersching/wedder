@@ -1,4 +1,4 @@
-all: lint build
+all: lint test build
 
 build:
 	cargo build --release
@@ -12,3 +12,6 @@ lint:
 
 lint-all:
 	cargo clippy -- -W clippy::pedantic
+
+test:
+	cargo test

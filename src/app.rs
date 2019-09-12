@@ -4,14 +4,11 @@ use std::time;
 use log::debug;
 
 use crate::config::Config;
-use crate::location::CurrentLocation;
-use crate::location::ip_api::IpApi;
-use crate::location::Location;
+use crate::location::{CurrentLocation, Location};
 use crate::location::LocationProvider;
 use crate::util::Result;
 use crate::weather::Formatter;
-use crate::weather::providers::CurrentWeather;
-use crate::weather::providers::owm::OpenWeatherMap;
+use crate::weather::providers::{CurrentWeather, WeatherProvider};
 
 pub struct App {
     config: Config,
@@ -21,24 +18,25 @@ pub struct App {
 
 impl App {
     pub fn new(config: Config) -> Self {
+        let location_provider =
+            LocationProvider::create(&config.location);
+        let weather_provider =
+            WeatherProvider::create(&config.weather.provider);
+
         Self {
             config,
-            location_provider: Box::new(IpApi::new()),
-            weather_provider: Box::new(OpenWeatherMap::new()),
+            location_provider,
+            weather_provider,
         }
     }
 
     pub fn run(&self) -> Result<()> {
         loop {
-            if self.config.location.provider == LocationProvider::Manual {
-                debug!("Using specified location: {:?}", &self.config.location.location);
-                self.print_current_weather(&self.config.location.location)?;
-            } else {
-                debug!("Pulling current location...");
-                let current_location = self.location_provider.current_location()?;
-                debug!("{:?}", current_location);
-                self.print_current_weather(&current_location)?;
-            }
+            debug!("Pulling current location...");
+            let current_location = self.location_provider.current_location()?;
+            debug!("{:?}", current_location);
+            self.print_current_weather(&current_location)?;
+
             self.sleep();
         }
     }

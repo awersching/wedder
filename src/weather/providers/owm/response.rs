@@ -1,10 +1,9 @@
 use chrono::DateTime;
 use chrono::Local;
-use chrono::NaiveDateTime;
-use chrono::offset::TimeZone;
 use log::warn;
 use serde::Deserialize;
 
+use crate::util;
 use crate::weather;
 use crate::weather::weather_condition::WeatherCondition;
 
@@ -88,23 +87,22 @@ impl weather::Weather for Response {
     }
 
     fn sunrise(&self) -> DateTime<Local> {
-        self.to_datetime(self.sys.sunrise)
+        util::to_datetime(self.sys.sunrise)
     }
 
     fn sunset(&self) -> DateTime<Local> {
-        self.to_datetime(self.sys.sunset)
+        util::to_datetime(self.sys.sunset)
     }
 }
 
 impl Response {
     fn weather_condition(&self, weather: &Weather) -> WeatherCondition {
         let id = weather.id;
-        let first_digit = match id.to_string()[0..1].parse::<i32>() {
-            Ok(digit) => digit,
-            Err(_) => {
-                warn!("Couldn't parse weather id");
-                return WeatherCondition::Unknown;
-            }
+        let first_digit = if let Ok(digit) = id.to_string()[0..1].parse::<i32>() {
+            digit
+        } else {
+            warn!("Couldn't parse weather id");
+            return WeatherCondition::Unknown;
         };
 
         match first_digit {
@@ -154,10 +152,5 @@ impl Response {
         } else {
             condition1
         }
-    }
-
-    fn to_datetime(&self, unix_timestamp: i64) -> DateTime<Local> {
-        let time = NaiveDateTime::from_timestamp(unix_timestamp, 0);
-        Local.from_utc_datetime(&time)
     }
 }

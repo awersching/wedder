@@ -10,6 +10,7 @@ use crate::weather::providers::owm::response::Response;
 use crate::weather::Weather;
 
 mod response;
+pub mod mock;
 
 const BASE_URL: &str = "http://api.openweathermap.org/data/2.5";
 

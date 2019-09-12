@@ -13,17 +13,17 @@ use crate::util::Result;
 use crate::weather::providers::WeatherProvider;
 
 #[derive(Debug, StructOpt)]
-#[structopt()]
+#[structopt(author, about)]
 pub struct CliArgs {
     /// Enables verbose debug output
     #[structopt(short, long)]
     pub debug: bool,
 
     /// Prints the default config path
-    #[structopt(short = "p", long = "default-config-path")]
+    #[structopt(short = "p", long)]
     pub default_config_path: bool,
     /// Path to an alternative config file
-    #[structopt(short, long = "config-file")]
+    #[structopt(short, long)]
     pub config_file: Option<String>,
 
     /// The format to display the weather status in
@@ -58,13 +58,14 @@ pub struct CliArgs {
     /// The provider to use for pulling weather updates
     ///
     /// Available providers:
-    /// OpenWeatherMap
+    /// OpenWeatherMap,
+    /// OwmMock (for testing purposes)
     ///
     /// Default: OpenWeatherMap
-    #[structopt(short, long = "weather-provider")]
+    #[structopt(short, long)]
     pub weather_provider: Option<WeatherProvider>,
     /// The API key for the corresponding weather provider
-    #[structopt(short = "k", long = "weather-api-key")]
+    #[structopt(short = "k", long)]
     pub weather_api_key: Option<String>,
 
     /// The provider to use for geolocation
@@ -74,10 +75,10 @@ pub struct CliArgs {
     /// Manual
     ///
     /// Default: Ip
-    #[structopt(short, long = "location-provider")]
+    #[structopt(short, long)]
     pub location_provider: Option<LocationProvider>,
     /// Prints the current city
-    #[structopt(short = "C", long = "current-city")]
+    #[structopt(short = "C", long)]
     pub current_city: bool,
     /// Latitude of the location to display the weather status for
     #[structopt(long)]
@@ -97,7 +98,7 @@ impl CliArgs {
         if self.default_config_path {
             let path = config::file::default_config_path()
                 .ok_or("Couldn't get default config path")?
-                .to_str().map(|string| string.to_string())
+                .to_str().map(std::string::ToString::to_string)
                 .ok_or("Couldn't parse default config path")?;
             println!("{}", path);
             process::exit(0);
