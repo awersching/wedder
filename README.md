@@ -4,6 +4,8 @@
 
 # wedder
 
+[![Build Status](https://travis-ci.com/awersching/wedder.svg?branch=master)](https://travis-ci.com/awersching/wedder)
+
 Wedder displays the current weather condition and temperature in a configurable format for status bars like [polybar](https://github.com/jaagr/polybar).
 The current weather is pulled from [OpenWeatherMap](https://openweathermap.org/) and you can either set a location manually or let it be determined by your IP.
 
@@ -67,15 +69,3 @@ There is also an [AUR package](https://aur.archlinux.org/packages/nerd-fonts-not
 
 Another option is using the [Weather Icons font](https://github.com/erikflowers/weather-icons) which is also included in Nerd Fonts.
 If you are using other fonts however like [Font Awesome](https://github.com/FortAwesome/Font-Awesome) there will most likely be conflicts.
-
-## Technologies
-
-### OpenWeatherMap
-
-To use the OpenWeatherMap API it is required to create a [free account](https://home.openweathermap.org/users/sign_up).
-The free account allows a maximum of 60 API calls per minute.
-
-### IP-API
-
-The [IP-API](http://ip-api.com/) service used for geolocation is free to use and does not require an account.
-It allows a maximum of 150 API calls per minute.
