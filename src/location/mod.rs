@@ -4,7 +4,7 @@ use strum_macros::EnumString;
 use crate::config::LocationConfig;
 use crate::location::ip_api::IpApi;
 use crate::location::manual::Manual;
-use crate::util::Result;
+use crate::Result;
 
 pub mod ip_api;
 mod manual;
@@ -32,14 +32,14 @@ pub enum LocationProvider {
 impl LocationProvider {
     pub fn create(provider: &LocationConfig) -> Box<dyn CurrentLocation> {
         match provider.provider {
-            LocationProvider::Ip => Box::new(IpApi::new()),
-            LocationProvider::Manual => Box::new(Manual::new(&provider.location))
+            Self::Ip => Box::new(IpApi::new()),
+            Self::Manual => Box::new(Manual::new(&provider.location))
         }
     }
 }
 
 impl Default for LocationProvider {
     fn default() -> Self {
-        LocationProvider::Ip
+        Self::Ip
     }
 }

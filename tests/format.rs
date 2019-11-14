@@ -2,7 +2,7 @@ use std::process::Command;
 
 use assert_cmd::prelude::*;
 
-const PKG_NAME: &'static str = env!("CARGO_PKG_NAME");
+const PKG_NAME: &str = env!("CARGO_PKG_NAME");
 
 #[test]
 fn default() {

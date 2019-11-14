@@ -1,5 +1,5 @@
 use crate::location::Location;
-use crate::util::Result;
+use crate::Result;
 use crate::weather::providers::CurrentWeather;
 use crate::weather::providers::owm::response::Response;
 use crate::weather::Weather;

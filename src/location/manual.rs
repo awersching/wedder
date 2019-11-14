@@ -1,5 +1,5 @@
 use crate::location::{CurrentLocation, Location};
-use crate::util::Result;
+use crate::Result;
 
 pub struct Manual {
     location: Location

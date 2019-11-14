@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::path::PathBuf;
 use std::process;
 
@@ -9,12 +8,10 @@ use crate::config::cli_args::CliArgs;
 use crate::location::Location;
 use crate::location::LocationProvider;
 use crate::weather::providers::WeatherProvider;
-use crate::weather::weather_condition;
+use crate::weather::weather_condition::Icons;
 
 pub mod cli_args;
 mod file;
-
-pub const RETRY_TIMEOUT: u64 = 15;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
@@ -25,8 +22,8 @@ pub struct Config {
     pub weather: WeatherConfig,
     #[serde(default)]
     pub location: LocationConfig,
-    #[serde(default = "weather_condition::default_icons")]
-    pub icons: HashMap<String, String>,
+    #[serde(default)]
+    pub icons: Icons,
 }
 
 #[derive(Default, Debug, Serialize, Deserialize)]
@@ -115,13 +112,13 @@ impl Default for Config {
             interval: None,
             weather: WeatherConfig::default(),
             location: LocationConfig::default(),
-            icons: weather_condition::default_icons(),
+            icons: Icons::default(),
         }
     }
 }
 
 /// Remove when serde supports default literals
-/// https://github.com/serde-rs/serde/issues/368
+/// <https://github.com/serde-rs/serde/issues/368>
 fn default_format() -> String {
     "<icon> <temperature_celsius>°C".to_string()
 }

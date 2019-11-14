@@ -9,7 +9,7 @@ use crate::location::CurrentLocation;
 use crate::location::ip_api::IpApi;
 use crate::location::LocationProvider;
 use crate::logger;
-use crate::util::Result;
+use crate::Result;
 use crate::weather::providers::WeatherProvider;
 
 #[derive(Debug, StructOpt)]
@@ -91,32 +91,44 @@ pub struct CliArgs {
 impl CliArgs {
     pub fn apply(&self) -> Result<()> {
         if self.debug {
-            logger::init()?;
-            debug!("Read {:?}", self);
+            self.debug()?
         }
-
         if self.default_config_path {
-            let path = config::file::default_config_path()
-                .ok_or("Couldn't get default config path")?
-                .to_str().map(std::string::ToString::to_string)
-                .ok_or("Couldn't parse default config path")?;
-            println!("{}", path);
-            process::exit(0);
+            self.default_config_path()?
+        }
+        if self.current_city {
+            self.current_city()
         }
 
-        if self.current_city {
-            match IpApi::new().current_location() {
-                Ok(location) => {
-                    println!("{}", location.city);
-                    process::exit(0)
-                }
-                Err(err) => {
-                    println!("Couldn't get current location");
-                    error!("{}", err.to_string());
-                    process::exit(1)
-                }
+        Ok(())
+    }
+
+    fn debug(&self) -> Result<()> {
+        logger::init()?;
+        debug!("Read {:?}", self);
+        Ok(())
+    }
+
+    fn default_config_path(&self) -> Result<()> {
+        let path = config::file::default_config_path()
+            .ok_or("Couldn't get default config path")?
+            .to_str().map(std::string::ToString::to_string)
+            .ok_or("Couldn't parse default config path")?;
+        println!("{}", path);
+        process::exit(0);
+    }
+
+    fn current_city(&self) {
+        match IpApi::new().current_location() {
+            Ok(location) => {
+                println!("{}", location.city);
+                process::exit(0)
+            }
+            Err(err) => {
+                println!("Couldn't get current location");
+                error!("{}", err.to_string());
+                process::exit(1)
             }
         }
-        Ok(())
     }
 }

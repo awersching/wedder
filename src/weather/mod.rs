@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use chrono::DateTime;
 use chrono::Local;
 
-use crate::weather::weather_condition::WeatherCondition;
+use crate::weather::weather_condition::{Icons, WeatherCondition};
 
 pub mod providers;
 pub mod weather_condition;
@@ -34,11 +34,11 @@ macro_rules! tag {
 pub struct Formatter<'a> {
     format: &'a str,
     weather: Box<dyn Weather>,
-    icons: &'a HashMap<String, String>,
+    icons: &'a Icons,
 }
 
 impl<'a> Formatter<'a> {
-    pub fn new(format: &'a str, weather: Box<dyn Weather>, icons: &'a HashMap<String, String>) -> Self {
+    pub fn new(format: &'a str, weather: Box<dyn Weather>, icons: &'a Icons) -> Self {
         Self {
             format,
             weather,

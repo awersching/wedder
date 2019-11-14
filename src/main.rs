@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::process;
 
 use structopt::StructOpt;
@@ -5,14 +6,15 @@ use structopt::StructOpt;
 use crate::app::App;
 use crate::config::cli_args::CliArgs;
 use crate::config::Config;
-use crate::util::Result;
 
 mod config;
 mod weather;
-mod util;
 mod location;
 mod app;
+mod http;
 mod logger;
+
+type Result<T> = ::std::result::Result<T, Box<dyn Error>>;
 
 fn main() {
     if let Err(err) = run() {

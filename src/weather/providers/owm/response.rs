@@ -1,9 +1,8 @@
-use chrono::DateTime;
+use chrono::{DateTime, NaiveDateTime, TimeZone};
 use chrono::Local;
 use log::warn;
 use serde::Deserialize;
 
-use crate::util;
 use crate::weather;
 use crate::weather::weather_condition::WeatherCondition;
 
@@ -87,11 +86,11 @@ impl weather::Weather for Response {
     }
 
     fn sunrise(&self) -> DateTime<Local> {
-        util::to_datetime(self.sys.sunrise)
+        to_datetime(self.sys.sunrise)
     }
 
     fn sunset(&self) -> DateTime<Local> {
-        util::to_datetime(self.sys.sunset)
+        to_datetime(self.sys.sunset)
     }
 }
 
@@ -153,4 +152,9 @@ impl Response {
             condition1
         }
     }
+}
+
+fn to_datetime(unix_timestamp: i64) -> DateTime<Local> {
+    let time = NaiveDateTime::from_timestamp(unix_timestamp, 0);
+    Local.from_utc_datetime(&time)
 }

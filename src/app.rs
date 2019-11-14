@@ -6,7 +6,7 @@ use log::debug;
 use crate::config::Config;
 use crate::location::{CurrentLocation, Location};
 use crate::location::LocationProvider;
-use crate::util::Result;
+use crate::Result;
 use crate::weather::Formatter;
 use crate::weather::providers::{CurrentWeather, WeatherProvider};
 

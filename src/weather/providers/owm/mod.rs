@@ -2,9 +2,9 @@ use std::process;
 
 use log::debug;
 
+use crate::http::get_retry;
 use crate::location::Location;
-use crate::util;
-use crate::util::Result;
+use crate::Result;
 use crate::weather::providers::CurrentWeather;
 use crate::weather::providers::owm::response::Response;
 use crate::weather::Weather;
@@ -27,7 +27,7 @@ impl CurrentWeather for OpenWeatherMap {
         );
 
         debug!("Querying {} ...", url);
-        let mut http_response = util::get_retry(&url);
+        let mut http_response = get_retry(&url);
         debug!("HTTP {}", http_response.status().to_string());
         if http_response.status().as_u16() == 401 {
             println!("Invalid/unauthorized API key");
@@ -42,6 +42,6 @@ impl CurrentWeather for OpenWeatherMap {
 
 impl OpenWeatherMap {
     pub fn new() -> Self {
-        OpenWeatherMap
+        Self
     }
 }
