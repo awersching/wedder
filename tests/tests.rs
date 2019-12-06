@@ -2,7 +2,7 @@ use std::process::Command;
 
 use assert_cmd::prelude::*;
 
-const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+const APP_NAME: &str = env!("CARGO_PKG_NAME");
 
 #[test]
 fn default() {
@@ -39,10 +39,37 @@ fn other() {
     test_format(format, expected);
 }
 
+#[test]
+fn no_api_key() {
+    let mut cmd = Command::cargo_bin(APP_NAME).unwrap();
+    cmd.arg("-k").arg("");
+    cmd.assert()
+        .failure()
+        .stdout("No API key\n");
+}
+
+#[test]
+fn debug() {
+    let mut cmd = create_cmd();
+    cmd.arg("-d");
+    cmd.assert()
+        .success();
+}
+
+#[test]
+fn current_city() {
+    let mut cmd = create_cmd();
+    cmd.arg("-C");
+    cmd.assert()
+        .success();
+}
+
 fn create_cmd() -> Command {
-    let mut cmd = Command::cargo_bin(PKG_NAME).unwrap();
+    let mut cmd = Command::cargo_bin(APP_NAME).unwrap();
     cmd.arg("-k").arg("mock")
-        .arg("-w").arg("OwmMock");
+        .arg("-w").arg("OwmMock")
+        // invalid path -> config defaults -> interval is None
+        .arg("-c").arg("");
     cmd
 }
 

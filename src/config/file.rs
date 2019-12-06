@@ -9,9 +9,8 @@ use log::debug;
 use log::error;
 use log::warn;
 
+use crate::APP_NAME;
 use crate::config::Config;
-
-const APP_NAME: &str = env!("CARGO_PKG_NAME");
 
 pub fn default_config_path() -> Option<PathBuf> {
     let project =

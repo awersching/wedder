@@ -16,6 +16,8 @@ mod logger;
 
 type Result<T> = ::std::result::Result<T, Box<dyn Error>>;
 
+const APP_NAME: &str = env!("CARGO_PKG_NAME");
+
 fn main() {
     if let Err(err) = run() {
         println!("Error: {}", err.to_string());
@@ -25,7 +27,7 @@ fn main() {
 
 fn run() -> Result<()> {
     let args = CliArgs::from_args();
-    args.apply()?;
+    args.apply();
     let config = Config::new(args);
 
     let app = App::new(config);

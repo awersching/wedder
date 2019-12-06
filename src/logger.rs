@@ -4,9 +4,7 @@ use log4rs::config::Root;
 use log4rs::encode::pattern::PatternEncoder;
 use log::LevelFilter;
 
-use crate::Result;
-
-const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+use crate::{APP_NAME, Result};
 
 pub fn init() -> Result<()> {
     let stdout = ConsoleAppender::builder()
@@ -15,7 +13,7 @@ pub fn init() -> Result<()> {
     let appender = Appender::builder()
         .build("stdout", Box::new(stdout));
     let logger = log4rs::config::Logger::builder()
-        .build(PKG_NAME, LevelFilter::Debug);
+        .build(APP_NAME, LevelFilter::Debug);
     let root = Root::builder()
         .appender("stdout")
         // disable logging for libs

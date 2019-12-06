@@ -10,14 +10,14 @@ use crate::weather::providers::owm::response::Response;
 use crate::weather::Weather;
 
 mod response;
-pub mod mock;
+pub mod tests;
 
 const BASE_URL: &str = "http://api.openweathermap.org/data/2.5";
 
 pub struct OpenWeatherMap;
 
 impl CurrentWeather for OpenWeatherMap {
-    fn current_weather(&self, location: &Location, api_key: &str) -> Result<Box<dyn Weather>> {
+    fn weather(&self, location: &Location, api_key: &str) -> Result<Box<dyn Weather>> {
         let url = format!(
             "{}/weather?lat={}&lon={}&APPID={}",
             BASE_URL,

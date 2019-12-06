@@ -12,7 +12,7 @@ use crate::logger;
 use crate::Result;
 use crate::weather::providers::WeatherProvider;
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, StructOpt, Clone)]
 #[structopt(author, about)]
 pub struct CliArgs {
     /// Enables verbose debug output
@@ -89,24 +89,28 @@ pub struct CliArgs {
 }
 
 impl CliArgs {
-    pub fn apply(&self) -> Result<()> {
+    pub fn apply(&self) {
         if self.debug {
-            self.debug()?
+            self.debug()
         }
         if self.default_config_path {
-            self.default_config_path()?
+            if let Err(err) = self.default_config_path() {
+                println!("{}", err.to_string());
+                process::exit(1);
+            }
         }
         if self.current_city {
             self.current_city()
         }
-
-        Ok(())
     }
 
-    fn debug(&self) -> Result<()> {
-        logger::init()?;
+    fn debug(&self) {
+        if let Err(err) = logger::init() {
+            println!("Error initializing logger");
+            println!("{}", err.to_string());
+            process::exit(1);
+        }
         debug!("Read {:?}", self);
-        Ok(())
     }
 
     fn default_config_path(&self) -> Result<()> {
@@ -119,7 +123,7 @@ impl CliArgs {
     }
 
     fn current_city(&self) {
-        match IpApi::new().current_location() {
+        match IpApi::new().location() {
             Ok(location) => {
                 println!("{}", location.city);
                 process::exit(0)

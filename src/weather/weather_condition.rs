@@ -22,7 +22,7 @@ pub enum WeatherCondition {
     Unknown,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Icons(HashMap<String, String>);
 
 impl Icons {

@@ -3,6 +3,7 @@ language: rust
 env:
   global:
     - PROJECT_NAME=wedder
+    - RUST_BACKTRACE=1
 notifications:
   email: false
 

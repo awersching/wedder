@@ -12,8 +12,10 @@ use crate::weather::weather_condition::Icons;
 
 pub mod cli_args;
 mod file;
+#[cfg(test)]
+mod tests;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Config {
     #[serde(default = "default_format")]
     pub format: String,
@@ -26,7 +28,7 @@ pub struct Config {
     pub icons: Icons,
 }
 
-#[derive(Default, Debug, Serialize, Deserialize)]
+#[derive(Default, Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct WeatherConfig {
     #[serde(default)]
     pub provider: WeatherProvider,
@@ -34,7 +36,7 @@ pub struct WeatherConfig {
     pub api_key: String,
 }
 
-#[derive(Default, Debug, Serialize, Deserialize)]
+#[derive(Default, Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct LocationConfig {
     #[serde(default)]
     pub provider: LocationProvider,

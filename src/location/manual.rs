@@ -6,7 +6,7 @@ pub struct Manual {
 }
 
 impl CurrentLocation for Manual {
-    fn current_location(&self) -> Result<Location> {
+    fn location(&self) -> Result<Location> {
         Ok(self.location.clone())
     }
 }

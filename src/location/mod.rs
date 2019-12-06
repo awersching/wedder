@@ -1,16 +1,28 @@
+use log::debug;
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
 use crate::config::LocationConfig;
+use crate::http::get_retry;
 use crate::location::ip_api::IpApi;
 use crate::location::manual::Manual;
 use crate::Result;
 
 pub mod ip_api;
 mod manual;
+mod tests;
 
 pub trait CurrentLocation {
-    fn current_location(&self) -> Result<Location>;
+    fn location(&self) -> Result<Location>;
+}
+
+pub fn location(url: &str) -> Result<Location> {
+    debug!("Querying {} ...", url);
+    let mut response = get_retry(url);
+    debug!("HTTP {}", response.status().to_string());
+
+    let location: Location = serde_json::from_str(&response.text()?)?;
+    Ok(location)
 }
 
 #[derive(Clone, Default, Debug, Serialize, Deserialize)]
@@ -23,7 +35,17 @@ pub struct Location {
     pub lon: f32,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, EnumString)]
+impl PartialEq for Location {
+    fn eq(&self, other: &Self) -> bool {
+        self.city == other.city &&
+            (self.lat / 1e-7) as i32 == (other.lat / 1e-7) as i32 &&
+            (self.lon / 1e-7) as i32 == (other.lon / 1e-7) as i32
+    }
+}
+
+impl Eq for Location {}
+
+#[derive(Debug, Eq, PartialEq, Serialize, Deserialize, EnumString, Clone)]
 pub enum LocationProvider {
     Ip,
     Manual,

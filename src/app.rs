@@ -33,26 +33,26 @@ impl App {
     pub fn run(&self) -> Result<()> {
         loop {
             debug!("Pulling current location...");
-            let current_location = self.location_provider.current_location()?;
-            debug!("{:?}", current_location);
-            self.print_current_weather(&current_location)?;
+            let location = self.location_provider.location()?;
+            debug!("{:?}", location);
+            let weather = self.weather(&location)?;
+            println!("{}", weather);
 
             self.sleep();
         }
     }
 
-    fn print_current_weather(&self, location: &Location) -> Result<()> {
+    fn weather(&self, location: &Location) -> Result<String> {
         debug!("Pulling current weather...");
-        let current_weather = self.weather_provider
-            .current_weather(location, &self.config.weather.api_key)?;
+        let weather = self.weather_provider
+            .weather(location, &self.config.weather.api_key)?;
+
         let formatted = Formatter::new(
             &self.config.format,
-            current_weather,
+            weather,
             &self.config.icons,
         ).format();
-
-        println!("{}", formatted);
-        Ok(())
+        Ok(formatted)
     }
 
     fn sleep(&self) {
