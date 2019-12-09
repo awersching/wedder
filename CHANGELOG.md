@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.6 - 2019-12-09
 
 - BREAKING: No more default value for interval. If no interval is specified, wedder exits after printing the weather once
 
