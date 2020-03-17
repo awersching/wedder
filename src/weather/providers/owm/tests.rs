@@ -12,7 +12,7 @@ pub struct OwmMock;
 impl CurrentWeather for OwmMock {
     #[allow(unused_variables)]
     fn weather(&self, location: &Location, api_key: &str) -> Result<Box<dyn Weather>> {
-        let mut http = reqwest::get(URL)?;
+        let http = reqwest::blocking::get(URL)?;
         let response: Response = serde_json::from_str(&http.text()?)?;
         Ok(Box::new(response))
     }

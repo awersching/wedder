@@ -6,10 +6,8 @@ use log::error;
 
 const RETRY_TIMEOUT: u64 = 15;
 
-/// Returns the requested resource if available
-/// If it is not available, loops every 5s and tries again until it succeeds
-pub fn get_retry(url: &str) -> reqwest::Response {
-    let mut result = reqwest::get(url);
+pub fn get_retry(url: &str) -> reqwest::blocking::Response {
+    let mut result = reqwest::blocking::get(url);
 
     while let Err(err) = result {
         error!("{}", err.to_string());
@@ -17,7 +15,7 @@ pub fn get_retry(url: &str) -> reqwest::Response {
         println!("No internet");
 
         thread::sleep(Duration::from_secs(RETRY_TIMEOUT));
-        result = reqwest::get(url);
+        result = reqwest::blocking::get(url);
     }
     result.unwrap()
 }

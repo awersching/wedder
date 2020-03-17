@@ -18,7 +18,7 @@ pub trait CurrentLocation {
 
 pub fn location(url: &str) -> Result<Location> {
     debug!("Querying {} ...", url);
-    let mut response = get_retry(url);
+    let response = get_retry(url);
     debug!("HTTP {}", response.status().to_string());
 
     let location: Location = serde_json::from_str(&response.text()?)?;

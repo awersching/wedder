@@ -27,7 +27,7 @@ impl CurrentWeather for OpenWeatherMap {
         );
 
         debug!("Querying {} ...", url);
-        let mut http_response = get_retry(&url);
+        let http_response = get_retry(&url);
         debug!("HTTP {}", http_response.status().to_string());
         if http_response.status().as_u16() == 401 {
             println!("Invalid/unauthorized API key");
