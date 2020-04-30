@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- BREAKING: Add temperature unit and wind speed unit as separate config options (i.e. format changes from e.g. &lt;temperature_celsius&gt; to &lt;temperature&gt;)
+
 ## 1.0.6 - 2019-12-09
 
 - BREAKING: No more default value for interval. If no interval is specified, wedder exits after printing the weather once

@@ -1,26 +1,33 @@
 # available tags:
 #   <icon>
-#   <temperature_kelvin>
-#   <kelvin_max>
-#   <kelvin_min>
-#   <temperature_celsius>
-#   <celsius_max>
-#   <celsius_min>
-#   <temperature_fahrenheit>
-#   <fahrenheit_max>
-#   <fahrenheit_min>
+#   <temperature>
+#   <temperature_max>
+#   <temperature_min>
 #   <pressure>
 #   <humidity>
 #   <wind_speed>
 #   <cloud_percentage>
 #   <sunrise>
 #   <sunset>
-# default: '<icon> <temperature_celsius>°C'
-format = '<icon> <temperature_celsius>°C'
-
+# default: '<icon> <temperature>°C'
+format = '<icon> <temperature>°C'
 # in seconds
 # if no interval is specified, wedder exits after printing the weather once
 interval = 300
+
+[units]
+# available units:
+#   Celsius
+#   Fahrenheit
+#   Kelvin
+# default: Celsius
+temperature = 'Celsius'
+# available units:
+#   Ms
+#   Kmh
+#   Mph
+# default: Kmh
+wind_speed = 'Kmh'
 
 [weather]
 # available providers:

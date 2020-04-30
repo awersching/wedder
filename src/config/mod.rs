@@ -5,12 +5,14 @@ use log::debug;
 use serde::{Deserialize, Serialize};
 
 use crate::config::cli_args::CliArgs;
+use crate::config::units::{Temperature, WindSpeed};
 use crate::location::Location;
 use crate::location::LocationProvider;
 use crate::weather::providers::WeatherProvider;
 use crate::weather::weather_condition::Icons;
 
 pub mod cli_args;
+pub mod units;
 mod file;
 #[cfg(test)]
 mod tests;
@@ -21,11 +23,19 @@ pub struct Config {
     pub format: String,
     pub interval: Option<u64>,
     #[serde(default)]
+    pub units: Units,
+    #[serde(default)]
     pub weather: WeatherConfig,
     #[serde(default)]
     pub location: LocationConfig,
     #[serde(default)]
     pub icons: Icons,
+}
+
+#[derive(Default, Debug, Serialize, Deserialize, Eq, PartialEq)]
+pub struct Units {
+    pub temperature: Temperature,
+    pub wind_speed: WindSpeed,
 }
 
 #[derive(Default, Debug, Serialize, Deserialize, Eq, PartialEq)]
@@ -88,6 +98,13 @@ impl Config {
             self.interval = Some(interval);
         }
 
+        if let Some(temperature_unit) = args.temperature_unit {
+            self.units.temperature = temperature_unit;
+        }
+        if let Some(wind_speed_unit) = args.wind_speed_unit {
+            self.units.wind_speed = wind_speed_unit;
+        }
+
         if let Some(weather_provider) = args.weather_provider {
             self.weather.provider = weather_provider;
         }
@@ -112,6 +129,7 @@ impl Default for Config {
         Self {
             format: default_format(),
             interval: None,
+            units: Units::default(),
             weather: WeatherConfig::default(),
             location: LocationConfig::default(),
             icons: Icons::default(),
@@ -122,5 +140,5 @@ impl Default for Config {
 /// Remove when serde supports default literals
 /// <https://github.com/serde-rs/serde/issues/368>
 fn default_format() -> String {
-    "<icon> <temperature_celsius>°C".to_string()
+    "<icon> <temperature>°C".to_string()
 }

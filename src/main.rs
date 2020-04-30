@@ -72,12 +72,8 @@ impl App {
         debug!("Pulling current weather...");
         let weather = self.weather_provider
             .weather(location, &self.config.weather.api_key)?;
-
-        let formatted = Formatter::new(
-            &self.config.format,
-            weather,
-            &self.config.icons,
-        ).format();
+        let formatted = Formatter::new(&self.config, weather)
+            .format();
         Ok(formatted)
     }
 

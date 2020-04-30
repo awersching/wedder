@@ -3,7 +3,9 @@ use std::collections::HashMap;
 use chrono::DateTime;
 use chrono::Local;
 
-use crate::weather::weather_condition::{Icons, WeatherCondition};
+use crate::config::Config;
+use crate::config::units::{Temperature, WindSpeed};
+use crate::weather::weather_condition::WeatherCondition;
 
 pub mod providers;
 pub mod weather_condition;
@@ -32,23 +34,20 @@ macro_rules! tag {
 }
 
 pub struct Formatter<'a> {
-    format: &'a str,
+    config: &'a Config,
     weather: Box<dyn Weather>,
-    icons: &'a Icons,
 }
 
 impl<'a> Formatter<'a> {
-    pub fn new(format: &'a str, weather: Box<dyn Weather>, icons: &'a Icons) -> Self {
+    pub fn new(config: &'a Config, weather: Box<dyn Weather>) -> Self {
         Self {
-            format,
+            config,
             weather,
-            icons,
         }
     }
 
     pub fn format(&self) -> String {
-        let mut formatted = self.format.to_string();
-
+        let mut formatted = self.config.format.to_string();
         for (tag, value) in self.tags() {
             formatted = formatted.replace(&tag, &value);
         }
@@ -59,18 +58,10 @@ impl<'a> Formatter<'a> {
         let mut tags = HashMap::new();
 
         let icon = self.icon();
-        let temperature_kelvin = self.weather.kelvin();
-        let kelvin_max = self.weather.kelvin_max();
-        let kelvin_min = self.weather.kelvin_min();
-        let temperature_celsius = self.celsius(temperature_kelvin);
-        let celsius_max = self.celsius(kelvin_max);
-        let celsius_min = self.celsius(kelvin_min);
-        let temperature_fahrenheit = self.fahrenheit(temperature_kelvin);
-        let fahrenheit_max = self.fahrenheit(kelvin_max);
-        let fahrenheit_min = self.fahrenheit(kelvin_min);
+        let (temperature, temperature_max, temperature_min) = self.temperature();
         let pressure = self.weather.pressure();
         let humidity = self.weather.humidity();
-        let wind_speed = (self.weather.wind_speed() * 3.6 * 10.0).round() / 10.0;
+        let wind_speed = self.wind_speed();
         let cloud_percentage = self.weather.cloud_percentage();
         let sunrise = self.weather.sunrise()
             .format("%H:%M");
@@ -78,36 +69,53 @@ impl<'a> Formatter<'a> {
             .format("%H:%M");
 
         tag!(tags, icon);
-        tag!(tags, temperature_kelvin);
-        tag!(tags, kelvin_max);
-        tag!(tags, kelvin_min);
-        tag!(tags, temperature_celsius);
-        tag!(tags, celsius_max);
-        tag!(tags, celsius_min);
-        tag!(tags, temperature_fahrenheit);
-        tag!(tags, fahrenheit_max);
-        tag!(tags, fahrenheit_min);
+        tag!(tags, temperature);
+        tag!(tags, temperature_max);
+        tag!(tags, temperature_min);
         tag!(tags, pressure);
         tag!(tags, humidity);
         tag!(tags, wind_speed);
         tag!(tags, cloud_percentage);
         tag!(tags, sunrise);
         tag!(tags, sunset);
-
         tags
     }
 
     fn icon(&self) -> String {
         let condition = self.weather.weather_condition().to_string();
-        self.icons.get(&condition)
+        self.config.icons.get(&condition)
             .unwrap_or(&condition).to_string()
     }
 
-    fn celsius(&self, kelvin: f32) -> i32 {
-        (kelvin - 273.15).round() as i32
+    fn temperature(&self) -> (i32, i32, i32) {
+        let kelvin = self.weather.kelvin();
+        let kelvin_max = self.weather.kelvin_max();
+        let kelvin_min = self.weather.kelvin_min();
+
+        match &self.config.units.temperature {
+            Temperature::Celsius =>
+                (celsius(kelvin), celsius(kelvin_max), celsius(kelvin_min)),
+            Temperature::Fahrenheit =>
+                (fahrenheit(kelvin), fahrenheit(kelvin_max), fahrenheit(kelvin_min)),
+            Temperature::Kelvin =>
+                (kelvin.round() as i32, kelvin_max.round() as i32, kelvin_min.round() as i32),
+        }
     }
 
-    fn fahrenheit(&self, kelvin: f32) -> i32 {
-        (1.8 * (kelvin - 273.15) + 32.0).round() as i32
+    fn wind_speed(&self) -> f32 {
+        let wind_speed = self.weather.wind_speed();
+        (match self.config.units.wind_speed {
+            WindSpeed::Ms => wind_speed,
+            WindSpeed::Kmh => wind_speed * 3.6,
+            WindSpeed::Mph => wind_speed * (3600.0 / 1609.34),
+        }).round()
     }
+}
+
+fn celsius(kelvin: f32) -> i32 {
+    (kelvin - 273.15).round() as i32
+}
+
+fn fahrenheit(kelvin: f32) -> i32 {
+    (1.8 * (kelvin - 273.15) + 32.0).round() as i32
 }
