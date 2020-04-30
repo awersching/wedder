@@ -13,9 +13,11 @@ use crate::APP_NAME;
 use crate::config::Config;
 
 pub fn default_config_path() -> Option<PathBuf> {
-    let project =
-        ProjectDirs::from("rs", APP_NAME, APP_NAME)?;
-
+    let project = ProjectDirs::from(
+        "rs",
+        APP_NAME,
+        APP_NAME,
+    )?;
     Some([
         project.config_dir().to_str()?,
         &format!("{}.toml", APP_NAME),
@@ -24,7 +26,7 @@ pub fn default_config_path() -> Option<PathBuf> {
 
 pub fn load_config(path: &PathBuf) -> Option<Config> {
     debug!("Trying to open config file under {}", path.to_str()?);
-    let config_string = match fs::read_to_string(path) {
+    let cfg_str = match fs::read_to_string(path) {
         Ok(cfg_str) => Some(cfg_str),
         Err(err) => match err.kind() {
             io::ErrorKind::NotFound => None,
@@ -32,15 +34,11 @@ pub fn load_config(path: &PathBuf) -> Option<Config> {
         }
     };
 
-    if config_string.is_none() {
-        warn!(
-            "No config file found under {}, using defaults",
-            path.to_str()?
-        );
+    if cfg_str.is_none() {
+        warn!("No config file found under {}, using defaults", path.to_str()?);
         return Some(Config::default());
     }
-
-    match toml::from_str(&config_string?) {
+    match toml::from_str(&cfg_str?) {
         Ok(config) => Some(config),
         Err(err) => malformed_config(err)
     }

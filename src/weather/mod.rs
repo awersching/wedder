@@ -62,12 +62,12 @@ impl<'a> Formatter<'a> {
         let temperature_kelvin = self.weather.kelvin();
         let kelvin_max = self.weather.kelvin_max();
         let kelvin_min = self.weather.kelvin_min();
-        let temperature_celsius = self.to_celsius(temperature_kelvin);
-        let celsius_max = self.to_celsius(kelvin_max);
-        let celsius_min = self.to_celsius(kelvin_min);
-        let temperature_fahrenheit = self.to_fahrenheit(temperature_kelvin);
-        let fahrenheit_max = self.to_fahrenheit(kelvin_max);
-        let fahrenheit_min = self.to_fahrenheit(kelvin_min);
+        let temperature_celsius = self.celsius(temperature_kelvin);
+        let celsius_max = self.celsius(kelvin_max);
+        let celsius_min = self.celsius(kelvin_min);
+        let temperature_fahrenheit = self.fahrenheit(temperature_kelvin);
+        let fahrenheit_max = self.fahrenheit(kelvin_max);
+        let fahrenheit_min = self.fahrenheit(kelvin_min);
         let pressure = self.weather.pressure();
         let humidity = self.weather.humidity();
         let wind_speed = self.weather.wind_speed();
@@ -103,11 +103,11 @@ impl<'a> Formatter<'a> {
             .unwrap_or(&condition).to_string()
     }
 
-    fn to_celsius(&self, kelvin: f32) -> i32 {
+    fn celsius(&self, kelvin: f32) -> i32 {
         (kelvin - 273.15).round() as i32
     }
 
-    fn to_fahrenheit(&self, kelvin: f32) -> i32 {
+    fn fahrenheit(&self, kelvin: f32) -> i32 {
         (1.8 * (kelvin - 273.15) + 32.0).round() as i32
     }
 }

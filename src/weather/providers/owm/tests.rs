@@ -34,10 +34,10 @@ mod tests {
     #[test]
     fn weather() {
         let location = Location { city: "".to_string(), lat: 0.0, lon: 0.0 };
-        let wtr = OwmMock::new()
+        let weather = OwmMock::new()
             .weather(&location, "");
-        assert!(wtr.is_ok());
-        let weather = wtr.unwrap();
+        assert!(weather.is_ok());
+        let weather = weather.unwrap();
 
         assert_eq!(Rain, weather.weather_condition());
 

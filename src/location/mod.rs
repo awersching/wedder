@@ -14,15 +14,15 @@ mod tests;
 
 pub trait CurrentLocation {
     fn location(&self) -> Result<Location>;
-}
 
-pub fn location(url: &str) -> Result<Location> {
-    debug!("Querying {} ...", url);
-    let response = get_retry(url);
-    debug!("HTTP {}", response.status().to_string());
+    fn get(&self, url: &str) -> Result<Location> {
+        debug!("Querying {} ...", url);
+        let response = get_retry(url);
+        debug!("HTTP {}", response.status().to_string());
 
-    let location: Location = serde_json::from_str(&response.text()?)?;
-    Ok(location)
+        let location: Location = serde_json::from_str(&response.text()?)?;
+        Ok(location)
+    }
 }
 
 #[derive(Clone, Default, Debug, Serialize, Deserialize)]

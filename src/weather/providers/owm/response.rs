@@ -145,12 +145,7 @@ impl Response {
             condition2 == WeatherCondition::Rain ||
             condition1 == WeatherCondition::HeavyRain ||
             condition2 == WeatherCondition::HeavyRain;
-
-        if rain && sun {
-            WeatherCondition::RainSun
-        } else {
-            condition1
-        }
+        if rain && sun { WeatherCondition::RainSun } else { condition1 }
     }
 }
 
