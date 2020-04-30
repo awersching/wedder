@@ -70,7 +70,7 @@ impl<'a> Formatter<'a> {
         let fahrenheit_min = self.fahrenheit(kelvin_min);
         let pressure = self.weather.pressure();
         let humidity = self.weather.humidity();
-        let wind_speed = self.weather.wind_speed();
+        let wind_speed = (self.weather.wind_speed() * 3.6 * 10.0).round() / 10.0;
         let cloud_percentage = self.weather.cloud_percentage();
         let sunrise = self.weather.sunrise()
             .format("%H:%M");

@@ -35,7 +35,7 @@ fn temperature_fahrenheit() {
 #[test]
 fn other() {
     let format = "<pressure>, <humidity>, <wind_speed>, <cloud_percentage>";
-    let expected = "1012, 81, 4.1, 90".to_string();
+    let expected = "1012, 81, 14.8, 90".to_string();
     test_format(format, expected);
 }
 
