@@ -1,6 +1,6 @@
 [package]
 name = "wedder"
-version = "1.0.6"
+version = "1.1.0"
 description = "Current weather info for status bars like polybar"
 authors = ["Adrian Wersching <dev@awersching.de>"]
 edition = "2018"
