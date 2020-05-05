@@ -69,3 +69,13 @@ There is also an [AUR package](https://aur.archlinux.org/packages/nerd-fonts-not
 
 Another option is using the [Weather Icons font](https://github.com/erikflowers/weather-icons) which is also included in Nerd Fonts.
 If you are using other fonts however like [Font Awesome](https://github.com/FortAwesome/Font-Awesome) there will most likely be conflicts.
+
+## Troubleshooting
+
+### libssl error
+
+When starting wedder, the following error occurs: 
+```
+wedder: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file: No such file or directory
+```
+Solution: install ```libssl1.0.0``` or ```openssl-1.0``` respectively according to your distribution.
