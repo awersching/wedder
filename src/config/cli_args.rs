@@ -14,7 +14,7 @@ use crate::Result;
 use crate::weather::providers::WeatherProvider;
 
 #[derive(Debug, StructOpt, Clone)]
-#[structopt(author, about)]
+#[structopt(author, about, setting = structopt::clap::AppSettings::AllowLeadingHyphen)]
 pub struct CliArgs {
     /// Enables verbose debug output
     #[structopt(short = "d", long)]

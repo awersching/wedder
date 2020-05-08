@@ -35,6 +35,14 @@ fn default_config_path() {
 }
 
 #[test]
+fn negative_coordinates() {
+    create_cmd().arg("--lat").arg("-53.154552")
+        .arg("--lon").arg("-70.897690")
+        .assert()
+        .success();
+}
+
+#[test]
 fn no_arg() {
     create_cmd().arg("-c")
         .assert()

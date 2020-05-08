@@ -1,3 +1,8 @@
+## Unreleased
+
+- Add troubleshooting to readme
+- Fix negative coordinates as arguments
+
 ## 1.1.0 - 2020-05-05
 
 - BREAKING: Add temperature unit and wind speed unit as separate config options (i.e. format changes from e.g. &lt;temperature_celsius&gt; to &lt;temperature&gt;)
