@@ -34,7 +34,9 @@ pub struct Config {
 
 #[derive(Default, Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Units {
+    #[serde(default)]
     pub temperature: Temperature,
+    #[serde(default)]
     pub wind_speed: WindSpeed,
 }
 
