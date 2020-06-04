@@ -5,13 +5,13 @@ use log::error;
 use structopt::StructOpt;
 
 use crate::config;
-use crate::config::units::{Temperature, WindSpeed};
+use crate::config::{Format, Interval, Temperature, WindSpeed};
 use crate::location::CurrentLocation;
 use crate::location::ip_api::IpApi;
 use crate::location::LocationProvider;
 use crate::logger;
 use crate::Result;
-use crate::weather::providers::WeatherProvider;
+use crate::weather::WeatherProvider;
 
 #[derive(Debug, StructOpt, Clone)]
 #[structopt(author, about, setting = structopt::clap::AppSettings::AllowLeadingHyphen)]
@@ -45,12 +45,12 @@ pub struct CliArgs {
     ///
     /// Default: '<icon> <temperature>°C'
     #[structopt(short = "f", long)]
-    pub format: Option<String>,
+    pub format: Option<Format>,
     /// The interval in seconds how often the weather status is updated
     ///
     /// If no interval is specified, wedder exits after printing the weather once
     #[structopt(short = "i", long)]
-    pub interval: Option<u64>,
+    pub interval: Option<Interval>,
 
     /// The unit of temperature values
     ///
@@ -125,7 +125,7 @@ impl CliArgs {
             println!("{}", err.to_string());
             process::exit(1);
         }
-        debug!("Read {:?}", self);
+        debug!("Read {:#?}", self);
     }
     fn current_city(&self) {
         match IpApi::new().location() {

@@ -3,12 +3,12 @@ use chrono::Local;
 use log::warn;
 use serde::Deserialize;
 
-use crate::weather;
+use crate::weather::Weather;
 use crate::weather::weather_condition::WeatherCondition;
 
 #[derive(Debug, Deserialize)]
 pub struct Response {
-    weather: Vec<Weather>,
+    weather: Vec<OwmWeather>,
     main: Main,
     wind: Wind,
     clouds: Clouds,
@@ -16,7 +16,7 @@ pub struct Response {
 }
 
 #[derive(Debug, Deserialize)]
-struct Weather {
+struct OwmWeather {
     id: i32,
     main: String,
     description: String,
@@ -48,7 +48,7 @@ struct Sys {
     sunset: i64,
 }
 
-impl weather::Weather for Response {
+impl Weather for Response {
     fn weather_condition(&self) -> WeatherCondition {
         if self.weather.len() > 1 {
             self.combined_weather_condition(&self.weather)
@@ -95,7 +95,7 @@ impl weather::Weather for Response {
 }
 
 impl Response {
-    fn weather_condition(&self, weather: &Weather) -> WeatherCondition {
+    fn weather_condition(&self, weather: &OwmWeather) -> WeatherCondition {
         let id = weather.id;
         let first_digit = if let Ok(digit) = id.to_string()[0..1].parse::<i32>() {
             digit
@@ -135,7 +135,7 @@ impl Response {
         }
     }
 
-    fn combined_weather_condition(&self, weather: &[Weather]) -> WeatherCondition {
+    fn combined_weather_condition(&self, weather: &[OwmWeather]) -> WeatherCondition {
         let condition1 = self.weather_condition(&weather[0]);
         let condition2 = self.weather_condition(&weather[1]);
 

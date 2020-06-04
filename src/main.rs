@@ -2,13 +2,11 @@ use std::{process, thread, time};
 use std::error::Error;
 
 use log::debug;
-use structopt::StructOpt;
 
-use crate::config::cli_args::CliArgs;
 use crate::config::Config;
 use crate::location::{CurrentLocation, Location, LocationProvider};
-use crate::weather::Formatter;
-use crate::weather::providers::{CurrentWeather, WeatherProvider};
+use crate::weather::{CurrentWeather, WeatherProvider};
+use crate::weather::formatter::Formatter;
 
 mod config;
 mod weather;
@@ -28,10 +26,7 @@ fn main() {
 }
 
 fn run() -> Result<()> {
-    let args = CliArgs::from_args();
-    args.apply();
-    let config = Config::new(args);
-
+    let config = Config::new();
     let app = App::new(config);
     app.run()
 }
@@ -60,7 +55,7 @@ impl App {
         loop {
             debug!("Pulling current location...");
             let location = self.location_provider.location()?;
-            debug!("{:?}", location);
+            debug!("{:#?}", location);
             let weather = self.weather(&location)?;
             println!("{}", weather);
 
@@ -78,7 +73,7 @@ impl App {
     }
 
     fn sleep(&self) {
-        if let Some(interval) = self.config.interval {
+        if let Some(interval) = self.config.interval.0 {
             debug!("Sleeping for {}s...", interval);
             thread::sleep(time::Duration::from_secs(interval));
         } else {

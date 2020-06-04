@@ -10,7 +10,6 @@ use crate::Result;
 
 pub mod ip_api;
 mod manual;
-mod tests;
 
 pub trait CurrentLocation {
     fn location(&self) -> Result<Location>;

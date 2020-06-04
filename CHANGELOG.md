@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Add troubleshooting to readme
+- Add debug output formatting
 - Fix negative coordinates as arguments
 - Fix units not optional in config file
 

@@ -12,6 +12,25 @@ use log::warn;
 use crate::APP_NAME;
 use crate::config::Config;
 
+pub fn from_default_path() -> Config {
+    let default_path = if let Some(path) = default_config_path() {
+        path
+    } else {
+        println!("Erroneous default config path");
+        process::exit(1)
+    };
+    from_path(&default_path)
+}
+
+pub fn from_path(path: &PathBuf) -> Config {
+    if let Some(config) = load_config(&path) {
+        config
+    } else {
+        println!("Erroneous config path");
+        process::exit(1)
+    }
+}
+
 pub fn default_config_path() -> Option<PathBuf> {
     let project = ProjectDirs::from(
         "rs",
@@ -24,7 +43,7 @@ pub fn default_config_path() -> Option<PathBuf> {
     ].iter().collect())
 }
 
-pub fn load_config(path: &PathBuf) -> Option<Config> {
+fn load_config(path: &PathBuf) -> Option<Config> {
     debug!("Trying to open config file under {}", path.to_str()?);
     let cfg_str = match fs::read_to_string(path) {
         Ok(cfg_str) => Some(cfg_str),
@@ -48,4 +67,16 @@ fn malformed_config<E: Display>(err: E) -> ! {
     error!("Error parsing config file: {}", err.to_string());
     println!("Malformed config file");
     process::exit(1)
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::config::{Config, file};
+
+    #[test]
+    fn path_not_found() {
+        let config = file::load_config(&[""].iter().collect());
+        assert!(config.is_some());
+        assert_eq!(config.unwrap(), Config::default());
+    }
 }

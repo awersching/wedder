@@ -1,27 +1,35 @@
-use std::path::PathBuf;
+use std::num::ParseIntError;
 use std::process;
+use std::str::FromStr;
+use std::string::ParseError;
 
 use log::debug;
 use serde::{Deserialize, Serialize};
+use structopt::StructOpt;
+use strum_macros::EnumString;
 
 use crate::config::cli_args::CliArgs;
-use crate::config::units::{Temperature, WindSpeed};
 use crate::location::Location;
 use crate::location::LocationProvider;
-use crate::weather::providers::WeatherProvider;
 use crate::weather::weather_condition::Icons;
+use crate::weather::WeatherProvider;
 
-pub mod cli_args;
-pub mod units;
+mod cli_args;
 mod file;
-#[cfg(test)]
-mod tests;
 
-#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
+macro_rules! merge {
+    ($config_value:expr, $args_value:expr) => {
+        if let Some(x) = $args_value {
+            $config_value = x
+        }
+    };
+}
+
+#[derive(Default, Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Config {
-    #[serde(default = "default_format")]
-    pub format: String,
-    pub interval: Option<u64>,
+    #[serde(default)]
+    pub format: Format,
+    pub interval: Interval,
     #[serde(default)]
     pub units: Units,
     #[serde(default)]
@@ -32,12 +40,70 @@ pub struct Config {
     pub icons: Icons,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq)]
+pub struct Format(pub String);
+
+impl Default for Format {
+    fn default() -> Self {
+        Self("<icon> <temperature>°C".to_string())
+    }
+}
+
+impl FromStr for Format {
+    type Err = ParseError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(Self(s.to_string()))
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq)]
+pub struct Interval(pub Option<u64>);
+
+impl Default for Interval {
+    fn default() -> Self {
+        Self(None)
+    }
+}
+
+impl FromStr for Interval {
+    type Err = ParseIntError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        u64::from_str(s).map(|u| Self(Some(u)))
+    }
+}
+
 #[derive(Default, Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Units {
     #[serde(default)]
     pub temperature: Temperature,
     #[serde(default)]
     pub wind_speed: WindSpeed,
+}
+
+#[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
+pub enum Temperature {
+    Celsius,
+    Fahrenheit,
+    Kelvin,
+}
+
+impl Default for Temperature {
+    fn default() -> Self {
+        Self::Celsius
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
+pub enum WindSpeed {
+    Ms,
+    Kmh,
+    Mph,
+}
+
+impl Default for WindSpeed {
+    fn default() -> Self {
+        Self::Kmh
+    }
 }
 
 #[derive(Default, Debug, Serialize, Deserialize, Eq, PartialEq)]
@@ -57,14 +123,17 @@ pub struct LocationConfig {
 }
 
 impl Config {
-    pub fn new(args: CliArgs) -> Self {
+    pub fn new() -> Self {
+        let args = CliArgs::from_args();
+        args.apply();
+
         let mut config = match &args.config_file {
-            Some(path) => Self::from_path(&[path].iter().collect()),
-            None => Self::from_default_path()
+            Some(path) => file::from_path(&[path].iter().collect()),
+            None => file::from_default_path()
         };
-        debug!("Read {:?}", config);
+        debug!("Read {:#?}", config);
         config.merge(args);
-        debug!("Merged config with args into {:?}", config);
+        debug!("Merged config with args into {:#?}", config);
 
         if config.weather.api_key == "" {
             println!("No API key");
@@ -73,74 +142,73 @@ impl Config {
         config
     }
 
-    fn from_default_path() -> Self {
-        let default_path = if let Some(path) = file::default_config_path() {
-            path
-        } else {
-            println!("Erroneous default config path");
-            process::exit(1)
-        };
-        Self::from_path(&default_path)
-    }
-
-    fn from_path(path: &PathBuf) -> Self {
-        if let Some(config) = file::load_config(&path) {
-            config
-        } else {
-            println!("Erroneous config path");
-            process::exit(1)
-        }
-    }
-
     fn merge(&mut self, args: CliArgs) {
-        if let Some(format) = args.format {
-            self.format = format;
-        }
-        if let Some(interval) = args.interval {
-            self.interval = Some(interval);
-        }
-
-        if let Some(temperature_unit) = args.temperature_unit {
-            self.units.temperature = temperature_unit;
-        }
-        if let Some(wind_speed_unit) = args.wind_speed_unit {
-            self.units.wind_speed = wind_speed_unit;
-        }
-
-        if let Some(weather_provider) = args.weather_provider {
-            self.weather.provider = weather_provider;
-        }
-        if let Some(weather_api_key) = args.weather_api_key {
-            self.weather.api_key = weather_api_key;
-        }
-
-        if let Some(location_provider) = args.location_provider {
-            self.location.provider = location_provider;
-        }
-        if let Some(lat) = args.lat {
-            self.location.location.lat = lat;
-        }
-        if let Some(lon) = args.lon {
-            self.location.location.lon = lon;
-        }
+        merge!(self.format, args.format);
+        merge!(self.interval, args.interval);
+        merge!(self.units.temperature, args.temperature_unit);
+        merge!(self.units.wind_speed, args.wind_speed_unit);
+        merge!(self.weather.provider, args.weather_provider);
+        merge!(self.weather.api_key, args.weather_api_key);
+        merge!(self.location.provider, args.location_provider);
+        merge!(self.location.location.lat, args.lat);
+        merge!(self.location.location.lon, args.lon);
     }
 }
 
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            format: default_format(),
-            interval: None,
-            units: Units::default(),
-            weather: WeatherConfig::default(),
-            location: LocationConfig::default(),
-            icons: Icons::default(),
-        }
-    }
-}
+#[cfg(test)]
+mod tests {
+    use std::fs;
 
-/// Remove when serde supports default literals
-/// <https://github.com/serde-rs/serde/issues/368>
-fn default_format() -> String {
-    "<icon> <temperature>°C".to_string()
+    use crate::config::{Config, Format, Interval};
+    use crate::config::cli_args::CliArgs;
+    use crate::config::Temperature::Kelvin;
+    use crate::config::WindSpeed::Ms;
+    use crate::location::LocationProvider::Manual;
+    use crate::weather::WeatherProvider::OwmMock;
+
+    #[test]
+    fn default() {
+        let cfg_str = fs::read_to_string("examples/wedder.toml").unwrap();
+        let file: Config = toml::from_str(&cfg_str).unwrap();
+        let default = Config::default();
+
+        assert_eq!(file.format, default.format);
+        assert_eq!(file.interval.0, Some(300));
+        assert_eq!(None, default.interval.0);
+        assert_eq!(file.units, default.units);
+        assert_eq!(file.weather, default.weather);
+        assert_eq!(file.location, default.location);
+        assert_eq!(file.icons, default.icons);
+    }
+
+    #[test]
+    fn merge() {
+        let args = CliArgs {
+            debug: false,
+            current_city: false,
+            default_config_path: false,
+            config_file: None,
+            format: Some(Format("format".to_string())),
+            interval: Some(Interval(Some(123))),
+            temperature_unit: Some(Kelvin),
+            wind_speed_unit: Some(Ms),
+            weather_provider: Some(OwmMock),
+            weather_api_key: Some("key".to_string()),
+            location_provider: Some(Manual),
+            lat: Some(1.0),
+            lon: Some(1.0),
+        };
+        let mut config = Config::default();
+        config.merge(args.clone());
+
+        assert_eq!(config.format.0, args.format.unwrap().0);
+        assert_eq!(config.interval.0, args.interval.unwrap().0);
+        assert_eq!(config.units.temperature, Kelvin);
+        assert_eq!(config.units.wind_speed, Ms);
+        assert_eq!(config.weather.provider, args.weather_provider.unwrap());
+        assert_eq!(config.weather.api_key, args.weather_api_key.unwrap());
+        assert_eq!(config.location.provider, args.location_provider.unwrap());
+        assert_eq!(config.location.location.lat, args.lat.unwrap());
+        assert_eq!(config.location.location.lon, args.lon.unwrap());
+    }
 }
