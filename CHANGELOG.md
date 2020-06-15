@@ -1,4 +1,4 @@
-## Unreleased
+## 1.1.1 - 2020-06-15
 
 - Add troubleshooting to readme
 - Add debug output formatting
