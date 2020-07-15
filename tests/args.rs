@@ -30,6 +30,9 @@ fn default_config_path() {
 #[test]
 fn negative_interval() {
     Command::cargo_bin(APP_NAME).unwrap()
+        .arg("-k").arg("mock")
+        .arg("-w").arg("OwmMock")
+        .arg("-l").arg("IpMock")
         .arg("-i").arg("-1000")
         .assert()
         .success();
