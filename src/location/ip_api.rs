@@ -5,6 +5,7 @@ use crate::Result;
 pub struct IpApi;
 
 const URL: &str = "http://ip-api.com/json/?fields=city,lat,lon";
+const MOCK_URL: &str = "http://ip-api.com/json/24.48.0.1?fields=city,lat,lon";
 
 impl CurrentLocation for IpApi {
     fn location(&self) -> Result<Location> {
@@ -18,23 +19,28 @@ impl IpApi {
     }
 }
 
+pub struct IpApiMock;
+
+impl IpApiMock {
+    pub fn new() -> Self {
+        Self
+    }
+}
+
+impl CurrentLocation for IpApiMock {
+    fn location(&self) -> Result<Location> {
+        self.get(MOCK_URL)
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::location::{CurrentLocation, Location};
-    use crate::location::ip_api::IpApi;
-    use crate::Result;
-
-    const URL: &str = "http://ip-api.com/json/24.48.0.1?fields=city,lat,lon";
-
-    impl IpApi {
-        fn mock(&self) -> Result<Location> {
-            self.get(URL)
-        }
-    }
+    use crate::location::CurrentLocation;
+    use crate::location::ip_api::IpApiMock;
 
     #[test]
     fn location() {
-        let location = IpApi::new().mock();
+        let location = IpApiMock::new().location();
         assert!(location.is_ok());
         let location = location.unwrap();
 

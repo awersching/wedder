@@ -1,13 +1,10 @@
 use std::process;
 
 use log::debug;
-use log::error;
 use structopt::StructOpt;
 
 use crate::config;
 use crate::config::{Format, Interval, Temperature, WindSpeed};
-use crate::location::CurrentLocation;
-use crate::location::ip_api::IpApi;
 use crate::location::LocationProvider;
 use crate::logger;
 use crate::Result;
@@ -19,9 +16,6 @@ pub struct CliArgs {
     /// Enables verbose debug output
     #[structopt(short = "d", long)]
     pub debug: bool,
-    /// Prints the current city
-    #[structopt(short = "C", long)]
-    pub current_city: bool,
     /// Prints the default config path
     #[structopt(short = "p", long)]
     pub default_config_path: bool,
@@ -32,6 +26,7 @@ pub struct CliArgs {
     /// The format to display the weather status in
     ///
     /// Available tags:
+    /// <city>,
     /// <icon>,
     /// <temperature>,
     /// <temperature_feels_like>,
@@ -77,8 +72,7 @@ pub struct CliArgs {
     /// The provider to use for pulling weather updates
     ///
     /// Available providers:
-    /// OpenWeatherMap,
-    /// OwmMock (for testing purposes)
+    /// OpenWeatherMap
     ///
     /// Default: OpenWeatherMap
     #[structopt(short = "w", long)]
@@ -109,9 +103,6 @@ impl CliArgs {
         if self.debug {
             self.debug()
         }
-        if self.current_city {
-            self.current_city()
-        }
         if self.default_config_path {
             if let Err(err) = self.default_config_path() {
                 println!("{}", err.to_string());
@@ -127,19 +118,6 @@ impl CliArgs {
             process::exit(1);
         }
         debug!("Read {:#?}", self);
-    }
-    fn current_city(&self) {
-        match IpApi::new().location() {
-            Ok(location) => {
-                println!("{}", location.city);
-                process::exit(0)
-            }
-            Err(err) => {
-                println!("Couldn't get current location");
-                error!("{}", err.to_string());
-                process::exit(1)
-            }
-        }
     }
 
     fn default_config_path(&self) -> Result<()> {

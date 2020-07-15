@@ -1,4 +1,5 @@
 # available tags:
+#   <city>
 #   <icon>
 #   <temperature>
 #   <temperature_feels_like>
@@ -33,7 +34,6 @@ wind_speed = 'Kmh'
 [weather]
 # available providers:
 #   OpenWeatherMap
-#   OwmMock (for testing purposes)
 # default: OpenWeatherMap
 provider = 'OpenWeatherMap'
 # enter your API key here

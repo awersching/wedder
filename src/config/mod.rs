@@ -185,7 +185,6 @@ mod tests {
     fn merge() {
         let args = CliArgs {
             debug: false,
-            current_city: false,
             default_config_path: false,
             config_file: None,
             format: Some(Format("format".to_string())),

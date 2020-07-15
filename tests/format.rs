@@ -10,6 +10,15 @@ fn default() {
 }
 
 #[test]
+fn city() {
+    let format = "<city>";
+    create_cmd().arg("-f").arg(format)
+        .assert()
+        .success()
+        .stdout("Montreal\n");
+}
+
+#[test]
 fn temperature_celsius() {
     let format = "<temperature>, <temperature_feels_like>, \
     <temperature_max>, <temperature_min>";

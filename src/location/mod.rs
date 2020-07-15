@@ -4,11 +4,11 @@ use strum_macros::EnumString;
 
 use crate::config::LocationConfig;
 use crate::http::get_retry;
-use crate::location::ip_api::IpApi;
+use crate::location::ip_api::{IpApi, IpApiMock};
 use crate::location::manual::Manual;
 use crate::Result;
 
-pub mod ip_api;
+mod ip_api;
 mod manual;
 
 pub trait CurrentLocation {
@@ -47,6 +47,7 @@ impl Eq for Location {}
 #[derive(Debug, Eq, PartialEq, Serialize, Deserialize, EnumString, Clone)]
 pub enum LocationProvider {
     Ip,
+    IpMock,
     Manual,
 }
 
@@ -54,6 +55,7 @@ impl LocationProvider {
     pub fn create(provider: &LocationConfig) -> Box<dyn CurrentLocation> {
         match provider.provider {
             Self::Ip => Box::new(IpApi::new()),
+            Self::IpMock => Box::new(IpApiMock::new()),
             Self::Manual => Box::new(Manual::new(&provider.location))
         }
     }

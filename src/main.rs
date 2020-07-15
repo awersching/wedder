@@ -56,18 +56,18 @@ impl App {
             debug!("Pulling current location...");
             let location = self.location_provider.location()?;
             debug!("{:#?}", location);
-            let weather = self.weather(&location)?;
+            let weather = self.weather(location)?;
             println!("{}", weather);
 
             self.sleep();
         }
     }
 
-    fn weather(&self, location: &Location) -> Result<String> {
+    fn weather(&self, location: Location) -> Result<String> {
         debug!("Pulling current weather...");
         let weather = self.weather_provider
-            .weather(location, &self.config.weather.api_key)?;
-        let formatted = Formatter::new(&self.config, weather)
+            .weather(&location, &self.config.weather.api_key)?;
+        let formatted = Formatter::new(&self.config, location, weather)
             .format();
         Ok(formatted)
     }

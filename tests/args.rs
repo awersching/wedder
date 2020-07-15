@@ -15,13 +15,6 @@ fn debug() {
 }
 
 #[test]
-fn current_city() {
-    create_cmd().arg("-C")
-        .assert()
-        .success();
-}
-
-#[test]
 fn default_config_path() {
     let path = &create_cmd().arg("-p")
         .assert()

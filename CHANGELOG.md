@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Add &lt;temperature_feels_like&gt; tag
+- BREAKING: Replace --current-city CLI argument with &lt;city&gt; format tag
 
 ## 1.1.1 - 2020-06-15
 

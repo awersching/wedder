@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use crate::config::{Config, Temperature, WindSpeed};
+use crate::location::Location;
 use crate::weather::Weather;
 
 macro_rules! tag {
@@ -12,13 +13,15 @@ macro_rules! tag {
 
 pub struct Formatter<'a> {
     config: &'a Config,
+    location: Location,
     weather: Box<dyn Weather>,
 }
 
 impl<'a> Formatter<'a> {
-    pub fn new(config: &'a Config, weather: Box<dyn Weather>) -> Self {
+    pub fn new(config: &'a Config, location: Location, weather: Box<dyn Weather>) -> Self {
         Self {
             config,
+            location,
             weather,
         }
     }
@@ -34,6 +37,7 @@ impl<'a> Formatter<'a> {
     fn tags(&self) -> HashMap<String, String> {
         let mut tags = HashMap::new();
 
+        let city = &self.location.city;
         let icon = self.icon();
         let temperature = self.convert(self.weather.kelvin());
         let temperature_feels_like = self.convert(self.weather.kelvin_feels_like());
@@ -48,6 +52,7 @@ impl<'a> Formatter<'a> {
         let sunset = self.weather.sunset()
             .format("%H:%M");
 
+        tag!(tags, city);
         tag!(tags, icon);
         tag!(tags, temperature);
         tag!(tags, temperature_feels_like);
