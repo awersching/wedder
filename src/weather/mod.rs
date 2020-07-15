@@ -19,6 +19,7 @@ pub trait Weather {
     fn weather_condition(&self) -> WeatherCondition;
 
     fn kelvin(&self) -> f32;
+    fn kelvin_feels_like(&self) -> f32;
     fn kelvin_max(&self) -> f32;
     fn kelvin_min(&self) -> f32;
 

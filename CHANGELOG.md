@@ -1,3 +1,7 @@
+## Unreleased
+
+- Add &lt;temperature_feels_like&gt; tag
+
 ## 1.1.1 - 2020-06-15
 
 - Add troubleshooting to readme

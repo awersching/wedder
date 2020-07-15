@@ -26,10 +26,11 @@ struct OwmWeather {
 #[derive(Debug, Deserialize)]
 struct Main {
     temp: f32,
-    pressure: f32,
-    humidity: f32,
+    feels_like: Option<f32>,
     temp_min: f32,
     temp_max: f32,
+    pressure: f32,
+    humidity: f32,
 }
 
 #[derive(Debug, Deserialize)]
@@ -59,6 +60,12 @@ impl Weather for Response {
 
     fn kelvin(&self) -> f32 {
         self.main.temp
+    }
+
+    fn kelvin_feels_like(&self) -> f32 {
+        self.main.feels_like
+            .or_else(|| Some(self.main.temp))
+            .unwrap()
     }
 
     fn kelvin_max(&self) -> f32 {

@@ -82,6 +82,8 @@ mod tests {
         assert_eq!(Rain, weather.weather_condition());
 
         assert_eq!(280.32, weather.kelvin());
+        // feels_like not available in mock
+        assert_eq!(280.32, weather.kelvin_feels_like());
         assert_eq!(281.15, weather.kelvin_max());
         assert_eq!(279.15, weather.kelvin_min());
 

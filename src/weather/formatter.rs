@@ -35,7 +35,10 @@ impl<'a> Formatter<'a> {
         let mut tags = HashMap::new();
 
         let icon = self.icon();
-        let (temperature, temperature_max, temperature_min) = self.temperature();
+        let temperature = self.convert(self.weather.kelvin());
+        let temperature_feels_like = self.convert(self.weather.kelvin_feels_like());
+        let temperature_max = self.convert(self.weather.kelvin_max());
+        let temperature_min = self.convert(self.weather.kelvin_min());
         let pressure = self.weather.pressure();
         let humidity = self.weather.humidity();
         let wind_speed = self.wind_speed();
@@ -47,6 +50,7 @@ impl<'a> Formatter<'a> {
 
         tag!(tags, icon);
         tag!(tags, temperature);
+        tag!(tags, temperature_feels_like);
         tag!(tags, temperature_max);
         tag!(tags, temperature_min);
         tag!(tags, pressure);
@@ -64,19 +68,12 @@ impl<'a> Formatter<'a> {
             .unwrap_or(&condition).to_string()
     }
 
-    fn temperature(&self) -> (i32, i32, i32) {
-        let kelvin = self.weather.kelvin();
-        let kelvin_max = self.weather.kelvin_max();
-        let kelvin_min = self.weather.kelvin_min();
-
+    fn convert(&self, kelvin: f32) -> i32 {
         match &self.config.units.temperature {
-            Temperature::Celsius =>
-                (celsius(kelvin), celsius(kelvin_max), celsius(kelvin_min)),
-            Temperature::Fahrenheit =>
-                (fahrenheit(kelvin), fahrenheit(kelvin_max), fahrenheit(kelvin_min)),
-            Temperature::Kelvin =>
-                (kelvin.round() as i32, kelvin_max.round() as i32, kelvin_min.round() as i32),
-        }
+            Temperature::Celsius => kelvin - 273.15,
+            Temperature::Fahrenheit => 1.8 * (kelvin - 273.15) + 32.0,
+            Temperature::Kelvin => kelvin,
+        }.round() as i32
     }
 
     fn wind_speed(&self) -> f32 {
@@ -87,12 +84,4 @@ impl<'a> Formatter<'a> {
             WindSpeed::Mph => wind_speed * (3600.0 / 1609.34),
         }).round()
     }
-}
-
-fn celsius(kelvin: f32) -> i32 {
-    (kelvin - 273.15).round() as i32
-}
-
-fn fahrenheit(kelvin: f32) -> i32 {
-    (1.8 * (kelvin - 273.15) + 32.0).round() as i32
 }

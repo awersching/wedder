@@ -11,31 +11,34 @@ fn default() {
 
 #[test]
 fn temperature_celsius() {
-    let format = "<temperature>, <temperature_max>, <temperature_min>";
+    let format = "<temperature>, <temperature_feels_like>, \
+    <temperature_max>, <temperature_min>";
     create_cmd().arg("-f").arg(format)
         .assert()
         .success()
-        .stdout("7, 8, 6\n");
+        .stdout("7, 7, 8, 6\n");
 }
 
 #[test]
 fn temperature_fahrenheit() {
-    let format = "<temperature>, <temperature_max>, <temperature_min>";
+    let format = "<temperature>, <temperature_feels_like>, \
+    <temperature_max>, <temperature_min>";
     create_cmd().arg("-f").arg(format)
         .arg("-t").arg("Fahrenheit")
         .assert()
         .success()
-        .stdout("45, 46, 43\n");
+        .stdout("45, 45, 46, 43\n");
 }
 
 #[test]
 fn temperature_kelvin() {
-    let format = "<temperature>, <temperature_max>, <temperature_min>";
+    let format = "<temperature>, <temperature_feels_like>, \
+    <temperature_max>, <temperature_min>";
     create_cmd().arg("-f").arg(format)
         .arg("-t").arg("Kelvin")
         .assert()
         .success()
-        .stdout("280, 281, 279\n");
+        .stdout("280, 280, 281, 279\n");
 }
 
 #[test]

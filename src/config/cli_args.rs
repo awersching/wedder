@@ -34,6 +34,7 @@ pub struct CliArgs {
     /// Available tags:
     /// <icon>,
     /// <temperature>,
+    /// <temperature_feels_like>,
     /// <temperature_max>,
     /// <temperature_min>,
     /// <pressure>,
