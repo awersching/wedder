@@ -73,11 +73,11 @@ impl App {
     }
 
     fn sleep(&self) {
-        if let Some(interval) = self.config.interval.0 {
-            debug!("Sleeping for {}s...", interval);
-            thread::sleep(time::Duration::from_secs(interval));
+        if self.config.interval.0 >= 0 {
+            debug!("Sleeping for {}s...", self.config.interval.0);
+            thread::sleep(time::Duration::from_secs(self.config.interval.0 as u64));
         } else {
-            debug!("Exiting because no interval for loop is specified...");
+            debug!("Exiting because of negative interval...");
             process::exit(0);
         }
     }

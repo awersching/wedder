@@ -44,7 +44,7 @@ pub struct CliArgs {
     pub format: Option<Format>,
     /// The interval in seconds how often the weather status is updated
     ///
-    /// If no interval is specified, wedder exits after printing the weather once
+    /// If a negative interval is specified, wedder exits after printing the weather once
     #[structopt(short = "i", long)]
     pub interval: Option<Interval>,
 

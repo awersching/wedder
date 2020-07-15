@@ -14,7 +14,7 @@
 # default: '<icon> <temperature>°C'
 format = '<icon> <temperature>°C'
 # in seconds
-# if no interval is specified, wedder exits after printing the weather once
+# if a negative interval is specified, wedder exits after printing the weather once
 interval = 300
 
 [units]

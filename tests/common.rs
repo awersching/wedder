@@ -7,7 +7,6 @@ pub fn create_cmd() -> Command {
     cmd.arg("-k").arg("mock")
         .arg("-w").arg("OwmMock")
         .arg("-l").arg("IpMock")
-        // invalid path -> config defaults -> interval is None
-        .arg("-c").arg("");
+        .arg("-i").arg("-1");
     cmd
 }

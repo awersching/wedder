@@ -29,6 +29,7 @@ macro_rules! merge {
 pub struct Config {
     #[serde(default)]
     pub format: Format,
+    #[serde(default)]
     pub interval: Interval,
     #[serde(default)]
     pub units: Units,
@@ -57,18 +58,18 @@ impl FromStr for Format {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq)]
-pub struct Interval(pub Option<u64>);
+pub struct Interval(pub i32);
 
 impl Default for Interval {
     fn default() -> Self {
-        Self(None)
+        Self(300)
     }
 }
 
 impl FromStr for Interval {
     type Err = ParseIntError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        u64::from_str(s).map(|u| Self(Some(u)))
+        i32::from_str(s).map(Self)
     }
 }
 
@@ -173,8 +174,7 @@ mod tests {
         let default = Config::default();
 
         assert_eq!(file.format, default.format);
-        assert_eq!(file.interval.0, Some(300));
-        assert_eq!(None, default.interval.0);
+        assert_eq!(file.interval, default.interval);
         assert_eq!(file.units, default.units);
         assert_eq!(file.weather, default.weather);
         assert_eq!(file.location, default.location);
@@ -188,7 +188,7 @@ mod tests {
             default_config_path: false,
             config_file: None,
             format: Some(Format("format".to_string())),
-            interval: Some(Interval(Some(123))),
+            interval: Some(Interval(123)),
             temperature_unit: Some(Kelvin),
             wind_speed_unit: Some(Ms),
             weather_provider: Some(OwmMock),
@@ -200,8 +200,8 @@ mod tests {
         let mut config = Config::default();
         config.merge(args.clone());
 
-        assert_eq!(config.format.0, args.format.unwrap().0);
-        assert_eq!(config.interval.0, args.interval.unwrap().0);
+        assert_eq!(config.format, args.format.unwrap());
+        assert_eq!(config.interval, args.interval.unwrap());
         assert_eq!(config.units.temperature, Kelvin);
         assert_eq!(config.units.wind_speed, Ms);
         assert_eq!(config.weather.provider, args.weather_provider.unwrap());

@@ -28,6 +28,14 @@ fn default_config_path() {
 }
 
 #[test]
+fn negative_interval() {
+    Command::cargo_bin(APP_NAME).unwrap()
+        .arg("-i").arg("-1000")
+        .assert()
+        .success();
+}
+
+#[test]
 fn negative_coordinates() {
     create_cmd().arg("--lat").arg("-53.154552")
         .arg("--lon").arg("-70.897690")

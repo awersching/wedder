@@ -6,7 +6,7 @@ mod common;
 fn default() {
     create_cmd().assert()
         .success()
-        .stdout(" 7°C\n");
+        .stdout("  7°C\n");
 }
 
 #[test]
