@@ -84,10 +84,10 @@ pub struct CliArgs {
     /// The provider to use for geolocation
     ///
     /// Available providers:
-    /// Ip,
+    /// IpApi,
     /// Manual
     ///
-    /// Default: Ip
+    /// Default: IpApi
     #[structopt(short = "l", long)]
     pub location_provider: Option<LocationProvider>,
     /// Latitude of the location to display the weather status for

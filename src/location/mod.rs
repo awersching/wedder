@@ -46,16 +46,16 @@ impl Eq for Location {}
 
 #[derive(Debug, Eq, PartialEq, Serialize, Deserialize, EnumString, Clone)]
 pub enum LocationProvider {
-    Ip,
-    IpMock,
+    IpApi,
+    IpApiMock,
     Manual,
 }
 
 impl LocationProvider {
     pub fn create(provider: &LocationConfig) -> Box<dyn CurrentLocation> {
         match provider.provider {
-            Self::Ip => Box::new(IpApi::new()),
-            Self::IpMock => Box::new(IpApiMock::new()),
+            Self::IpApi => Box::new(IpApi::new()),
+            Self::IpApiMock => Box::new(IpApiMock::new()),
             Self::Manual => Box::new(Manual::new(&provider.location))
         }
     }
@@ -63,6 +63,6 @@ impl LocationProvider {
 
 impl Default for LocationProvider {
     fn default() -> Self {
-        Self::Ip
+        Self::IpApi
     }
 }

@@ -41,10 +41,10 @@ api_key = ''
 
 [location]
 # available providers:
-#   Ip
+#   IpApi
 #   Manual
-# default: Ip
-provider = 'Ip'
+# default: IpApi
+provider = 'IpApi'
 # if you choose 'Manual' as provider, you can set your coordinates
 #lat = 51.509865
 #lon = -0.118092
