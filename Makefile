@@ -1,4 +1,4 @@
-all: lint test build
+all: format lint test build
 
 build:
 	cargo build --release
@@ -6,6 +6,9 @@ build:
 ci:
 	cargo build --release --target "${TARGET}"
 	cp "target/${TARGET}/release/${PROJECT_NAME}" "${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}"
+
+format:
+	cargo fmt
 
 lint:
 	cargo clippy

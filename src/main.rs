@@ -1,18 +1,18 @@
-use std::{process, thread, time};
 use std::error::Error;
+use std::{process, thread, time};
 
 use log::debug;
 
 use crate::config::Config;
 use crate::location::{CurrentLocation, Location, LocationProvider};
-use crate::weather::{CurrentWeather, WeatherProvider};
 use crate::weather::formatter::Formatter;
+use crate::weather::{CurrentWeather, WeatherProvider};
 
 mod config;
-mod weather;
-mod location;
 mod http;
+mod location;
 mod logger;
+mod weather;
 
 type Result<T> = ::std::result::Result<T, Box<dyn Error>>;
 
@@ -39,10 +39,8 @@ pub struct App {
 
 impl App {
     pub fn new(config: Config) -> Self {
-        let location_provider =
-            LocationProvider::create(&config.location);
-        let weather_provider =
-            WeatherProvider::create(&config.weather.provider);
+        let location_provider = LocationProvider::create(&config.location);
+        let weather_provider = WeatherProvider::create(&config.weather.provider);
 
         Self {
             config,
@@ -65,10 +63,10 @@ impl App {
 
     fn weather(&self, location: Location) -> Result<String> {
         debug!("Pulling current weather...");
-        let weather = self.weather_provider
+        let weather = self
+            .weather_provider
             .weather(&location, &self.config.weather.api_key)?;
-        let formatted = Formatter::new(&self.config, location, weather)
-            .format();
+        let formatted = Formatter::new(&self.config, location, weather).format();
         Ok(formatted)
     }
 

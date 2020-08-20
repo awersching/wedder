@@ -1,19 +1,17 @@
+use log::LevelFilter;
 use log4rs::append::console::ConsoleAppender;
 use log4rs::config::Appender;
 use log4rs::config::Root;
 use log4rs::encode::pattern::PatternEncoder;
-use log::LevelFilter;
 
-use crate::{APP_NAME, Result};
+use crate::{Result, APP_NAME};
 
 pub fn init() -> Result<()> {
     let stdout = ConsoleAppender::builder()
         .encoder(Box::new(PatternEncoder::new(&format())))
         .build();
-    let appender = Appender::builder()
-        .build("stdout", Box::new(stdout));
-    let logger = log4rs::config::Logger::builder()
-        .build(APP_NAME, LevelFilter::Debug);
+    let appender = Appender::builder().build("stdout", Box::new(stdout));
+    let logger = log4rs::config::Logger::builder().build(APP_NAME, LevelFilter::Debug);
     let root = Root::builder()
         .appender("stdout")
         // disable logging for libs
@@ -33,13 +31,7 @@ fn format() -> String {
     let origin = "{M}";
     let message = "{m}{n}";
 
-    let format = format!(
-        "{} {} {} - {}",
-        date,
-        log_level,
-        origin,
-        message,
-    );
+    let format = format!("{} {} {} - {}", date, log_level, origin, message,);
     let colorized = format!("{{h({})}}", format);
     colorized
 }

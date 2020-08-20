@@ -7,8 +7,8 @@ use crate::config;
 use crate::config::{Format, Interval, Temperature, WindSpeed};
 use crate::location::LocationProvider;
 use crate::logger;
-use crate::Result;
 use crate::weather::WeatherProvider;
+use crate::Result;
 
 #[derive(Debug, StructOpt, Clone)]
 #[structopt(author, about, setting = structopt::clap::AppSettings::AllowLeadingHyphen)]
@@ -123,7 +123,8 @@ impl CliArgs {
     fn default_config_path(&self) -> Result<()> {
         let path = config::file::default_config_path()
             .ok_or("Couldn't get default config path")?
-            .to_str().map(std::string::ToString::to_string)
+            .to_str()
+            .map(std::string::ToString::to_string)
             .ok_or("Couldn't parse default config path")?;
         println!("{}", path);
         process::exit(0);

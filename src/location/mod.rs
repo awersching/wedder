@@ -36,9 +36,9 @@ pub struct Location {
 
 impl PartialEq for Location {
     fn eq(&self, other: &Self) -> bool {
-        self.city == other.city &&
-            (self.lat / 1e-7) as i32 == (other.lat / 1e-7) as i32 &&
-            (self.lon / 1e-7) as i32 == (other.lon / 1e-7) as i32
+        self.city == other.city
+            && (self.lat / 1e-7) as i32 == (other.lat / 1e-7) as i32
+            && (self.lon / 1e-7) as i32 == (other.lon / 1e-7) as i32
     }
 }
 
@@ -56,7 +56,7 @@ impl LocationProvider {
         match provider.provider {
             Self::IpApi => Box::new(IpApi::new()),
             Self::IpApiMock => Box::new(IpApiMock::new()),
-            Self::Manual => Box::new(Manual::new(&provider.location))
+            Self::Manual => Box::new(Manual::new(&provider.location)),
         }
     }
 }

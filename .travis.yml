@@ -15,6 +15,7 @@ matrix:
 
 install:
   - rustup component add clippy
+  - rustup component add rustfmt
 script:
   - make
 

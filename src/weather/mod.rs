@@ -3,13 +3,13 @@ use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
 use crate::location::Location;
-use crate::Result;
 use crate::weather::owm::{OpenWeatherMap, OwmMock};
 use crate::weather::weather_condition::WeatherCondition;
+use crate::Result;
 
-pub mod weather_condition;
 pub mod formatter;
 mod owm;
+pub mod weather_condition;
 
 pub trait CurrentWeather {
     fn weather(&self, location: &Location, api_key: &str) -> Result<Box<dyn Weather>>;
@@ -42,7 +42,7 @@ impl WeatherProvider {
     pub fn create(provider: &Self) -> Box<dyn CurrentWeather> {
         match provider {
             Self::OpenWeatherMap => Box::new(OpenWeatherMap::new()),
-            Self::OwmMock => Box::new(OwmMock::new())
+            Self::OwmMock => Box::new(OwmMock::new()),
         }
     }
 }

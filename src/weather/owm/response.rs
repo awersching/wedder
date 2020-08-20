@@ -1,10 +1,10 @@
-use chrono::{DateTime, NaiveDateTime, TimeZone};
 use chrono::Local;
+use chrono::{DateTime, NaiveDateTime, TimeZone};
 use log::warn;
 use serde::Deserialize;
 
-use crate::weather::Weather;
 use crate::weather::weather_condition::WeatherCondition;
+use crate::weather::Weather;
 
 #[derive(Debug, Deserialize)]
 pub struct Response {
@@ -63,7 +63,8 @@ impl Weather for Response {
     }
 
     fn kelvin_feels_like(&self) -> f32 {
-        self.main.feels_like
+        self.main
+            .feels_like
             .or_else(|| Some(self.main.temp))
             .unwrap()
     }
@@ -118,12 +119,12 @@ impl Response {
             3 => match id {
                 300 | 301 | 310 => WeatherCondition::Rain,
                 302 | 311 | 312 | 313 | 314 | 321 => WeatherCondition::HeavyRain,
-                _ => WeatherCondition::Unknown
+                _ => WeatherCondition::Unknown,
             },
             5 => match id {
                 500 | 520 => WeatherCondition::Rain,
                 501 | 502 | 503 | 504 | 511 | 521 | 522 | 531 => WeatherCondition::HeavyRain,
-                _ => WeatherCondition::Unknown
+                _ => WeatherCondition::Unknown,
             },
 
             6 => WeatherCondition::Snow,
@@ -135,10 +136,10 @@ impl Response {
                 801 => WeatherCondition::FewClouds,
                 802 => WeatherCondition::Clouds,
                 803 | 804 => WeatherCondition::ManyClouds,
-                _ => WeatherCondition::Unknown
+                _ => WeatherCondition::Unknown,
             },
 
-            _ => WeatherCondition::Unknown
+            _ => WeatherCondition::Unknown,
         }
     }
 
@@ -146,13 +147,17 @@ impl Response {
         let condition1 = self.weather_condition(&weather[0]);
         let condition2 = self.weather_condition(&weather[1]);
 
-        let sun = condition1 == WeatherCondition::ClearSky ||
-            condition2 == WeatherCondition::ClearSky;
-        let rain = condition1 == WeatherCondition::Rain ||
-            condition2 == WeatherCondition::Rain ||
-            condition1 == WeatherCondition::HeavyRain ||
-            condition2 == WeatherCondition::HeavyRain;
-        if rain && sun { WeatherCondition::RainSun } else { condition1 }
+        let sun =
+            condition1 == WeatherCondition::ClearSky || condition2 == WeatherCondition::ClearSky;
+        let rain = condition1 == WeatherCondition::Rain
+            || condition2 == WeatherCondition::Rain
+            || condition1 == WeatherCondition::HeavyRain
+            || condition2 == WeatherCondition::HeavyRain;
+        if rain && sun {
+            WeatherCondition::RainSun
+        } else {
+            condition1
+        }
     }
 }
 

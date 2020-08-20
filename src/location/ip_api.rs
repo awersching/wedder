@@ -35,8 +35,8 @@ impl CurrentLocation for IpApiMock {
 
 #[cfg(test)]
 mod tests {
-    use crate::location::CurrentLocation;
     use crate::location::ip_api::IpApiMock;
+    use crate::location::CurrentLocation;
 
     #[test]
     fn location() {

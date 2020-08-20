@@ -4,10 +4,10 @@ use log::debug;
 
 use crate::http::get_retry;
 use crate::location::Location;
-use crate::Result;
-use crate::weather::CurrentWeather;
 use crate::weather::owm::response::Response;
+use crate::weather::CurrentWeather;
 use crate::weather::Weather;
+use crate::Result;
 
 mod response;
 
@@ -21,10 +21,7 @@ impl CurrentWeather for OpenWeatherMap {
     fn weather(&self, location: &Location, api_key: &str) -> Result<Box<dyn Weather>> {
         let url = format!(
             "{}/weather?lat={}&lon={}&APPID={}",
-            URL,
-            location.lat,
-            location.lon,
-            api_key
+            URL, location.lat, location.lon, api_key
         );
 
         debug!("Querying {} ...", url);
@@ -67,15 +64,18 @@ impl OwmMock {
 #[cfg(test)]
 mod tests {
     use crate::location::Location;
-    use crate::weather::CurrentWeather;
     use crate::weather::owm::OwmMock;
     use crate::weather::weather_condition::WeatherCondition::Rain;
+    use crate::weather::CurrentWeather;
 
     #[test]
     fn weather() {
-        let location = Location { city: "".to_string(), lat: 0.0, lon: 0.0 };
-        let weather = OwmMock::new()
-            .weather(&location, "");
+        let location = Location {
+            city: "".to_string(),
+            lat: 0.0,
+            lon: 0.0,
+        };
+        let weather = OwmMock::new().weather(&location, "");
         assert!(weather.is_ok());
         let weather = weather.unwrap();
 

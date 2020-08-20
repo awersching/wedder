@@ -130,7 +130,7 @@ impl Config {
 
         let mut config = match &args.config_file {
             Some(path) => file::from_path(&[path].iter().collect()),
-            None => file::from_default_path()
+            None => file::from_default_path(),
         };
         debug!("Read {:#?}", config);
         config.merge(args);
@@ -160,10 +160,10 @@ impl Config {
 mod tests {
     use std::fs;
 
-    use crate::config::{Config, Format, Interval};
     use crate::config::cli_args::CliArgs;
     use crate::config::Temperature::Kelvin;
     use crate::config::WindSpeed::Ms;
+    use crate::config::{Config, Format, Interval};
     use crate::location::LocationProvider::Manual;
     use crate::weather::WeatherProvider::OwmMock;
 
