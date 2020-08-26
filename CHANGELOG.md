@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Add option to provide weather API key via environment variable
 - Add &lt;temperature_feels_like&gt; tag
 - BREAKING: Replace --current-city CLI argument with &lt;city&gt; format tag
 - BREAKING: Exit after printing by specifying negative interval instead of no interval

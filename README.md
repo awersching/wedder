@@ -55,6 +55,12 @@ wedder -p
 All config options except the weather condition icons can be overridden by passing CLI options.
 The weather condition icons can only be set via config file.
 
+Yet another option is providing the API key via an environment variable:
+
+```bash
+export WEDDER_WEATHER_API_KEY=<api_key>
+```
+
 ### Polybar
 
 Add a custom script module to your polybar config as shown in the [example snippet](examples/polybar).

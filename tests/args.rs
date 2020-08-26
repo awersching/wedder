@@ -1,9 +1,10 @@
-use std::str;
+use std::{env, str};
 
 use assert_cmd::Command;
 
 use crate::common::create_cmd;
 use crate::common::APP_NAME;
+use crate::common::WEDDER_WEATHER_API_KEY;
 
 mod common;
 
@@ -66,6 +67,7 @@ fn wrong_arg() {
 
 #[test]
 fn no_api_key() {
+    env::remove_var(WEDDER_WEATHER_API_KEY);
     Command::cargo_bin(APP_NAME)
         .unwrap()
         .arg("-k")
@@ -73,4 +75,16 @@ fn no_api_key() {
         .assert()
         .failure()
         .stdout("No API key\n");
+}
+
+#[test]
+fn no_api_key_but_env() {
+    env::set_var(WEDDER_WEATHER_API_KEY, "1234");
+    Command::cargo_bin(APP_NAME)
+        .unwrap()
+        .arg("-k")
+        .arg("")
+        .assert()
+        .failure()
+        .stdout("Invalid/unauthorized API key\n");
 }

@@ -1,7 +1,7 @@
 use std::num::ParseIntError;
-use std::process;
 use std::str::FromStr;
 use std::string::ParseError;
+use std::{env, process};
 
 use log::debug;
 use serde::{Deserialize, Serialize};
@@ -16,6 +16,8 @@ use crate::weather::WeatherProvider;
 
 mod cli_args;
 mod file;
+
+const WEDDER_WEATHER_API_KEY: &str = "WEDDER_WEATHER_API_KEY";
 
 macro_rules! merge {
     ($config_value:expr, $args_value:expr) => {
@@ -137,8 +139,12 @@ impl Config {
         debug!("Merged config with args into {:#?}", config);
 
         if config.weather.api_key == "" {
-            println!("No API key");
-            process::exit(1)
+            if let Ok(key) = env::var(WEDDER_WEATHER_API_KEY) {
+                config.weather.api_key = key;
+            } else {
+                println!("No API key");
+                process::exit(1)
+            }
         }
         config
     }
