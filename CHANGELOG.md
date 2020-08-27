@@ -1,4 +1,4 @@
-## Unreleased
+## 1.2.0 - 2020-08-27
 
 - Add option to provide weather API key via environment variable
 - Add &lt;temperature_feels_like&gt; tag
