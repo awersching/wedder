@@ -1,3 +1,7 @@
+## Unreleased
+
+- Add Add &lt;visibility&gt; and &lt;precipitation&gt; tags
+
 ## 1.2.0 - 2020-08-27
 
 - Add option to provide weather API key via environment variable

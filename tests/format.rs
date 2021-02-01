@@ -27,7 +27,7 @@ fn temperature_celsius() {
         .arg(format)
         .assert()
         .success()
-        .stdout("7, 7, 8, 6\n");
+        .stdout("7, N/A, 8, 6\n");
 }
 
 #[test]
@@ -41,7 +41,7 @@ fn temperature_fahrenheit() {
         .arg("Fahrenheit")
         .assert()
         .success()
-        .stdout("45, 45, 46, 43\n");
+        .stdout("45, N/A, 46, 43\n");
 }
 
 #[test]
@@ -55,7 +55,7 @@ fn temperature_kelvin() {
         .arg("Kelvin")
         .assert()
         .success()
-        .stdout("280, 280, 281, 279\n");
+        .stdout("280, N/A, 281, 279\n");
 }
 
 #[test]
@@ -97,11 +97,11 @@ fn wind_speed_mph() {
 
 #[test]
 fn other() {
-    let format = "<pressure>, <humidity>, <cloud_percentage>";
+    let format = "<pressure>, <humidity>, <cloud_percentage>, <visibility>, <precipitation>";
     create_cmd()
         .arg("-f")
         .arg(format)
         .assert()
         .success()
-        .stdout("1012, 81, 90\n");
+        .stdout("1012, 81, 90, 10000, N/A\n");
 }

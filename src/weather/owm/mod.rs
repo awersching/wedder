@@ -81,15 +81,18 @@ mod tests {
 
         assert_eq!(Rain, weather.weather_condition());
 
-        assert_eq!(280.32, weather.kelvin());
-        // feels_like not available in mock
-        assert_eq!(280.32, weather.kelvin_feels_like());
-        assert_eq!(281.15, weather.kelvin_max());
-        assert_eq!(279.15, weather.kelvin_min());
+        assert_eq!(280.32, weather.temp().0);
+        // not available in mock
+        assert!(weather.temp_feels_like().is_none());
+        assert_eq!(281.15, weather.temp_max().unwrap().0);
+        assert_eq!(279.15, weather.temp_min().unwrap().0);
 
-        assert_eq!(1012.0, weather.pressure());
-        assert_eq!(81.0, weather.humidity());
-        assert_eq!(4.1, weather.wind_speed());
-        assert_eq!(90.0, weather.cloud_percentage());
+        assert_eq!(1012.0, weather.pressure().unwrap().0);
+        assert_eq!(81.0, weather.humidity().unwrap().0);
+        assert_eq!(4.1, weather.wind_speed().unwrap().0);
+        assert_eq!(90.0, weather.clouds().unwrap().0);
+        assert_eq!(10000.0, weather.visibility().unwrap().0);
+        // not available in mock
+        assert!(weather.precipitation().is_none());
     }
 }

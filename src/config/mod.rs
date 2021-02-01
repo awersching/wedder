@@ -138,7 +138,7 @@ impl Config {
         config.merge(args);
         debug!("Merged config with args into {:#?}", config);
 
-        if config.weather.api_key == "" {
+        if config.weather.api_key.is_empty() {
             if let Ok(key) = env::var(WEDDER_WEATHER_API_KEY) {
                 config.weather.api_key = key;
             } else {

@@ -4,49 +4,61 @@ use log::warn;
 use serde::Deserialize;
 
 use crate::weather::weather_condition::WeatherCondition;
-use crate::weather::Weather;
+use crate::weather::{Hpa, Kelvin, Meter, Millimeter, Ms, Percentage, Weather};
 
 #[derive(Debug, Deserialize)]
 pub struct Response {
     weather: Vec<OwmWeather>,
     main: Main,
-    wind: Wind,
-    clouds: Clouds,
-    sys: Sys,
+    visibility: Option<Meter>,
+    wind: Option<Wind>,
+    clouds: Option<Clouds>,
+    rain: Option<Rain>,
+    snow: Option<Snow>,
+    sys: Option<Sys>,
 }
 
 #[derive(Debug, Deserialize)]
 struct OwmWeather {
     id: i32,
-    main: String,
-    description: String,
-    icon: String,
 }
 
 #[derive(Debug, Deserialize)]
 struct Main {
-    temp: f32,
-    feels_like: Option<f32>,
-    temp_min: f32,
-    temp_max: f32,
-    pressure: f32,
-    humidity: f32,
+    temp: Kelvin,
+    feels_like: Option<Kelvin>,
+    temp_min: Option<Kelvin>,
+    temp_max: Option<Kelvin>,
+    pressure: Option<Hpa>,
+    humidity: Option<Percentage>,
 }
 
 #[derive(Debug, Deserialize)]
 struct Wind {
-    speed: f32,
+    speed: Option<Ms>,
 }
 
 #[derive(Debug, Deserialize)]
 struct Clouds {
-    all: f32,
+    all: Option<Percentage>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Rain {
+    #[serde(rename = "1h")]
+    last_hour: Option<Millimeter>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Snow {
+    #[serde(rename = "1h")]
+    last_hour: Option<Millimeter>,
 }
 
 #[derive(Debug, Deserialize)]
 struct Sys {
-    sunrise: i64,
-    sunset: i64,
+    sunrise: Option<i64>,
+    sunset: Option<i64>,
 }
 
 impl Weather for Response {
@@ -58,47 +70,66 @@ impl Weather for Response {
         }
     }
 
-    fn kelvin(&self) -> f32 {
+    fn temp(&self) -> Kelvin {
         self.main.temp
     }
 
-    fn kelvin_feels_like(&self) -> f32 {
-        self.main
-            .feels_like
-            .or_else(|| Some(self.main.temp))
-            .unwrap()
+    fn temp_feels_like(&self) -> Option<Kelvin> {
+        self.main.feels_like
     }
 
-    fn kelvin_max(&self) -> f32 {
+    fn temp_max(&self) -> Option<Kelvin> {
         self.main.temp_max
     }
 
-    fn kelvin_min(&self) -> f32 {
+    fn temp_min(&self) -> Option<Kelvin> {
         self.main.temp_min
     }
 
-    fn pressure(&self) -> f32 {
+    fn pressure(&self) -> Option<Hpa> {
         self.main.pressure
     }
 
-    fn humidity(&self) -> f32 {
+    fn humidity(&self) -> Option<Percentage> {
         self.main.humidity
     }
 
-    fn wind_speed(&self) -> f32 {
-        self.wind.speed
+    fn wind_speed(&self) -> Option<Ms> {
+        self.wind.as_ref().and_then(|wind| wind.speed)
     }
 
-    fn cloud_percentage(&self) -> f32 {
-        self.clouds.all
+    fn clouds(&self) -> Option<Percentage> {
+        self.clouds.as_ref().and_then(|clouds| clouds.all)
     }
 
-    fn sunrise(&self) -> DateTime<Local> {
-        to_datetime(self.sys.sunrise)
+    fn visibility(&self) -> Option<Meter> {
+        self.visibility
     }
 
-    fn sunset(&self) -> DateTime<Local> {
-        to_datetime(self.sys.sunset)
+    fn precipitation(&self) -> Option<Millimeter> {
+        let rain = self.rain.as_ref().and_then(|rain| rain.last_hour);
+        let snow = self.snow.as_ref().and_then(|snow| snow.last_hour);
+        if let (Some(rain), Some(snow)) = (rain, snow) {
+            Some(Millimeter(rain.0 + snow.0))
+        } else if rain.is_some() {
+            rain
+        } else if snow.is_some() {
+            snow
+        } else {
+            None
+        }
+    }
+
+    fn sunrise(&self) -> Option<DateTime<Local>> {
+        self.sys
+            .as_ref()
+            .and_then(|sys| sys.sunrise.map(to_datetime))
+    }
+
+    fn sunset(&self) -> Option<DateTime<Local>> {
+        self.sys
+            .as_ref()
+            .and_then(|sys| sys.sunset.map(to_datetime))
     }
 }
 

@@ -36,6 +36,8 @@ pub struct CliArgs {
     /// <humidity>,
     /// <wind_speed>,
     /// <cloud_percentage>,
+    /// <visibility>,
+    /// <precipitation>,
     /// <sunrise>,
     /// <sunset>
     ///

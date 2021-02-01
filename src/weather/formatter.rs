@@ -1,13 +1,17 @@
 use std::collections::HashMap;
 
-use crate::config::{Config, Temperature, WindSpeed};
+use crate::config::Config;
 use crate::location::Location;
 use crate::weather::Weather;
 
 macro_rules! tag {
-    ($tags:expr, $value:expr) => {
-        let tag = format!("<{}>", stringify!($value));
-        $tags.insert(tag, $value.to_string());
+    ($tags:expr, $option:expr) => {
+        let tag = format!("<{}>", stringify!($option));
+        if let Some(value) = $option {
+            $tags.insert(tag, value.to_string());
+        } else {
+            $tags.insert(tag, "N/A".to_string());
+        }
     };
 }
 
@@ -37,18 +41,32 @@ impl<'a> Formatter<'a> {
     fn tags(&self) -> HashMap<String, String> {
         let mut tags = HashMap::new();
 
-        let city = &self.location.city;
-        let icon = self.icon();
-        let temperature = self.convert(self.weather.kelvin());
-        let temperature_feels_like = self.convert(self.weather.kelvin_feels_like());
-        let temperature_max = self.convert(self.weather.kelvin_max());
-        let temperature_min = self.convert(self.weather.kelvin_min());
+        let city = Some(&self.location.city);
+        let icon = Some(self.icon());
+        let temperature = Some(self.weather.temp().convert(&self.config.units.temperature));
+        let temperature_feels_like = self
+            .weather
+            .temp_feels_like()
+            .map(|kelvin| kelvin.convert(&self.config.units.temperature));
+        let temperature_max = self
+            .weather
+            .temp_max()
+            .map(|kelvin| kelvin.convert(&self.config.units.temperature));
+        let temperature_min = self
+            .weather
+            .temp_min()
+            .map(|kelvin| kelvin.convert(&self.config.units.temperature));
         let pressure = self.weather.pressure();
         let humidity = self.weather.humidity();
-        let wind_speed = self.wind_speed();
-        let cloud_percentage = self.weather.cloud_percentage();
-        let sunrise = self.weather.sunrise().format("%H:%M");
-        let sunset = self.weather.sunset().format("%H:%M");
+        let wind_speed = self
+            .weather
+            .wind_speed()
+            .map(|ms| ms.convert(&self.config.units.wind_speed));
+        let cloud_percentage = self.weather.clouds();
+        let visibility = self.weather.visibility();
+        let precipitation = self.weather.precipitation();
+        let sunrise = self.weather.sunrise().map(|time| time.format("%H:%M"));
+        let sunset = self.weather.sunset().map(|time| time.format("%H:%M"));
 
         tag!(tags, city);
         tag!(tags, icon);
@@ -60,6 +78,8 @@ impl<'a> Formatter<'a> {
         tag!(tags, humidity);
         tag!(tags, wind_speed);
         tag!(tags, cloud_percentage);
+        tag!(tags, visibility);
+        tag!(tags, precipitation);
         tag!(tags, sunrise);
         tag!(tags, sunset);
         tags
@@ -72,24 +92,5 @@ impl<'a> Formatter<'a> {
             .get(&condition)
             .unwrap_or(&condition)
             .to_string()
-    }
-
-    fn convert(&self, kelvin: f32) -> i32 {
-        match &self.config.units.temperature {
-            Temperature::Celsius => kelvin - 273.15,
-            Temperature::Fahrenheit => 1.8 * (kelvin - 273.15) + 32.0,
-            Temperature::Kelvin => kelvin,
-        }
-        .round() as i32
-    }
-
-    fn wind_speed(&self) -> f32 {
-        let wind_speed = self.weather.wind_speed();
-        (match self.config.units.wind_speed {
-            WindSpeed::Ms => wind_speed,
-            WindSpeed::Kmh => wind_speed * 3.6,
-            WindSpeed::Mph => wind_speed * (3600.0 / 1609.34),
-        })
-        .round()
     }
 }
