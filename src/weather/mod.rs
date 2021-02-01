@@ -7,9 +7,8 @@ use crate::location::Location;
 use crate::weather::owm::{OpenWeatherMap, OwmMock};
 use crate::weather::weather_condition::WeatherCondition;
 use crate::Result;
-use serde::export::Formatter;
 use std::fmt;
-use std::fmt::Display;
+use std::fmt::{Display, Formatter};
 
 pub mod formatter;
 mod owm;
