@@ -96,12 +96,73 @@ fn wind_speed_mph() {
 }
 
 #[test]
-fn other() {
-    let format = "<pressure>, <humidity>, <cloud_percentage>, <visibility>, <precipitation>";
+fn distance_meter() {
+    let format = "<visibility>";
+    create_cmd()
+        .arg("-f")
+        .arg(format)
+        .arg("-D")
+        .arg("Meter")
+        .assert()
+        .success()
+        .stdout("10000\n");
+}
+
+#[test]
+fn distance_kilometer() {
+    let format = "<visibility>";
     create_cmd()
         .arg("-f")
         .arg(format)
         .assert()
         .success()
-        .stdout("1012, 81, 90, 10000, N/A\n");
+        .stdout("10\n");
+}
+
+#[test]
+fn distance_mile() {
+    let format = "<visibility>";
+    create_cmd()
+        .arg("-f")
+        .arg(format)
+        .arg("-D")
+        .arg("Mile")
+        .assert()
+        .success()
+        .stdout("6\n");
+}
+
+#[test]
+fn precipitation_millimeter() {
+    let format = "<precipitation>";
+    create_cmd()
+        .arg("-f")
+        .arg(format)
+        .assert()
+        .success()
+        .stdout("N/A\n");
+}
+
+#[test]
+fn precipitation_inch() {
+    let format = "<precipitation>";
+    create_cmd()
+        .arg("-f")
+        .arg(format)
+        .arg("-P")
+        .arg("Inch")
+        .assert()
+        .success()
+        .stdout("N/A\n");
+}
+
+#[test]
+fn other() {
+    let format = "<pressure>, <humidity>, <cloud_percentage>";
+    create_cmd()
+        .arg("-f")
+        .arg(format)
+        .assert()
+        .success()
+        .stdout("1012, 81, 90\n");
 }

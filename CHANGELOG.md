@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Add Add &lt;visibility&gt; and &lt;precipitation&gt; tags
+- Add unit config options for distances and precipitation
 
 ## 1.2.0 - 2020-08-27
 

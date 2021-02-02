@@ -4,7 +4,7 @@ use log::debug;
 use structopt::StructOpt;
 
 use crate::config;
-use crate::config::{Format, Interval, Temperature, WindSpeed};
+use crate::config::{Distance, Format, Interval, Precipitation, Temperature, WindSpeed};
 use crate::location::LocationProvider;
 use crate::logger;
 use crate::weather::WeatherProvider;
@@ -70,6 +70,25 @@ pub struct CliArgs {
     /// Default: Kmh
     #[structopt(short = "s", long)]
     pub wind_speed_unit: Option<WindSpeed>,
+    /// The unit of distances
+    ///
+    /// Available units:
+    /// Meter,
+    /// Kilometer,
+    /// Mile
+    ///
+    /// Default: Kilometer
+    #[structopt(short = "D", long)]
+    pub distance_unit: Option<Distance>,
+    /// The unit of the precipitation
+    ///
+    /// Available units:
+    /// Millimeter,
+    /// Inch
+    ///
+    /// Default: Millimeter
+    #[structopt(short = "P", long)]
+    pub precipitation_unit: Option<Precipitation>,
 
     /// The provider to use for pulling weather updates
     ///

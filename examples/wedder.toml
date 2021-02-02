@@ -32,6 +32,17 @@ temperature = 'Celsius'
 #   Mph
 # default: Kmh
 wind_speed = 'Kmh'
+# available units:
+#   Meter
+#   Kilometer
+#   Mile
+# default: Kilometer
+distance = 'Kilometer'
+# available units:
+#   Millimeter
+#   Inch
+# default: Millimeter
+precipitation = 'Millimeter'
 
 [weather]
 # available providers:

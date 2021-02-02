@@ -2,7 +2,7 @@ use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
-use crate::config::{Temperature, WindSpeed};
+use crate::config::{Distance, Precipitation, Temperature, WindSpeed};
 use crate::location::Location;
 use crate::weather::owm::{OpenWeatherMap, OwmMock};
 use crate::weather::weather_condition::WeatherCondition;
@@ -47,13 +47,13 @@ impl Display for Kelvin {
 }
 
 impl Kelvin {
-    fn convert(&self, unit: &Temperature) -> i32 {
+    fn convert(&self, unit: &Temperature) -> f32 {
         match unit {
             Temperature::Celsius => self.0 - 273.15,
             Temperature::Fahrenheit => (self.0 - 273.15) * (9.0 / 5.0) + 32.0,
             Temperature::Kelvin => self.0,
         }
-        .round() as i32
+        .round()
     }
 }
 
@@ -104,12 +104,33 @@ impl Display for Meter {
     }
 }
 
+impl Meter {
+    fn convert(&self, unit: &Distance) -> f32 {
+        match unit {
+            Distance::Meter => self.0,
+            Distance::Kilometer => self.0 / 1000.0,
+            Distance::Mile => self.0 * 0.000_621_371_2,
+        }
+        .round()
+    }
+}
+
 #[derive(Debug, Deserialize, Copy, Clone)]
 pub struct Millimeter(f32);
 
 impl Display for Millimeter {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         self.0.fmt(f)
+    }
+}
+
+impl Millimeter {
+    fn convert(&self, unit: &Precipitation) -> f32 {
+        match unit {
+            Precipitation::Millimeter => self.0,
+            Precipitation::Inch => self.0 / 25.4,
+        }
+        .round()
     }
 }
 

@@ -81,6 +81,10 @@ pub struct Units {
     pub temperature: Temperature,
     #[serde(default)]
     pub wind_speed: WindSpeed,
+    #[serde(default)]
+    pub distance: Distance,
+    #[serde(default)]
+    pub precipitation: Precipitation,
 }
 
 #[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
@@ -106,6 +110,31 @@ pub enum WindSpeed {
 impl Default for WindSpeed {
     fn default() -> Self {
         Self::Kmh
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
+pub enum Distance {
+    Meter,
+    Kilometer,
+    Mile,
+}
+
+impl Default for Distance {
+    fn default() -> Self {
+        Self::Kilometer
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
+pub enum Precipitation {
+    Millimeter,
+    Inch,
+}
+
+impl Default for Precipitation {
+    fn default() -> Self {
+        Self::Millimeter
     }
 }
 
@@ -154,6 +183,8 @@ impl Config {
         merge!(self.interval, args.interval);
         merge!(self.units.temperature, args.temperature_unit);
         merge!(self.units.wind_speed, args.wind_speed_unit);
+        merge!(self.units.distance, args.distance_unit);
+        merge!(self.units.precipitation, args.precipitation_unit);
         merge!(self.weather.provider, args.weather_provider);
         merge!(self.weather.api_key, args.weather_api_key);
         merge!(self.location.provider, args.location_provider);
@@ -167,6 +198,8 @@ mod tests {
     use std::fs;
 
     use crate::config::cli_args::CliArgs;
+    use crate::config::Distance::Mile;
+    use crate::config::Precipitation::Inch;
     use crate::config::Temperature::Kelvin;
     use crate::config::WindSpeed::Ms;
     use crate::config::{Config, Format, Interval};
@@ -197,6 +230,8 @@ mod tests {
             interval: Some(Interval(123)),
             temperature_unit: Some(Kelvin),
             wind_speed_unit: Some(Ms),
+            distance_unit: Some(Mile),
+            precipitation_unit: Some(Inch),
             weather_provider: Some(OwmMock),
             weather_api_key: Some("key".to_string()),
             location_provider: Some(Manual),
@@ -210,6 +245,8 @@ mod tests {
         assert_eq!(config.interval, args.interval.unwrap());
         assert_eq!(config.units.temperature, Kelvin);
         assert_eq!(config.units.wind_speed, Ms);
+        assert_eq!(config.units.distance, Mile);
+        assert_eq!(config.units.precipitation, Inch);
         assert_eq!(config.weather.provider, args.weather_provider.unwrap());
         assert_eq!(config.weather.api_key, args.weather_api_key.unwrap());
         assert_eq!(config.location.provider, args.location_provider.unwrap());

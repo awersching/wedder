@@ -63,8 +63,14 @@ impl<'a> Formatter<'a> {
             .wind_speed()
             .map(|ms| ms.convert(&self.config.units.wind_speed));
         let cloud_percentage = self.weather.clouds();
-        let visibility = self.weather.visibility();
-        let precipitation = self.weather.precipitation();
+        let visibility = self
+            .weather
+            .visibility()
+            .map(|visibility| visibility.convert(&self.config.units.distance));
+        let precipitation = self
+            .weather
+            .precipitation()
+            .map(|precipitation| precipitation.convert(&self.config.units.precipitation));
         let sunrise = self.weather.sunrise().map(|time| time.format("%H:%M"));
         let sunset = self.weather.sunset().map(|time| time.format("%H:%M"));
 
