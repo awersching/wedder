@@ -2,7 +2,7 @@
 name = "wedder"
 version = "1.2.0"
 description = "Current weather info for status bars like polybar"
-authors = ["Adrian Wersching <dev@awersching.de>"]
+authors = ["Adrian Wersching <awersching@posteo.de>"]
 edition = "2018"
 
 [dependencies]
