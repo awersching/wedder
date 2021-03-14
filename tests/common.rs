@@ -9,9 +9,9 @@ pub fn create_cmd() -> Command {
     cmd.arg("-k")
         .arg("mock")
         .arg("-w")
-        .arg("OwmMock")
+        .arg("OpenWeatherMap")
         .arg("-l")
-        .arg("IpApiMock")
+        .arg("IpApi")
         .arg("-i")
         .arg("-1");
     cmd

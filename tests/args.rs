@@ -35,9 +35,9 @@ fn negative_interval() {
         .arg("-k")
         .arg("mock")
         .arg("-w")
-        .arg("OwmMock")
+        .arg("OpenWeatherMap")
         .arg("-l")
-        .arg("IpApiMock")
+        .arg("IpApi")
         .arg("-i")
         .arg("-1000")
         .assert()
@@ -82,9 +82,10 @@ fn no_api_key_but_env() {
     env::set_var(WEDDER_WEATHER_API_KEY, "1234");
     Command::cargo_bin(APP_NAME)
         .unwrap()
+        .arg("-i")
+        .arg("-1")
         .arg("-k")
         .arg("")
         .assert()
-        .failure()
-        .stdout("Invalid/unauthorized API key\n");
+        .success();
 }

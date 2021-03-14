@@ -12,14 +12,11 @@ pub enum WeatherCondition {
     FewClouds,
     Clouds,
     ManyClouds,
-    RainSun,
     Rain,
     HeavyRain,
     Thunderstorm,
     Snow,
     Mist,
-
-    Unknown,
 }
 
 #[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]

@@ -78,61 +78,61 @@ impl FromStr for Interval {
 #[derive(Default, Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Units {
     #[serde(default)]
-    pub temperature: Temperature,
+    pub temperature: TemperatureUnit,
     #[serde(default)]
-    pub wind_speed: WindSpeed,
+    pub wind_speed: WindSpeedUnit,
     #[serde(default)]
-    pub distance: Distance,
+    pub distance: DistanceUnit,
     #[serde(default)]
-    pub precipitation: Precipitation,
+    pub precipitation: PrecipitationUnit,
 }
 
 #[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
-pub enum Temperature {
+pub enum TemperatureUnit {
     Celsius,
     Fahrenheit,
     Kelvin,
 }
 
-impl Default for Temperature {
+impl Default for TemperatureUnit {
     fn default() -> Self {
         Self::Celsius
     }
 }
 
 #[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
-pub enum WindSpeed {
+pub enum WindSpeedUnit {
     Ms,
     Kmh,
     Mph,
 }
 
-impl Default for WindSpeed {
+impl Default for WindSpeedUnit {
     fn default() -> Self {
         Self::Kmh
     }
 }
 
 #[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
-pub enum Distance {
+pub enum DistanceUnit {
     Meter,
     Kilometer,
     Mile,
 }
 
-impl Default for Distance {
+impl Default for DistanceUnit {
     fn default() -> Self {
         Self::Kilometer
     }
 }
 
 #[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
-pub enum Precipitation {
+pub enum PrecipitationUnit {
     Millimeter,
     Inch,
 }
 
-impl Default for Precipitation {
+impl Default for PrecipitationUnit {
     fn default() -> Self {
         Self::Millimeter
     }
@@ -193,64 +193,50 @@ impl Config {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use std::fs;
+#[test]
+fn default() {
+    let cfg_str = std::fs::read_to_string("examples/wedder.toml").unwrap();
+    let file: Config = toml::from_str(&cfg_str).unwrap();
+    let default = Config::default();
 
-    use crate::config::cli_args::CliArgs;
-    use crate::config::Distance::Mile;
-    use crate::config::Precipitation::Inch;
-    use crate::config::Temperature::Kelvin;
-    use crate::config::WindSpeed::Ms;
-    use crate::config::{Config, Format, Interval};
-    use crate::location::LocationProvider::Manual;
-    use crate::weather::WeatherProvider::OwmMock;
+    assert_eq!(file.format, default.format);
+    assert_eq!(file.interval, default.interval);
+    assert_eq!(file.units, default.units);
+    assert_eq!(file.weather, default.weather);
+    assert_eq!(file.location, default.location);
+    assert_eq!(file.icons, default.icons);
+}
 
-    #[test]
-    fn default() {
-        let cfg_str = fs::read_to_string("examples/wedder.toml").unwrap();
-        let file: Config = toml::from_str(&cfg_str).unwrap();
-        let default = Config::default();
+#[test]
+fn merge() {
+    let args = CliArgs {
+        debug: false,
+        default_config_path: false,
+        config_file: None,
+        format: Some(Format("format".to_string())),
+        interval: Some(Interval(123)),
+        temperature_unit: Some(TemperatureUnit::Kelvin),
+        wind_speed_unit: Some(WindSpeedUnit::Ms),
+        distance_unit: Some(DistanceUnit::Mile),
+        precipitation_unit: Some(PrecipitationUnit::Inch),
+        weather_provider: Some(WeatherProvider::OpenWeatherMap),
+        weather_api_key: Some("key".to_string()),
+        location_provider: Some(LocationProvider::Manual),
+        lat: Some(1.0),
+        lon: Some(1.0),
+    };
+    let mut config = Config::default();
+    config.merge(args.clone());
 
-        assert_eq!(file.format, default.format);
-        assert_eq!(file.interval, default.interval);
-        assert_eq!(file.units, default.units);
-        assert_eq!(file.weather, default.weather);
-        assert_eq!(file.location, default.location);
-        assert_eq!(file.icons, default.icons);
-    }
-
-    #[test]
-    fn merge() {
-        let args = CliArgs {
-            debug: false,
-            default_config_path: false,
-            config_file: None,
-            format: Some(Format("format".to_string())),
-            interval: Some(Interval(123)),
-            temperature_unit: Some(Kelvin),
-            wind_speed_unit: Some(Ms),
-            distance_unit: Some(Mile),
-            precipitation_unit: Some(Inch),
-            weather_provider: Some(OwmMock),
-            weather_api_key: Some("key".to_string()),
-            location_provider: Some(Manual),
-            lat: Some(1.0),
-            lon: Some(1.0),
-        };
-        let mut config = Config::default();
-        config.merge(args.clone());
-
-        assert_eq!(config.format, args.format.unwrap());
-        assert_eq!(config.interval, args.interval.unwrap());
-        assert_eq!(config.units.temperature, Kelvin);
-        assert_eq!(config.units.wind_speed, Ms);
-        assert_eq!(config.units.distance, Mile);
-        assert_eq!(config.units.precipitation, Inch);
-        assert_eq!(config.weather.provider, args.weather_provider.unwrap());
-        assert_eq!(config.weather.api_key, args.weather_api_key.unwrap());
-        assert_eq!(config.location.provider, args.location_provider.unwrap());
-        assert_eq!(config.location.location.lat, args.lat.unwrap());
-        assert_eq!(config.location.location.lon, args.lon.unwrap());
-    }
+    assert_eq!(config.format, args.format.unwrap());
+    assert_eq!(config.interval, args.interval.unwrap());
+    assert_eq!(config.units.temperature, TemperatureUnit::Kelvin);
+    assert_eq!(config.units.wind_speed, WindSpeedUnit::Ms);
+    assert_eq!(config.units.distance, DistanceUnit::Mile);
+    assert_eq!(config.units.precipitation, PrecipitationUnit::Inch);
+    assert_eq!(config.weather.provider, args.weather_provider.unwrap());
+    assert_eq!(config.weather.api_key, args.weather_api_key.unwrap());
+    assert_eq!(config.location.provider, args.location_provider.unwrap());
+    assert_eq!(config.location.location.lat, args.lat.unwrap());
+    assert_eq!(config.location.location.lon, args.lon.unwrap());
 }

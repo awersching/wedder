@@ -2,11 +2,10 @@ use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
-use crate::config::{Distance, Precipitation, Temperature, WindSpeed};
+use crate::config::{DistanceUnit, PrecipitationUnit, TemperatureUnit, Units, WindSpeedUnit};
 use crate::location::Location;
-use crate::weather::owm::{OpenWeatherMap, OwmMock};
+use crate::weather::owm::OpenWeatherMap;
 use crate::weather::weather_condition::WeatherCondition;
-use crate::Result;
 use std::fmt;
 use std::fmt::{Display, Formatter};
 
@@ -15,54 +14,61 @@ mod owm;
 pub mod weather_condition;
 
 pub trait CurrentWeather {
-    fn weather(&self, location: &Location, api_key: &str) -> Result<Box<dyn Weather>>;
+    fn weather(&self, location: &Location, api_key: &str) -> crate::Result<Box<dyn Weather>>;
 }
 
 pub trait Weather {
-    fn weather_condition(&self) -> WeatherCondition;
+    fn weather_condition(&self) -> Option<WeatherCondition>;
 
-    fn temp(&self) -> Kelvin;
+    fn temp(&self) -> Option<Kelvin>;
     fn temp_feels_like(&self) -> Option<Kelvin>;
     fn temp_max(&self) -> Option<Kelvin>;
     fn temp_min(&self) -> Option<Kelvin>;
+    fn dew_point(&self) -> Option<Kelvin>;
 
-    fn pressure(&self) -> Option<Hpa>;
-    fn humidity(&self) -> Option<Percentage>;
-    fn wind_speed(&self) -> Option<Ms>;
-    fn clouds(&self) -> Option<Percentage>;
-    fn visibility(&self) -> Option<Meter>;
     fn precipitation(&self) -> Option<Millimeter>;
+    fn precipitation_chance(&self) -> Option<Percentage>;
+    fn clouds(&self) -> Option<Percentage>;
+    fn humidity(&self) -> Option<Percentage>;
+    fn visibility(&self) -> Option<Meter>;
+    fn wind_speed(&self) -> Option<Ms>;
+    fn pressure(&self) -> Option<Hpa>;
+    fn uvi(&self) -> Option<Uvi>;
+    fn aqi(&self) -> Option<Aqi>;
 
     fn sunrise(&self) -> Option<DateTime<Local>>;
     fn sunset(&self) -> Option<DateTime<Local>>;
 }
 
+pub trait Convert {
+    fn convert(&self, units: &Units) -> String;
+}
+
 #[derive(Debug, Deserialize, Copy, Clone)]
 pub struct Kelvin(f32);
 
-impl Display for Kelvin {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl Kelvin {
-    fn convert(&self, unit: &Temperature) -> f32 {
-        match unit {
-            Temperature::Celsius => self.0 - 273.15,
-            Temperature::Fahrenheit => (self.0 - 273.15) * (9.0 / 5.0) + 32.0,
-            Temperature::Kelvin => self.0,
+impl Convert for Kelvin {
+    fn convert(&self, units: &Units) -> String {
+        match units.temperature {
+            TemperatureUnit::Celsius => self.0 - 273.15,
+            TemperatureUnit::Fahrenheit => (self.0 - 273.15) * (9.0 / 5.0) + 32.0,
+            TemperatureUnit::Kelvin => self.0,
         }
         .round()
+        .to_string()
     }
 }
 
 #[derive(Debug, Deserialize, Copy, Clone)]
-pub struct Hpa(f32);
+pub struct Millimeter(f32);
 
-impl Display for Hpa {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
+impl Convert for Millimeter {
+    fn convert(&self, units: &Units) -> String {
+        let converted = match units.precipitation {
+            PrecipitationUnit::Millimeter => self.0,
+            PrecipitationUnit::Inch => self.0 / 25.4,
+        };
+        format!("{:.3}", converted)
     }
 }
 
@@ -76,75 +82,69 @@ impl Display for Percentage {
 }
 
 #[derive(Debug, Deserialize, Copy, Clone)]
-pub struct Ms(f32);
-
-impl Display for Ms {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl Ms {
-    fn convert(&self, unit: &WindSpeed) -> f32 {
-        match unit {
-            WindSpeed::Ms => self.0,
-            WindSpeed::Kmh => self.0 * 3.6,
-            WindSpeed::Mph => self.0 * (3600.0 / 1609.34),
-        }
-        .round()
-    }
-}
-
-#[derive(Debug, Deserialize, Copy, Clone)]
 pub struct Meter(f32);
 
-impl Display for Meter {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl Meter {
-    fn convert(&self, unit: &Distance) -> f32 {
-        match unit {
-            Distance::Meter => self.0,
-            Distance::Kilometer => self.0 / 1000.0,
-            Distance::Mile => self.0 * 0.000_621_371_2,
-        }
-        .round()
+impl Convert for Meter {
+    fn convert(&self, units: &Units) -> String {
+        let converted = match units.distance {
+            DistanceUnit::Meter => self.0,
+            DistanceUnit::Kilometer => self.0 / 1000.0,
+            DistanceUnit::Mile => self.0 * 0.000_621_371_2,
+        };
+        format!("{:.1}", converted)
     }
 }
 
 #[derive(Debug, Deserialize, Copy, Clone)]
-pub struct Millimeter(f32);
+pub struct Ms(f32);
 
-impl Display for Millimeter {
+impl Convert for Ms {
+    fn convert(&self, units: &Units) -> String {
+        let converted = match units.wind_speed {
+            WindSpeedUnit::Ms => self.0,
+            WindSpeedUnit::Kmh => self.0 * 3.6,
+            WindSpeedUnit::Mph => self.0 * (3600.0 / 1609.34),
+        };
+        format!("{:.1}", converted)
+    }
+}
+
+#[derive(Debug, Deserialize, Copy, Clone)]
+pub struct Hpa(f32);
+
+impl Display for Hpa {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         self.0.fmt(f)
     }
 }
 
-impl Millimeter {
-    fn convert(&self, unit: &Precipitation) -> f32 {
-        match unit {
-            Precipitation::Millimeter => self.0,
-            Precipitation::Inch => self.0 / 25.4,
-        }
-        .round()
+#[derive(Debug, Deserialize, Copy, Clone)]
+pub struct Uvi(f32);
+
+impl Display for Uvi {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+#[derive(Debug, Deserialize, Copy, Clone)]
+pub struct Aqi(f32);
+
+impl Display for Aqi {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
     }
 }
 
 #[derive(Debug, Serialize, Deserialize, EnumString, Eq, PartialEq, Clone)]
 pub enum WeatherProvider {
     OpenWeatherMap,
-    OwmMock,
 }
 
 impl WeatherProvider {
     pub fn create(provider: &Self) -> Box<dyn CurrentWeather> {
         match provider {
             Self::OpenWeatherMap => Box::new(OpenWeatherMap::new()),
-            Self::OwmMock => Box::new(OwmMock::new()),
         }
     }
 }

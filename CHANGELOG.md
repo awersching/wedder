@@ -1,7 +1,11 @@
 ## Unreleased
 
-- Add Add &lt;visibility&gt; and &lt;precipitation&gt; tags
+- Add &lt;visibility&gt;, &lt;precipitation&gt;, &lt;precipitation_chance&gt;, &lt;dew_point&gt;, &lt;uv_index&gt; and
+  &lt;air_quality_index&gt; tags
 - Add unit config options for distances and precipitation
+- Update thunderstorm default icon
+- BREAKING: Remove rain_sun weather condition
+- BREAKING: Rename &lt;cloud_percentage&gt; to &lt;clouds&gt;
 
 ## 1.2.0 - 2020-08-27
 
@@ -20,11 +24,13 @@
 
 ## 1.1.0 - 2020-05-05
 
-- BREAKING: Add temperature unit and wind speed unit as separate config options (i.e. format changes from e.g. &lt;temperature_celsius&gt; to &lt;temperature&gt;)
+- BREAKING: Add temperature unit and wind speed unit as separate config options (i.e. format changes from e.g.
+  &lt;temperature_celsius&gt; to &lt;temperature&gt;)
 
 ## 1.0.6 - 2019-12-09
 
-- BREAKING: No more default value for interval. If no interval is specified, wedder exits after printing the weather once
+- BREAKING: No more default value for interval. If no interval is specified, wedder exits after printing the weather
+  once
 
 ## 1.0.5 - 2019-04-11
 

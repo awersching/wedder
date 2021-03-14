@@ -5,21 +5,22 @@ description = "Current weather info for status bars like polybar"
 authors = ["Adrian Wersching <awersching@posteo.de>"]
 edition = "2018"
 
+[features]
+# Workaround for integration tests not getting cfg(test)
+# https://github.com/rust-lang/cargo/issues/4669
+test = ["assert_cmd", "serde_json"]
+
 [dependencies]
-reqwest = { version = "0.11.0", features = ["blocking"] }
+reqwest = { version = "0.11.0", features = ["json", "blocking"] }
 serde = { version = "1.0.123", features = ["derive"] }
-serde_json = "1.0.61"
 toml = "0.5.8"
 structopt = "0.3.21"
-
 strum = "0.20.0"
 strum_macros = "0.20.1"
-
 directories = "3.0.1"
 chrono = "0.4.19"
-
 log = "0.4.14"
 log4rs = "1.0.0"
 
-[dev-dependencies]
-assert_cmd = "1.0.2"
+assert_cmd = { version = "1.0.2", optional = true }
+serde_json = { version = "1.0.62", optional = true }

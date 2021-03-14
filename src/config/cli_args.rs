@@ -4,11 +4,12 @@ use log::debug;
 use structopt::StructOpt;
 
 use crate::config;
-use crate::config::{Distance, Format, Interval, Precipitation, Temperature, WindSpeed};
+use crate::config::{
+    DistanceUnit, Format, Interval, PrecipitationUnit, TemperatureUnit, WindSpeedUnit,
+};
 use crate::location::LocationProvider;
 use crate::logger;
 use crate::weather::WeatherProvider;
-use crate::Result;
 
 #[derive(Debug, StructOpt, Clone)]
 #[structopt(author, about, setting = structopt::clap::AppSettings::AllowLeadingHyphen)]
@@ -26,19 +27,23 @@ pub struct CliArgs {
     /// The format to display the weather status in
     ///
     /// Available tags:
-    /// <city>,
-    /// <icon>,
-    /// <temperature>,
-    /// <temperature_feels_like>,
-    /// <temperature_max>,
-    /// <temperature_min>,
-    /// <pressure>,
-    /// <humidity>,
-    /// <wind_speed>,
-    /// <cloud_percentage>,
-    /// <visibility>,
-    /// <precipitation>,
-    /// <sunrise>,
+    /// <city>
+    /// <icon>
+    /// <temperature>
+    /// <temperature_feels_like>
+    /// <temperature_max>
+    /// <temperature_min>
+    /// <dew_point>
+    /// <precipitation>
+    /// <precipitation_chance>
+    /// <clouds>
+    /// <humidity>
+    /// <visibility>
+    /// <wind_speed>
+    /// <pressure>
+    /// <uv_index>
+    /// <air_quality_index>
+    /// <sunrise>
     /// <sunset>
     ///
     /// Default: '<icon> <temperature>°C'
@@ -59,7 +64,7 @@ pub struct CliArgs {
     ///
     /// Default: Celsius
     #[structopt(short = "t", long)]
-    pub temperature_unit: Option<Temperature>,
+    pub temperature_unit: Option<TemperatureUnit>,
     /// The unit for the wind speed
     ///
     /// Available units:
@@ -69,7 +74,7 @@ pub struct CliArgs {
     ///
     /// Default: Kmh
     #[structopt(short = "s", long)]
-    pub wind_speed_unit: Option<WindSpeed>,
+    pub wind_speed_unit: Option<WindSpeedUnit>,
     /// The unit of distances
     ///
     /// Available units:
@@ -79,7 +84,7 @@ pub struct CliArgs {
     ///
     /// Default: Kilometer
     #[structopt(short = "D", long)]
-    pub distance_unit: Option<Distance>,
+    pub distance_unit: Option<DistanceUnit>,
     /// The unit of the precipitation
     ///
     /// Available units:
@@ -88,7 +93,7 @@ pub struct CliArgs {
     ///
     /// Default: Millimeter
     #[structopt(short = "P", long)]
-    pub precipitation_unit: Option<Precipitation>,
+    pub precipitation_unit: Option<PrecipitationUnit>,
 
     /// The provider to use for pulling weather updates
     ///
@@ -141,7 +146,7 @@ impl CliArgs {
         debug!("Read {:#?}", self);
     }
 
-    fn default_config_path(&self) -> Result<()> {
+    fn default_config_path(&self) -> crate::Result<()> {
         let path = config::file::default_config_path()
             .ok_or("Couldn't get default config path")?
             .to_str()

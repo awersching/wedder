@@ -1,51 +1,37 @@
+use crate::http;
 use crate::location::CurrentLocation;
 use crate::location::Location;
-use crate::Result;
 
 pub struct IpApi;
 
-const URL: &str = "http://ip-api.com/json/?fields=city,lat,lon";
-const MOCK_URL: &str = "http://ip-api.com/json/24.48.0.1?fields=city,lat,lon";
-
-impl CurrentLocation for IpApi {
-    fn location(&self) -> Result<Location> {
-        self.get(URL)
-    }
-}
-
 impl IpApi {
+    const URL: &'static str = "http://ip-api.com/json/?fields=city,lat,lon";
     pub fn new() -> Self {
         Self
     }
 }
 
-pub struct IpApiMock;
-
-impl IpApiMock {
-    pub fn new() -> Self {
-        Self
+#[cfg(not(feature = "test"))]
+impl CurrentLocation for IpApi {
+    fn location(&self) -> crate::Result<Location> {
+        http::get(Self::URL)
     }
 }
 
-impl CurrentLocation for IpApiMock {
-    fn location(&self) -> Result<Location> {
-        self.get(MOCK_URL)
+#[cfg(feature = "test")]
+impl CurrentLocation for IpApi {
+    fn location(&self) -> crate::Result<Location> {
+        http::get("http://ip-api.com/json/24.48.0.1?fields=city,lat,lon")
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use crate::location::ip_api::IpApiMock;
-    use crate::location::CurrentLocation;
+#[test]
+fn location() {
+    let location = IpApi::new().location();
+    assert!(location.is_ok());
+    let location = location.unwrap();
 
-    #[test]
-    fn location() {
-        let location = IpApiMock::new().location();
-        assert!(location.is_ok());
-        let location = location.unwrap();
-
-        assert_eq!("Montreal", location.city);
-        assert_eq!(45.5808, location.lat);
-        assert_eq!(-73.5825, location.lon);
-    }
+    assert_eq!("Montreal", location.city.unwrap());
+    assert_eq!(45.5808, location.lat);
+    assert_eq!(-73.5825, location.lon);
 }

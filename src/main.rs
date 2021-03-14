@@ -25,20 +25,20 @@ fn main() {
     }
 }
 
-fn run() -> Result<()> {
+fn run() -> crate::Result<()> {
     let config = Config::new();
     let app = App::new(config);
     app.run()
 }
 
-pub struct App {
+struct App {
     config: Config,
     location_provider: Box<dyn CurrentLocation>,
     weather_provider: Box<dyn CurrentWeather>,
 }
 
 impl App {
-    pub fn new(config: Config) -> Self {
+    fn new(config: Config) -> Self {
         let location_provider = LocationProvider::create(&config.location);
         let weather_provider = WeatherProvider::create(&config.weather.provider);
 
@@ -49,7 +49,7 @@ impl App {
         }
     }
 
-    pub fn run(&self) -> Result<()> {
+    fn run(&self) -> Result<()> {
         loop {
             debug!("Pulling current location...");
             let location = self.location_provider.location()?;

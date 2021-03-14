@@ -4,9 +4,9 @@ use log4rs::config::Appender;
 use log4rs::config::Root;
 use log4rs::encode::pattern::PatternEncoder;
 
-use crate::{Result, APP_NAME};
+use crate::APP_NAME;
 
-pub fn init() -> Result<()> {
+pub fn init() -> crate::Result<()> {
     let stdout = ConsoleAppender::builder()
         .encoder(Box::new(PatternEncoder::new(&format())))
         .build();

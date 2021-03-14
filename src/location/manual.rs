@@ -1,14 +1,7 @@
 use crate::location::{CurrentLocation, Location};
-use crate::Result;
 
 pub struct Manual {
     location: Location,
-}
-
-impl CurrentLocation for Manual {
-    fn location(&self) -> Result<Location> {
-        Ok(self.location.clone())
-    }
 }
 
 impl Manual {
@@ -16,5 +9,11 @@ impl Manual {
         Self {
             location: location.clone(),
         }
+    }
+}
+
+impl CurrentLocation for Manual {
+    fn location(&self) -> crate::Result<Location> {
+        Ok(self.location.clone())
     }
 }

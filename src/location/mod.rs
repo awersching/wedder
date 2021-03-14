@@ -1,33 +1,20 @@
-use log::debug;
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
 use crate::config::LocationConfig;
-use crate::http::get_retry;
-use crate::location::ip_api::{IpApi, IpApiMock};
+use crate::location::ip_api::IpApi;
 use crate::location::manual::Manual;
-use crate::Result;
 
 mod ip_api;
 mod manual;
 
 pub trait CurrentLocation {
-    fn location(&self) -> Result<Location>;
-
-    fn get(&self, url: &str) -> Result<Location> {
-        debug!("Querying {} ...", url);
-        let response = get_retry(url);
-        debug!("HTTP {}", response.status().to_string());
-
-        let location: Location = serde_json::from_str(&response.text()?)?;
-        Ok(location)
-    }
+    fn location(&self) -> crate::Result<Location>;
 }
 
 #[derive(Clone, Default, Debug, Serialize, Deserialize)]
 pub struct Location {
-    #[serde(default)]
-    pub city: String,
+    pub city: Option<String>,
     #[serde(default)]
     pub lat: f32,
     #[serde(default)]
@@ -47,7 +34,6 @@ impl Eq for Location {}
 #[derive(Debug, Eq, PartialEq, Serialize, Deserialize, EnumString, Clone)]
 pub enum LocationProvider {
     IpApi,
-    IpApiMock,
     Manual,
 }
 
@@ -55,7 +41,6 @@ impl LocationProvider {
     pub fn create(provider: &LocationConfig) -> Box<dyn CurrentLocation> {
         match provider.provider {
             Self::IpApi => Box::new(IpApi::new()),
-            Self::IpApiMock => Box::new(IpApiMock::new()),
             Self::Manual => Box::new(Manual::new(&provider.location)),
         }
     }

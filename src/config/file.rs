@@ -72,14 +72,9 @@ fn malformed_config<E: Display>(err: E) -> ! {
     process::exit(1)
 }
 
-#[cfg(test)]
-mod tests {
-    use crate::config::{file, Config};
-
-    #[test]
-    fn path_not_found() {
-        let config = file::load_config(&[""].iter().collect());
-        assert!(config.is_some());
-        assert_eq!(config.unwrap(), Config::default());
-    }
+#[test]
+fn path_not_found() {
+    let config = load_config(&[""].iter().collect());
+    assert!(config.is_some());
+    assert_eq!(config.unwrap(), Config::default());
 }

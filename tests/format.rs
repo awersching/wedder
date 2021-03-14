@@ -4,7 +4,7 @@ mod common;
 
 #[test]
 fn default() {
-    create_cmd().assert().success().stdout(" 7°C\n");
+    create_cmd().assert().success().stdout(" 2°C\n");
 }
 
 #[test]
@@ -21,19 +21,19 @@ fn city() {
 #[test]
 fn temperature_celsius() {
     let format = "<temperature>, <temperature_feels_like>, \
-    <temperature_max>, <temperature_min>";
+    <temperature_max>, <temperature_min>, <dew_point>";
     create_cmd()
         .arg("-f")
         .arg(format)
         .assert()
         .success()
-        .stdout("7, N/A, 8, 6\n");
+        .stdout("2, -3, 6, 0, 1\n");
 }
 
 #[test]
 fn temperature_fahrenheit() {
     let format = "<temperature>, <temperature_feels_like>, \
-    <temperature_max>, <temperature_min>";
+    <temperature_max>, <temperature_min>, <dew_point>";
     create_cmd()
         .arg("-f")
         .arg(format)
@@ -41,13 +41,13 @@ fn temperature_fahrenheit() {
         .arg("Fahrenheit")
         .assert()
         .success()
-        .stdout("45, N/A, 46, 43\n");
+        .stdout("35, 27, 43, 32, 34\n");
 }
 
 #[test]
 fn temperature_kelvin() {
     let format = "<temperature>, <temperature_feels_like>, \
-    <temperature_max>, <temperature_min>";
+    <temperature_max>, <temperature_min>, <dew_point>";
     create_cmd()
         .arg("-f")
         .arg(format)
@@ -55,7 +55,7 @@ fn temperature_kelvin() {
         .arg("Kelvin")
         .assert()
         .success()
-        .stdout("280, N/A, 281, 279\n");
+        .stdout("275, 270, 279, 273, 274\n");
 }
 
 #[test]
@@ -68,7 +68,7 @@ fn wind_speed_ms() {
         .arg("Ms")
         .assert()
         .success()
-        .stdout("4\n");
+        .stdout("3.6\n");
 }
 
 #[test]
@@ -79,7 +79,7 @@ fn wind_speed_kmh() {
         .arg(format)
         .assert()
         .success()
-        .stdout("15\n");
+        .stdout("13.0\n");
 }
 
 #[test]
@@ -92,7 +92,7 @@ fn wind_speed_mph() {
         .arg("Mph")
         .assert()
         .success()
-        .stdout("9\n");
+        .stdout("8.1\n");
 }
 
 #[test]
@@ -105,7 +105,7 @@ fn distance_meter() {
         .arg("Meter")
         .assert()
         .success()
-        .stdout("10000\n");
+        .stdout("6437.0\n");
 }
 
 #[test]
@@ -116,7 +116,7 @@ fn distance_kilometer() {
         .arg(format)
         .assert()
         .success()
-        .stdout("10\n");
+        .stdout("6.4\n");
 }
 
 #[test]
@@ -129,7 +129,7 @@ fn distance_mile() {
         .arg("Mile")
         .assert()
         .success()
-        .stdout("6\n");
+        .stdout("4.0\n");
 }
 
 #[test]
@@ -140,7 +140,7 @@ fn precipitation_millimeter() {
         .arg(format)
         .assert()
         .success()
-        .stdout("N/A\n");
+        .stdout("0.074\n");
 }
 
 #[test]
@@ -153,16 +153,17 @@ fn precipitation_inch() {
         .arg("Inch")
         .assert()
         .success()
-        .stdout("N/A\n");
+        .stdout("0.003\n");
 }
 
 #[test]
 fn other() {
-    let format = "<pressure>, <humidity>, <cloud_percentage>";
+    let format = "<pressure>, <humidity>, <clouds>, \
+    <precipitation_chance>, <uv_index>, <air_quality_index>";
     create_cmd()
         .arg("-f")
         .arg(format)
         .assert()
         .success()
-        .stdout("1012, 81, 90\n");
+        .stdout("1017, 96, 90, 10, 0, 1\n");
 }

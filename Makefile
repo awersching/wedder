@@ -17,4 +17,4 @@ lint-all:
 	cargo clippy -- -W clippy::pedantic
 
 test:
-	cargo test
+	cargo test --features "test"
