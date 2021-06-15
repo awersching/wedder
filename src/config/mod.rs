@@ -13,6 +13,7 @@ use crate::location::Location;
 use crate::location::LocationProvider;
 use crate::weather::weather_condition::Icons;
 use crate::weather::WeatherProvider;
+use std::path::Path;
 
 mod cli_args;
 mod file;
@@ -160,7 +161,7 @@ impl Config {
         args.apply();
 
         let mut config = match &args.config_file {
-            Some(path) => file::from_path(&[path].iter().collect()),
+            Some(path) => file::from_path(Path::new(path)),
             None => file::from_default_path(),
         };
         debug!("Read {:#?}", config);

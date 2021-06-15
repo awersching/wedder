@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::fs;
 use std::io;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process;
 
 use directories::ProjectDirs;
@@ -22,7 +22,7 @@ pub fn from_default_path() -> Config {
     from_path(&default_path)
 }
 
-pub fn from_path(path: &PathBuf) -> Config {
+pub fn from_path(path: &Path) -> Config {
     if let Some(config) = load_config(&path) {
         config
     } else {
@@ -43,7 +43,7 @@ pub fn default_config_path() -> Option<PathBuf> {
     )
 }
 
-fn load_config(path: &PathBuf) -> Option<Config> {
+fn load_config(path: &Path) -> Option<Config> {
     debug!("Trying to open config file under {}", path.to_str()?);
     let cfg_str = match fs::read_to_string(path) {
         Ok(cfg_str) => Some(cfg_str),
@@ -74,7 +74,7 @@ fn malformed_config<E: Display>(err: E) -> ! {
 
 #[test]
 fn path_not_found() {
-    let config = load_config(&[""].iter().collect());
+    let config = load_config(Path::new(""));
     assert!(config.is_some());
     assert_eq!(config.unwrap(), Config::default());
 }

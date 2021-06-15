@@ -1,4 +1,4 @@
-## Unreleased
+## 1.3.0 - 2021-06-15
 
 - Add &lt;visibility&gt;, &lt;precipitation&gt;, &lt;precipitation_chance&gt;, &lt;dew_point&gt;, &lt;uv_index&gt; and
   &lt;air_quality_index&gt; tags
