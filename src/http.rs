@@ -12,9 +12,9 @@ pub fn get<T: Debug + DeserializeOwned>(url: &str) -> crate::Result<T> {
     debug!("Querying {} ...", url);
     let mut result = reqwest::blocking::get(url);
     while let Err(err) = result {
+        println!("Unavailable");
         error!("{}", err.to_string());
         debug!("Retrying {} ...", url);
-        println!("No internet");
         thread::sleep(Duration::from_secs(RETRY_TIMEOUT));
         result = reqwest::blocking::get(url);
     }
