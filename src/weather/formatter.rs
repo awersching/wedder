@@ -40,22 +40,38 @@ impl<'a> Formatter<'a> {
 
     fn tags(&self) -> HashMap<String, String> {
         let mut tags = HashMap::new();
+        let temp_unit = &self.config.units.temperature;
 
         let city = &self.location.city;
         let icon = self.icon();
 
-        let temperature = self.convert(self.weather.temp());
-        let temperature_feels_like = self.convert(self.weather.temp_feels_like());
-        let temperature_max = self.convert(self.weather.temp_max());
-        let temperature_min = self.convert(self.weather.temp_min());
-        let dew_point = self.convert(self.weather.dew_point());
+        let temperature = self.weather.temp().map(|temp| temp.convert(temp_unit));
+        let temperature_feels_like = self
+            .weather
+            .temp_feels_like()
+            .map(|feels_like| feels_like.convert(temp_unit));
+        let temperature_max = self.weather.temp_max().map(|max| max.convert(temp_unit));
+        let temperature_min = self.weather.temp_min().map(|min| min.convert(temp_unit));
+        let dew_point = self
+            .weather
+            .dew_point()
+            .map(|dew_point| dew_point.convert(temp_unit));
 
-        let precipitation = self.convert(self.weather.precipitation());
+        let precipitation = self
+            .weather
+            .precipitation()
+            .map(|precipitation| precipitation.convert(&self.config.units.precipitation));
         let precipitation_chance = self.weather.precipitation_chance();
         let clouds = self.weather.clouds();
         let humidity = self.weather.humidity();
-        let visibility = self.convert(self.weather.visibility());
-        let wind_speed = self.convert(self.weather.wind_speed());
+        let visibility = self
+            .weather
+            .visibility()
+            .map(|visibility| visibility.convert(&self.config.units.distance));
+        let wind_speed = self
+            .weather
+            .wind_speed()
+            .map(|wind_speed| wind_speed.convert(&self.config.units.wind_speed));
         let pressure = self.weather.pressure();
         let uv_index = self.weather.uvi();
         let air_quality_index = self.weather.aqi();
@@ -93,9 +109,5 @@ impl<'a> Formatter<'a> {
             .unwrap_or(&condition)
             .to_string();
         Some(icon)
-    }
-
-    fn convert<T: Convert>(&self, option: Option<T>) -> Option<String> {
-        option.map(|value| value.convert(&self.config.units))
     }
 }

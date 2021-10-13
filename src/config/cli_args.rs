@@ -127,10 +127,10 @@ pub struct CliArgs {
 impl CliArgs {
     pub fn apply(&self) {
         if self.debug {
-            self.debug()
+            self.debug();
         }
         if self.default_config_path {
-            if let Err(err) = self.default_config_path() {
+            if let Err(err) = Self::default_config_path() {
                 println!("{}", err.to_string());
                 process::exit(1);
             }
@@ -146,7 +146,7 @@ impl CliArgs {
         debug!("Read {:#?}", self);
     }
 
-    fn default_config_path(&self) -> crate::Result<()> {
+    fn default_config_path() -> crate::Result<()> {
         let path = config::file::default_config_path()
             .ok_or("Couldn't get default config path")?
             .to_str()

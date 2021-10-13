@@ -23,7 +23,7 @@ pub fn from_default_path() -> Config {
 }
 
 pub fn from_path(path: &Path) -> Config {
-    if let Some(config) = load_config(&path) {
+    if let Some(config) = load_config(path) {
         config
     } else {
         println!("Erroneous config path");

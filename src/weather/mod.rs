@@ -2,7 +2,7 @@ use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
-use crate::config::{DistanceUnit, PrecipitationUnit, TemperatureUnit, Units, WindSpeedUnit};
+use crate::config::{DistanceUnit, PrecipitationUnit, TemperatureUnit, WindSpeedUnit};
 use crate::location::Location;
 use crate::weather::owm::OpenWeatherMap;
 use crate::weather::weather_condition::WeatherCondition;
@@ -41,15 +41,17 @@ pub trait Weather {
 }
 
 pub trait Convert {
-    fn convert(&self, units: &Units) -> String;
+    type Unit;
+    fn convert(&self, unit: &Self::Unit) -> String;
 }
 
 #[derive(Debug, Deserialize, Copy, Clone)]
 pub struct Kelvin(f32);
 
 impl Convert for Kelvin {
-    fn convert(&self, units: &Units) -> String {
-        match units.temperature {
+    type Unit = TemperatureUnit;
+    fn convert(&self, unit: &Self::Unit) -> String {
+        match unit {
             TemperatureUnit::Celsius => self.0 - 273.15,
             TemperatureUnit::Fahrenheit => (self.0 - 273.15) * (9.0 / 5.0) + 32.0,
             TemperatureUnit::Kelvin => self.0,
@@ -63,8 +65,9 @@ impl Convert for Kelvin {
 pub struct Millimeter(f32);
 
 impl Convert for Millimeter {
-    fn convert(&self, units: &Units) -> String {
-        let converted = match units.precipitation {
+    type Unit = PrecipitationUnit;
+    fn convert(&self, unit: &Self::Unit) -> String {
+        let converted = match unit {
             PrecipitationUnit::Millimeter => self.0,
             PrecipitationUnit::Inch => self.0 / 25.4,
         };
@@ -85,8 +88,9 @@ impl Display for Percentage {
 pub struct Meter(f32);
 
 impl Convert for Meter {
-    fn convert(&self, units: &Units) -> String {
-        let converted = match units.distance {
+    type Unit = DistanceUnit;
+    fn convert(&self, unit: &Self::Unit) -> String {
+        let converted = match unit {
             DistanceUnit::Meter => self.0,
             DistanceUnit::Kilometer => self.0 / 1000.0,
             DistanceUnit::Mile => self.0 * 0.000_621_371_2,
@@ -99,8 +103,9 @@ impl Convert for Meter {
 pub struct Ms(f32);
 
 impl Convert for Ms {
-    fn convert(&self, units: &Units) -> String {
-        let converted = match units.wind_speed {
+    type Unit = WindSpeedUnit;
+    fn convert(&self, unit: &Self::Unit) -> String {
+        let converted = match unit {
             WindSpeedUnit::Ms => self.0,
             WindSpeedUnit::Kmh => self.0 * 3.6,
             WindSpeedUnit::Mph => self.0 * (3600.0 / 1609.34),
