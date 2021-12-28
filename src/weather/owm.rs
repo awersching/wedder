@@ -284,9 +284,9 @@ fn weather() {
     assert_eq!(weather.temp_min().unwrap().0, 273.15);
     assert_eq!(weather.dew_point().unwrap().0, 274.18);
     assert_eq!(weather.precipitation().unwrap().0, 0.074);
-    assert_eq!(weather.precipitation_chance().unwrap().0, 10.0);
+    assert_eq!(weather.precipitation_chance().unwrap().0, 19.82223);
     assert_eq!(weather.clouds().unwrap().0, 90.0);
-    assert_eq!(weather.humidity().unwrap().0, 96.0);
+    assert_eq!(weather.humidity().unwrap().0, 96.775);
     assert_eq!(weather.visibility().unwrap().0, 6437.0);
     assert_eq!(weather.wind_speed().unwrap().0, 3.6);
     assert_eq!(weather.pressure().unwrap().0, 1017.0);

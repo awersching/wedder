@@ -10,7 +10,7 @@
     "temp": 274.75,
     "feels_like": 270.4,
     "pressure": 1017,
-    "humidity": 96,
+    "humidity": 96.775,
     "dew_point": 274.18,
     "uvi": 0,
     "clouds": 90,
@@ -59,7 +59,7 @@
           "icon": "04n"
         }
       ],
-      "pop": 0.1
+      "pop": 0.1982223
     }
   ],
   "daily": [

@@ -45,6 +45,10 @@ pub trait Convert {
     fn convert(&self, unit: &Self::Unit) -> String;
 }
 
+pub trait Round {
+    fn round(&self) -> f32;
+}
+
 #[derive(Debug, Deserialize, Copy, Clone)]
 pub struct Kelvin(f32);
 
@@ -81,6 +85,12 @@ pub struct Percentage(f32);
 impl Display for Percentage {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         self.0.fmt(f)
+    }
+}
+
+impl Round for Percentage {
+    fn round(&self) -> f32 {
+        self.0.round()
     }
 }
 

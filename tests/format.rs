@@ -165,5 +165,5 @@ fn other() {
         .arg(format)
         .assert()
         .success()
-        .stdout("1017, 96, 90, 10, 0, 1\n");
+        .stdout("1017, 97, 90, 20, 0, 1\n");
 }
