@@ -4,7 +4,12 @@ mod common;
 
 #[test]
 fn default() {
-    create_cmd().assert().success().stdout(" 2°C\n");
+    create_cmd()
+        .arg("-c")
+        .arg("")
+        .assert()
+        .success()
+        .stdout(" 2°C\n");
 }
 
 #[test]
