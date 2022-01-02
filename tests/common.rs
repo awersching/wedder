@@ -6,7 +6,9 @@ pub const WEDDER_WEATHER_API_KEY: &str = "WEDDER_WEATHER_API_KEY";
 
 pub fn create_cmd() -> Command {
     let mut cmd = Command::cargo_bin(APP_NAME).unwrap();
-    cmd.arg("-k")
+    cmd.arg("-c")
+        .arg("")
+        .arg("-k")
         .arg("mock")
         .arg("-w")
         .arg("OpenWeatherMap")
