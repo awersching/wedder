@@ -57,7 +57,11 @@ fn negative_coordinates() {
 
 #[test]
 fn no_arg() {
-    create_cmd().arg("-c").assert().failure();
+    Command::cargo_bin(APP_NAME)
+        .unwrap()
+        .arg("-c")
+        .assert()
+        .failure();
 }
 
 #[test]
