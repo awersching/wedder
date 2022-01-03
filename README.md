@@ -4,8 +4,8 @@
 
 # wedder
 
-![Release](https://github.com/awersching/wedder/actions/workflows/release.yml/badge.svg)
-![Make](https://github.com/awersching/wedder/actions/workflows/make.yml/badge.svg)
+<a href="https://github.com/awersching/wedder/actions?query=workflow%3ARelease"><img src="https://github.com/awersching/wedder/actions/workflows/release.yml/badge.svg" alt="Release Status"></a>
+<a href="https://github.com/awersching/wedder/actions?query=workflow%3AMake"><img src="https://github.com/awersching/wedder/actions/workflows/make.yml/badge.svg" alt="Build Status"></a>
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Wedder displays the current weather condition and temperature in a configurable format for status bars like [polybar](https://github.com/jaagr/polybar).
