@@ -4,7 +4,9 @@
 
 # wedder
 
-[![Build Status](https://travis-ci.com/awersching/wedder.svg?branch=master)](https://travis-ci.com/awersching/wedder)
+![Release](https://github.com/awersching/wedder/actions/workflows/release.yml/badge.svg)
+![Make](https://github.com/awersching/wedder/actions/workflows/make.yml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Wedder displays the current weather condition and temperature in a configurable format for status bars like [polybar](https://github.com/jaagr/polybar).
 The current weather is pulled from [OpenWeatherMap](https://openweathermap.org/) and you can either set a location manually or let it be determined by your IP.

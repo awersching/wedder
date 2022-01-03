@@ -3,9 +3,9 @@ all: format lint test build
 build:
 	cargo build --release
 
-ci:
+release:
 	cargo build --release --target "${TARGET}"
-	cp "target/${TARGET}/release/${PROJECT_NAME}" "${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}"
+	cp "target/${TARGET}/release/${PROJECT_NAME}" "${PROJECT_NAME}-${GITHUB_REF_NAME}-${TARGET}"
 
 format:
 	cargo fmt
