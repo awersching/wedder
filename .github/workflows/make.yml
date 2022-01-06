@@ -1,0 +1,24 @@
+name: Make
+
+env:
+  RUST_BACKTRACE: 1
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  make:
+    name: Execute format, lint, test, and build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+          profile: minimal
+          components: rustfmt, clippy
+      - uses: actions/checkout@v2
+      - run: make
