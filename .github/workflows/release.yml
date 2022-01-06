@@ -21,7 +21,7 @@ jobs:
           default: true
           profile: minimal
       - uses: actions/checkout@v2
-        run: make release
+      - run: make release
       - uses: softprops/action-gh-release@v1
         with:
           files: ${{ PROJECT_NAME }}-${{ GITHUB_REF_NAME }}-${{ TARGET }}
