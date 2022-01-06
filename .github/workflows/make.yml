@@ -21,4 +21,4 @@ jobs:
           profile: minimal
           components: rustfmt, clippy
       - uses: actions/checkout@v2
-      - run: make
+        run: make
