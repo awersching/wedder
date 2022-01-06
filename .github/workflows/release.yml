@@ -24,4 +24,4 @@ jobs:
       - run: make release
       - uses: softprops/action-gh-release@v1
         with:
-          files: ${{ PROJECT_NAME }}-${{ GITHUB_REF_NAME }}-${{ TARGET }}
+          files: $PROJECT_NAME-$TRAVIS_TAG-$TARGET
