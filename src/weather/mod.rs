@@ -51,13 +51,12 @@ pub struct Kelvin(f32);
 impl Convert for Kelvin {
     type Unit = TemperatureUnit;
     fn convert(&self, unit: &Self::Unit) -> String {
-        match unit {
+        let converted = match unit {
             TemperatureUnit::Celsius => self.0 - 273.15,
             TemperatureUnit::Fahrenheit => (self.0 - 273.15) * (9.0 / 5.0) + 32.0,
             TemperatureUnit::Kelvin => self.0,
-        }
-        .round()
-        .to_string()
+        };
+        format!("{:.0}", converted)
     }
 }
 
@@ -80,7 +79,7 @@ pub struct Percentage(f32);
 
 impl Display for Percentage {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
+        write!(f, "{:.0}", self.0)
     }
 }
 
@@ -119,7 +118,7 @@ pub struct Hpa(f32);
 
 impl Display for Hpa {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
+        write!(f, "{:.0}", self.0)
     }
 }
 
@@ -128,7 +127,7 @@ pub struct Uvi(f32);
 
 impl Display for Uvi {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
+        write!(f, "{:.0}", self.0)
     }
 }
 
@@ -137,7 +136,7 @@ pub struct Aqi(f32);
 
 impl Display for Aqi {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
+        write!(f, "{:.0}", self.0)
     }
 }
 

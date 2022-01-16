@@ -7,15 +7,15 @@
     "dt": 1595243443,
     "sunrise": 1608124431,
     "sunset": 1608160224,
-    "temp": 274.75,
-    "feels_like": 270.4,
-    "pressure": 1017,
-    "humidity": 96,
-    "dew_point": 274.18,
-    "uvi": 0,
-    "clouds": 90,
-    "visibility": 6437,
-    "wind_speed": 3.6,
+    "temp": 274.753,
+    "feels_like": 270.456,
+    "pressure": 1017.567,
+    "humidity": 96.775,
+    "dew_point": 274.183,
+    "uvi": 3.123,
+    "clouds": 90.563,
+    "visibility": 6437.888,
+    "wind_speed": 3.654,
     "wind_deg": 320,
     "rain": {
       "1h": 0.062
@@ -59,7 +59,7 @@
           "icon": "04n"
         }
       ],
-      "pop": 0.1
+      "pop": 0.1982223
     }
   ],
   "daily": [
@@ -69,8 +69,8 @@
       "sunset": 1608160224,
       "temp": {
         "day": 278.14,
-        "min": 273.15,
-        "max": 279.4,
+        "min": 273.159,
+        "max": 279.471,
         "night": 273.15,
         "eve": 275.82,
         "morn": 275.35
