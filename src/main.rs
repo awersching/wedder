@@ -20,7 +20,7 @@ const APP_NAME: &str = env!("CARGO_PKG_NAME");
 
 fn main() {
     if let Err(err) = run() {
-        println!("Error: {}", err.to_string());
+        println!("Error: {}", err);
         process::exit(1);
     }
 }

@@ -131,7 +131,7 @@ impl CliArgs {
         }
         if self.default_config_path {
             if let Err(err) = Self::default_config_path() {
-                println!("{}", err.to_string());
+                println!("{}", err);
                 process::exit(1);
             }
         }
@@ -140,7 +140,7 @@ impl CliArgs {
     fn debug(&self) {
         if let Err(err) = logger::init() {
             println!("Error initializing logger");
-            println!("{}", err.to_string());
+            println!("{}", err);
             process::exit(1);
         }
         debug!("Read {:#?}", self);

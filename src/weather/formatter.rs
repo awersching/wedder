@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::config::Config;
 use crate::location::Location;
-use crate::weather::{Convert, Round, Weather};
+use crate::weather::{Convert, Weather};
 
 macro_rules! tag {
     ($tags:expr, $option:expr) => {
@@ -61,9 +61,9 @@ impl<'a> Formatter<'a> {
             .weather
             .precipitation()
             .map(|precipitation| precipitation.convert(&self.config.units.precipitation));
-        let precipitation_chance = self.weather.precipitation_chance().map(|chance| chance.round());
+        let precipitation_chance = self.weather.precipitation_chance();
         let clouds = self.weather.clouds();
-        let humidity = self.weather.humidity().map(|humidity| humidity.round());
+        let humidity = self.weather.humidity();
         let visibility = self
             .weather
             .visibility()

@@ -68,7 +68,7 @@ fn wind_speed_ms() {
         .arg("Ms")
         .assert()
         .success()
-        .stdout("3.6\n");
+        .stdout("3.7\n");
 }
 
 #[test]
@@ -79,7 +79,7 @@ fn wind_speed_kmh() {
         .arg(format)
         .assert()
         .success()
-        .stdout("13.0\n");
+        .stdout("13.2\n");
 }
 
 #[test]
@@ -92,7 +92,7 @@ fn wind_speed_mph() {
         .arg("Mph")
         .assert()
         .success()
-        .stdout("8.1\n");
+        .stdout("8.2\n");
 }
 
 #[test]
@@ -105,7 +105,7 @@ fn distance_meter() {
         .arg("Meter")
         .assert()
         .success()
-        .stdout("6437.0\n");
+        .stdout("6437.9\n");
 }
 
 #[test]
@@ -165,5 +165,5 @@ fn other() {
         .arg(format)
         .assert()
         .success()
-        .stdout("1017, 97, 90, 20, 0, 1\n");
+        .stdout("1018, 97, 91, 20, 3, 1\n");
 }

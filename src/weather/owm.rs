@@ -278,20 +278,20 @@ fn weather() {
     let weather = weather.unwrap();
 
     assert_eq!(weather.weather_condition().unwrap(), WeatherCondition::Mist);
-    assert_eq!(weather.temp().unwrap().0, 274.75);
-    assert_eq!(weather.temp_feels_like().unwrap().0, 270.4);
-    assert_eq!(weather.temp_max().unwrap().0, 279.4);
-    assert_eq!(weather.temp_min().unwrap().0, 273.15);
-    assert_eq!(weather.dew_point().unwrap().0, 274.18);
+    assert_eq!(weather.temp().unwrap().0, 274.753);
+    assert_eq!(weather.temp_feels_like().unwrap().0, 270.456);
+    assert_eq!(weather.temp_max().unwrap().0, 279.471);
+    assert_eq!(weather.temp_min().unwrap().0, 273.159);
+    assert_eq!(weather.dew_point().unwrap().0, 274.183);
     assert_eq!(weather.precipitation().unwrap().0, 0.074);
     assert_eq!(weather.precipitation_chance().unwrap().0, 19.82223);
-    assert_eq!(weather.clouds().unwrap().0, 90.0);
+    assert_eq!(weather.clouds().unwrap().0, 90.563);
     assert_eq!(weather.humidity().unwrap().0, 96.775);
-    assert_eq!(weather.visibility().unwrap().0, 6437.0);
-    assert_eq!(weather.wind_speed().unwrap().0, 3.6);
-    assert_eq!(weather.pressure().unwrap().0, 1017.0);
-    assert_eq!(weather.uvi().unwrap().0, 0.0);
-    assert_eq!(weather.aqi().unwrap().0, 1.0);
+    assert_eq!(weather.visibility().unwrap().0, 6437.888);
+    assert_eq!(weather.wind_speed().unwrap().0, 3.654);
+    assert_eq!(weather.pressure().unwrap().0, 1017.567);
+    assert_eq!(weather.uvi().unwrap().0, 3.123);
+    assert_eq!(weather.aqi().unwrap().0, 1.33);
     assert!(weather.sunrise().is_some());
     let sunrise = DateTime::<chrono::Utc>::from(weather.sunrise().unwrap())
         .format("%H:%M")
