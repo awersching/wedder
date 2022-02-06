@@ -1,3 +1,8 @@
+## 1.3.1 - 2022-02-06
+
+- Improve HTTP error message
+- Fix rounding of floating point numbers
+
 ## 1.3.0 - 2021-06-15
 
 - Add &lt;visibility&gt;, &lt;precipitation&gt;, &lt;precipitation_chance&gt;, &lt;dew_point&gt;, &lt;uv_index&gt; and
