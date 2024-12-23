@@ -1,0 +1,52 @@
+{
+  "coord": {
+    "lon": 7.367,
+    "lat": 45.133
+  },
+  "weather": [
+    {
+      "id": 701,
+      "main": "Mist",
+      "description": "mist",
+      "icon": "50n"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": 274.753,
+    "feels_like": 270.456,
+    "temp_min": 273.159,
+    "temp_max": 279.471,
+    "pressure": 1017.567,
+    "humidity": 96.775,
+    "sea_level": 1021,
+    "grnd_level": 910
+  },
+  "visibility": 6437.888,
+  "wind": {
+    "speed": 3.654,
+    "deg": 121,
+    "gust": 3.47
+  },
+  "rain": {
+    "1h": 0.062
+  },
+  "snow": {
+    "1h": 0.012
+  },
+  "clouds": {
+    "all": 90.563
+  },
+  "dt": 1726660758,
+  "sys": {
+    "type": 1,
+    "id": 6736,
+    "country": "IT",
+    "sunrise": 1608124431,
+    "sunset": 1608160224
+  },
+  "timezone": 7200,
+  "id": 3165523,
+  "name": "Province of Turin",
+  "cod": 200
+}

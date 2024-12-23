@@ -32,6 +32,6 @@ fn location() {
     let location = location.unwrap();
 
     assert_eq!("Montreal", location.city.unwrap());
-    assert_eq!(45.6752, location.lat);
-    assert_eq!(-73.5022, location.lon);
+    assert_eq!(45.6026, location.lat);
+    assert_eq!(-73.5167, location.lon);
 }

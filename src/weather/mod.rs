@@ -45,7 +45,7 @@ pub trait Convert {
     fn convert(&self, unit: &Self::Unit) -> String;
 }
 
-#[derive(Debug, Deserialize, Copy, Clone)]
+#[derive(Debug, Deserialize, Copy, Clone, PartialEq)]
 pub struct Kelvin(f32);
 
 impl Convert for Kelvin {
@@ -74,7 +74,7 @@ impl Convert for Millimeter {
     }
 }
 
-#[derive(Debug, Deserialize, Copy, Clone)]
+#[derive(Debug, Deserialize, Copy, Clone, PartialEq)]
 pub struct Percentage(f32);
 
 impl Display for Percentage {
@@ -122,7 +122,7 @@ impl Display for Hpa {
     }
 }
 
-#[derive(Debug, Deserialize, Copy, Clone)]
+#[derive(Debug, Deserialize, Copy, Clone, PartialEq)]
 pub struct Uvi(f32);
 
 impl Display for Uvi {

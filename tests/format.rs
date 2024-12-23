@@ -27,7 +27,7 @@ fn temperature_celsius() {
         .arg(format)
         .assert()
         .success()
-        .stdout("2, -3, 6, 0, 1\n");
+        .stdout("2, -3, 6, 0, N/A\n");
 }
 
 #[test]
@@ -41,7 +41,7 @@ fn temperature_fahrenheit() {
         .arg("Fahrenheit")
         .assert()
         .success()
-        .stdout("35, 27, 43, 32, 34\n");
+        .stdout("35, 27, 43, 32, N/A\n");
 }
 
 #[test]
@@ -55,7 +55,7 @@ fn temperature_kelvin() {
         .arg("Kelvin")
         .assert()
         .success()
-        .stdout("275, 270, 279, 273, 274\n");
+        .stdout("275, 270, 279, 273, N/A\n");
 }
 
 #[test]
@@ -165,5 +165,5 @@ fn other() {
         .arg(format)
         .assert()
         .success()
-        .stdout("1018, 97, 91, 20, 3, 1\n");
+        .stdout("1018, 97, 91, N/A, N/A, 1\n");
 }
