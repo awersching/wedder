@@ -12,13 +12,8 @@ on:
 jobs:
   make:
     name: Execute format, lint, test, and build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          default: true
-          profile: minimal
-          components: rustfmt, clippy
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
       - run: make

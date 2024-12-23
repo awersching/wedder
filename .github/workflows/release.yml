@@ -13,14 +13,10 @@ on:
 jobs:
   release:
     name: Build executable and upload to releases page
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          default: true
-          profile: minimal
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
       - run: make release
       - uses: softprops/action-gh-release@v1
         with:
