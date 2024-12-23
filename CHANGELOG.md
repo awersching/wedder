@@ -1,3 +1,8 @@
+## Unreleased
+
+- BREAKING: Migrate from OWM OneCall API (which is no longer free) to OWM Current Weather API
+- BREAKING: dew point, precipitation chance, and UVI currently not supported due to API change
+
 ## 1.3.1 - 2022-02-06
 
 - Improve HTTP error message

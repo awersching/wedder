@@ -3,7 +3,7 @@ use crate::location::Location;
 use crate::weather::weather_condition::WeatherCondition;
 use crate::weather::Weather;
 use crate::weather::{Aqi, CurrentWeather, Hpa, Kelvin, Meter, Millimeter, Ms, Percentage, Uvi};
-use chrono::{DateTime, Local, NaiveDateTime, TimeZone};
+use chrono::{DateTime, Local};
 use serde::Deserialize;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
@@ -256,8 +256,8 @@ struct AirPollutionMain {
 }
 
 fn to_datetime(unix_timestamp: i64) -> DateTime<Local> {
-    let time = NaiveDateTime::from_timestamp(unix_timestamp, 0);
-    Local.from_utc_datetime(&time)
+    let time = DateTime::from_timestamp(unix_timestamp, 0).unwrap();
+    time.with_timezone(&Local)
 }
 
 #[cfg(feature = "test")]
