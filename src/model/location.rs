@@ -1,13 +1,6 @@
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
-use crate::config::LocationConfig;
-use crate::location::ip_api::IpApi;
-use crate::location::manual::Manual;
-
-mod ip_api;
-mod manual;
-
 pub trait CurrentLocation {
     fn location(&self) -> crate::Result<Location>;
 }
@@ -35,15 +28,6 @@ impl Eq for Location {}
 pub enum LocationProvider {
     IpApi,
     Manual,
-}
-
-impl LocationProvider {
-    pub fn create(provider: &LocationConfig) -> Box<dyn CurrentLocation> {
-        match provider.provider {
-            Self::IpApi => Box::new(IpApi::new()),
-            Self::Manual => Box::new(Manual::new(&provider.location)),
-        }
-    }
 }
 
 impl Default for LocationProvider {

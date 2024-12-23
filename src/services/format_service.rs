@@ -1,8 +1,9 @@
 use std::collections::HashMap;
 
-use crate::config::Config;
-use crate::location::Location;
-use crate::weather::{Convert, Weather};
+use crate::model::config::Config;
+use crate::model::location::Location;
+use crate::model::weather::Convert;
+use crate::model::weather::Weather;
 
 macro_rules! tag {
     ($tags:expr, $option:expr) => {
@@ -15,13 +16,13 @@ macro_rules! tag {
     };
 }
 
-pub struct Formatter<'a> {
+pub struct FormatService<'a> {
     config: &'a Config,
     location: Location,
     weather: Box<dyn Weather>,
 }
 
-impl<'a> Formatter<'a> {
+impl<'a> FormatService<'a> {
     pub fn new(config: &'a Config, location: Location, weather: Box<dyn Weather>) -> Self {
         Self {
             config,

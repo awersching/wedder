@@ -1,8 +1,9 @@
-use crate::http;
-use crate::location::Location;
-use crate::weather::weather_condition::WeatherCondition;
-use crate::weather::Weather;
-use crate::weather::{Aqi, CurrentWeather, Hpa, Kelvin, Meter, Millimeter, Ms, Percentage, Uvi};
+use crate::adapters::http;
+use crate::model::location::Location;
+use crate::model::weather::{
+    Aqi, CurrentWeather, Hpa, Kelvin, Meter, Millimeter, Ms, Percentage, Uvi, Weather,
+    WeatherCondition,
+};
 use chrono::{DateTime, Local};
 use serde::Deserialize;
 use std::fmt;
@@ -263,8 +264,8 @@ fn to_datetime(unix_timestamp: i64) -> DateTime<Local> {
 #[cfg(feature = "test")]
 impl CurrentWeather for OpenWeatherMap {
     fn weather(&self, location: &Location, api_key: &str) -> crate::Result<Box<dyn Weather>> {
-        let current_str = include_str!("../../tests/current.json");
-        let air_pollution_str = include_str!("../../tests/air_pollution.json");
+        let current_str = include_str!("../../../tests/current.json");
+        let air_pollution_str = include_str!("../../../tests/air_pollution.json");
         let current: Option<Current> = serde_json::from_str(current_str).ok();
         let air_pollution: Option<AirPollution> = serde_json::from_str(air_pollution_str).ok();
         Ok(Box::new(OwmWeather::new(current, air_pollution)))

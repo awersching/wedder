@@ -9,7 +9,7 @@ use log::debug;
 use log::error;
 use log::warn;
 
-use crate::config::Config;
+use crate::model::config::Config;
 use crate::APP_NAME;
 
 pub fn from_default_path() -> Config {

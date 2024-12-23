@@ -2,17 +2,16 @@ use std::error::Error;
 use std::{process, thread, time};
 
 use log::debug;
+use model::config::Config;
+use model::location::{CurrentLocation, Location};
+use model::weather::CurrentWeather;
+use services::format_service::FormatService;
+use services::{config_service, location_service, weather_service};
 
-use crate::config::Config;
-use crate::location::{CurrentLocation, Location, LocationProvider};
-use crate::weather::formatter::Formatter;
-use crate::weather::{CurrentWeather, WeatherProvider};
-
-mod config;
-mod http;
-mod location;
+mod adapters;
 mod logger;
-mod weather;
+mod model;
+mod services;
 
 type Result<T> = ::std::result::Result<T, Box<dyn Error>>;
 
@@ -26,35 +25,35 @@ fn main() {
 }
 
 fn run() -> crate::Result<()> {
-    let config = Config::new();
+    let config = config_service::config();
     let app = App::new(config);
     app.run()
 }
 
 struct App {
     config: Config,
-    location_provider: Box<dyn CurrentLocation>,
-    weather_provider: Box<dyn CurrentWeather>,
+    current_location: Box<dyn CurrentLocation>,
+    current_weather: Box<dyn CurrentWeather>,
 }
 
 impl App {
     fn new(config: Config) -> Self {
-        let location_provider = LocationProvider::create(&config.location);
-        let weather_provider = WeatherProvider::create(&config.weather.provider);
+        let current_location = location_service::current_location(&config.location);
+        let current_weather = weather_service::current_weather(&config.weather.provider);
 
         Self {
             config,
-            location_provider,
-            weather_provider,
+            current_location,
+            current_weather,
         }
     }
 
     fn run(&self) -> Result<()> {
         loop {
-            debug!("Pulling current location...");
-            let location = self.location_provider.location()?;
+            debug!("Polling current location...");
+            let location = self.current_location.location()?;
             debug!("{:#?}", location);
-            debug!("Pulling current weather...");
+            debug!("Polling current weather...");
             let weather = self.weather(location)?;
             println!("{}", weather);
 
@@ -64,9 +63,9 @@ impl App {
 
     fn weather(&self, location: Location) -> Result<String> {
         let weather = self
-            .weather_provider
+            .current_weather
             .weather(&location, &self.config.weather.api_key)?;
-        let formatted = Formatter::new(&self.config, location, weather).format();
+        let formatted = FormatService::new(&self.config, location, weather).format();
         Ok(formatted)
     }
 

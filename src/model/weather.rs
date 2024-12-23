@@ -2,16 +2,14 @@ use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
-use crate::config::{DistanceUnit, PrecipitationUnit, TemperatureUnit, WindSpeedUnit};
-use crate::location::Location;
-use crate::weather::owm::OpenWeatherMap;
-use crate::weather::weather_condition::WeatherCondition;
+use crate::model::config::{PrecipitationUnit, WindSpeedUnit};
+use crate::model::location::Location;
 use std::fmt;
 use std::fmt::{Display, Formatter};
 
-pub mod formatter;
-mod owm;
-pub mod weather_condition;
+use strum_macros::Display;
+
+use super::config::{DistanceUnit, TemperatureUnit};
 
 pub trait CurrentWeather {
     fn weather(&self, location: &Location, api_key: &str) -> crate::Result<Box<dyn Weather>>;
@@ -46,7 +44,7 @@ pub trait Convert {
 }
 
 #[derive(Debug, Deserialize, Copy, Clone, PartialEq)]
-pub struct Kelvin(f32);
+pub struct Kelvin(pub f32);
 
 impl Convert for Kelvin {
     type Unit = TemperatureUnit;
@@ -61,7 +59,7 @@ impl Convert for Kelvin {
 }
 
 #[derive(Debug, Deserialize, Copy, Clone)]
-pub struct Millimeter(f32);
+pub struct Millimeter(pub f32);
 
 impl Convert for Millimeter {
     type Unit = PrecipitationUnit;
@@ -75,7 +73,7 @@ impl Convert for Millimeter {
 }
 
 #[derive(Debug, Deserialize, Copy, Clone, PartialEq)]
-pub struct Percentage(f32);
+pub struct Percentage(pub f32);
 
 impl Display for Percentage {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -84,7 +82,7 @@ impl Display for Percentage {
 }
 
 #[derive(Debug, Deserialize, Copy, Clone)]
-pub struct Meter(f32);
+pub struct Meter(pub f32);
 
 impl Convert for Meter {
     type Unit = DistanceUnit;
@@ -99,7 +97,7 @@ impl Convert for Meter {
 }
 
 #[derive(Debug, Deserialize, Copy, Clone)]
-pub struct Ms(f32);
+pub struct Ms(pub f32);
 
 impl Convert for Ms {
     type Unit = WindSpeedUnit;
@@ -114,7 +112,7 @@ impl Convert for Ms {
 }
 
 #[derive(Debug, Deserialize, Copy, Clone)]
-pub struct Hpa(f32);
+pub struct Hpa(pub f32);
 
 impl Display for Hpa {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -123,7 +121,7 @@ impl Display for Hpa {
 }
 
 #[derive(Debug, Deserialize, Copy, Clone, PartialEq)]
-pub struct Uvi(f32);
+pub struct Uvi(pub f32);
 
 impl Display for Uvi {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -132,7 +130,7 @@ impl Display for Uvi {
 }
 
 #[derive(Debug, Deserialize, Copy, Clone)]
-pub struct Aqi(f32);
+pub struct Aqi(pub f32);
 
 impl Display for Aqi {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -145,16 +143,22 @@ pub enum WeatherProvider {
     OpenWeatherMap,
 }
 
-impl WeatherProvider {
-    pub fn create(provider: &Self) -> Box<dyn CurrentWeather> {
-        match provider {
-            Self::OpenWeatherMap => Box::new(OpenWeatherMap::new()),
-        }
-    }
-}
-
 impl Default for WeatherProvider {
     fn default() -> Self {
         Self::OpenWeatherMap
     }
+}
+
+#[derive(Debug, Hash, Eq, PartialEq, Serialize, Deserialize, Display)]
+#[strum(serialize_all = "snake_case")]
+pub enum WeatherCondition {
+    ClearSky,
+    FewClouds,
+    Clouds,
+    ManyClouds,
+    Rain,
+    HeavyRain,
+    Thunderstorm,
+    Snow,
+    Mist,
 }

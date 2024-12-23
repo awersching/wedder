@@ -3,13 +3,16 @@ use std::process;
 use log::debug;
 use structopt::StructOpt;
 
-use crate::config;
-use crate::config::{
-    DistanceUnit, Format, Interval, PrecipitationUnit, TemperatureUnit, WindSpeedUnit,
-};
-use crate::location::LocationProvider;
+use crate::adapters::config::file;
 use crate::logger;
-use crate::weather::WeatherProvider;
+use crate::model::config::DistanceUnit;
+use crate::model::config::Format;
+use crate::model::config::Interval;
+use crate::model::config::PrecipitationUnit;
+use crate::model::config::TemperatureUnit;
+use crate::model::config::WindSpeedUnit;
+use crate::model::location::LocationProvider;
+use crate::model::weather::WeatherProvider;
 
 #[derive(Debug, StructOpt, Clone)]
 #[structopt(author, about, setting = structopt::clap::AppSettings::AllowLeadingHyphen)]
@@ -147,7 +150,7 @@ impl CliArgs {
     }
 
     fn default_config_path() -> crate::Result<()> {
-        let path = config::file::default_config_path()
+        let path = file::default_config_path()
             .ok_or("Couldn't get default config path")?
             .to_str()
             .map(std::string::ToString::to_string)

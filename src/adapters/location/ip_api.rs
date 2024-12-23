@@ -1,6 +1,7 @@
-use crate::http;
-use crate::location::CurrentLocation;
-use crate::location::Location;
+use crate::{
+    adapters::http,
+    model::location::{CurrentLocation, Location},
+};
 
 pub struct IpApi;
 

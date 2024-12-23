@@ -1,4 +1,4 @@
-use crate::location::{CurrentLocation, Location};
+use crate::model::location::{CurrentLocation, Location};
 
 pub struct Manual {
     location: Location,
