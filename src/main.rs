@@ -1,12 +1,15 @@
 use std::error::Error;
 use std::{process, thread, time};
 
+use adapters::location::ip_api::IpApi;
+use adapters::location::manual::Manual;
+use adapters::weather::owm::OpenWeatherMap;
 use log::debug;
-use model::config::Config;
-use model::location::{CurrentLocation, Location};
-use model::weather::CurrentWeather;
+use model::config::{Config, LocationConfig};
+use model::location::{CurrentLocation, Location, LocationProvider};
+use model::weather::{CurrentWeather, WeatherProvider};
+use services::config_service;
 use services::format_service::FormatService;
-use services::{config_service, location_service, weather_service};
 
 mod adapters;
 mod logger;
@@ -38,13 +41,26 @@ struct App {
 
 impl App {
     fn new(config: Config) -> Self {
-        let current_location = location_service::current_location(&config.location);
-        let current_weather = weather_service::current_weather(&config.weather.provider);
+        let current_location = Self::current_location(&config.location);
+        let current_weather = Self::current_weather(&config.weather.provider);
 
         Self {
             config,
             current_location,
             current_weather,
+        }
+    }
+
+    fn current_location(location_config: &LocationConfig) -> Box<dyn CurrentLocation> {
+        match &location_config.provider {
+            LocationProvider::IpApi => Box::new(IpApi::new()),
+            LocationProvider::Manual => Box::new(Manual::new(&location_config.location)),
+        }
+    }
+
+    fn current_weather(provider: &WeatherProvider) -> Box<dyn CurrentWeather> {
+        match provider {
+            WeatherProvider::OpenWeatherMap => Box::new(OpenWeatherMap::new()),
         }
     }
 
